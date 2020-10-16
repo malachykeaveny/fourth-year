@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:title="Add To List"
+        android:id="@+id/addToList"
+        android:icon="@drawable/ic_action_add_button"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
+        android:title="Remove From List"
+        android:id="@+id/removeFromList"
+        android:icon="@drawable/ic_action_remove_button"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
+        android:title="View List"
+        android:id="@+id/viewList"
+        app:showAsAction="ifRoom"
+        />
+
+</menu>
