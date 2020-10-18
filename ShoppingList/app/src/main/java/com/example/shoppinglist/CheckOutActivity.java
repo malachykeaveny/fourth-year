@@ -15,12 +15,13 @@ public class CheckOutActivity extends AppCompatActivity {
     ArrayList<ShoppingList> shoppingList;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.checkout_activity);
         Intent intent = getIntent();
 
         TextView ttlItems= (TextView) findViewById(R.id.totalItems);
-        ttlItems.setText(shoppingList.size());
+        ttlItems.setText("Hi");
+
     }
 }

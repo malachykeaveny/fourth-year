@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
                 EditText editPwname = (EditText) findViewById(R.id.password);
                 if (editTxtname.getText().toString().equals("mal") && editPwname.getText().toString().equals("gg")) {
                     Intent intent = new Intent(MainActivity.this, Shopping.class);
-                    //EditText editTxtname = (EditText) findViewById(R.id.userInput);
                     String name = editTxtname.getText().toString();
                     intent.putExtra(MESSAGE_KEY, name);
                     startActivity(intent);

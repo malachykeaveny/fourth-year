@@ -41,8 +41,8 @@ public class Shopping extends AppCompatActivity {
         cOutBton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Shopping.this, CheckOutActivity.class);
-                startActivity(intent);
+                Intent i = new Intent(Shopping.this, CheckOutActivity.class);
+                startActivity(i);
             }
         }
         );
