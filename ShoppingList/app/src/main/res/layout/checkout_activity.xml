@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,10 +7,11 @@
 
     <TextView
         android:id="@+id/totalCostLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="73dp"
+        android:layout_height="18dp"
         android:layout_marginTop="30dp"
         android:text="Total Cost:"
+        app:layout_constraintEnd_toEndOf="@+id/totalItems"
         app:layout_constraintStart_toStartOf="@+id/totalItemsLabel"
         app:layout_constraintTop_toBottomOf="@+id/totalItemsLabel" />
 
@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/totalCostLabel"
+        app:layout_constraintEnd_toEndOf="@+id/totalItems"
         app:layout_constraintStart_toEndOf="@+id/totalCostLabel" />
 
     <TextView
@@ -29,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="120dp"
         android:layout_marginTop="40dp"
-        android:text="Total Items"
+        android:text="Total Items:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,4 +41,88 @@
         android:layout_marginStart="16dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/totalItemsLabel"
         app:layout_constraintStart_toEndOf="@+id/totalItemsLabel" />
+
+    <TextView
+        android:id="@+id/card_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:text="Card Number:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/payment_header" />
+
+    <TextView
+        android:id="@+id/date_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="Expiry date:"
+        app:layout_constraintStart_toStartOf="@+id/card_title"
+        app:layout_constraintTop_toBottomOf="@+id/card_title" />
+
+    <TextView
+        android:id="@+id/cvv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="CVV:"
+        app:layout_constraintStart_toStartOf="@+id/date_title"
+        app:layout_constraintTop_toBottomOf="@+id/date_title" />
+
+    <EditText
+        android:id="@+id/input_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintBaseline_toBaselineOf="@+id/card_title"
+        app:layout_constraintStart_toEndOf="@+id/card_title" />
+
+    <EditText
+        android:id="@+id/input_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:ems="10"
+        android:inputType="date"
+        app:layout_constraintBaseline_toBaselineOf="@+id/date_title"
+        app:layout_constraintEnd_toEndOf="@+id/input_card"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/date_title" />
+
+    <EditText
+        android:id="@+id/input_cvv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintBaseline_toBaselineOf="@+id/cvv_title"
+        app:layout_constraintStart_toEndOf="@+id/cvv_title" />
+
+    <TextView
+        android:id="@+id/payment_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="16dp"
+        android:text="Please input payment details below"
+        app:layout_constraintEnd_toEndOf="@+id/input_card"
+        app:layout_constraintStart_toStartOf="@+id/card_title"
+        app:layout_constraintTop_toBottomOf="@+id/totalCostLabel" />
+
+    <Button
+        android:id="@+id/pay_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="16dp"
+        android:text="Pay"
+        app:layout_constraintEnd_toEndOf="@+id/input_cvv"
+        app:layout_constraintStart_toStartOf="@+id/cvv_title"
+        app:layout_constraintTop_toBottomOf="@+id/input_cvv" />
 </androidx.constraintlayout.widget.ConstraintLayout>

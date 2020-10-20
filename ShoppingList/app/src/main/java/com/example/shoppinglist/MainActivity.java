@@ -27,13 +27,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText editTxtname = (EditText) findViewById(R.id.username);
                 EditText editPwname = (EditText) findViewById(R.id.password);
-                if (editTxtname.getText().toString().equals("mal") && editPwname.getText().toString().equals("gg")) {
+                //if (editTxtname.getText().toString().equals("mal") && editPwname.getText().toString().equals("gg")) {
+                if (editTxtname.getText().toString().length() >= 6 && editPwname.getText().toString().length() >= 6 && !editPwname.getText().toString().contains(" ")) {
                     Intent intent = new Intent(MainActivity.this, Shopping.class);
                     String name = editTxtname.getText().toString();
                     intent.putExtra(MESSAGE_KEY, name);
                     startActivity(intent);
                 } else {
-
                     Snackbar mySnackbar = Snackbar.make(v, "Wrong credentials", BaseTransientBottomBar.LENGTH_SHORT);
                     mySnackbar.show();
                     EditText editTxtname1 = (EditText) findViewById(R.id.username);

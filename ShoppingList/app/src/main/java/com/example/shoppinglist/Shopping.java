@@ -26,6 +26,7 @@ public class Shopping extends AppCompatActivity {
 
     private static final String TAG = "Shopping";
     ArrayList<ShoppingList> shoppingList;
+    public static final String MESSAGE_KEY2 = "key2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +37,24 @@ public class Shopping extends AppCompatActivity {
         TextView txtView = (TextView) findViewById(R.id.textView2);
         txtView.setText("Logged in as " + name);
         shoppingList = new ArrayList<>();
+        shoppingList.clear();
 
         Button cOutBton= (Button) findViewById(R.id.checkOutBtn);
         cOutBton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Shopping.this, CheckOutActivity.class);
+                Intent i = new Intent(Shopping.this, CheckOut.class);
+
+                double sum = 0;
+                for (int c = 0; c < shoppingList.size(); c++) {
+                    sum += shoppingList.get(c).getItemPrice();
+                }
+                Log.d(TAG, "List size: " + Double.toString(sum));
+
+
+                String test = Integer.toString(shoppingList.size());
+                i.putExtra(MESSAGE_KEY, test);
+                i.putExtra(MESSAGE_KEY2, Double.toString(sum));
                 startActivity(i);
             }
         }
