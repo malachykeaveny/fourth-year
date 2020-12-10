@@ -5,16 +5,23 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.Toolbar
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import java.util.ArrayList
 
 class DashboardActivity : AppCompatActivity(), View.OnClickListener {
 
+    lateinit var toggle: ActionBarDrawerToggle
     var layout: ViewGroup? = null
     var tables = ("E___T___/"
             + "_A__U__A/"
@@ -33,13 +40,37 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
+
+        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+        //set up back arrow
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        navView.setNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.menuLogout -> Toast.makeText(applicationContext, "Clicked logout", Toast.LENGTH_SHORT).show()
+                R.id.menuTime -> Toast.makeText(applicationContext, "Clicked time", Toast.LENGTH_SHORT).show()
+                R.id.menuViewBookings -> Toast.makeText(applicationContext, "Clicked view bookings", Toast.LENGTH_SHORT).show()
+            }
+            true
+        }
+
         layout = layoutTable
         tables = "/$tables"
         val layoutSeat = LinearLayout(this)
-        val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val params = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         layoutSeat.orientation = LinearLayout.VERTICAL
         layoutSeat.layoutParams = params
-        layoutSeat.setPadding(8 * tableSpacing, 8 * tableSpacing, 8 * tableSpacing, 8 * tableSpacing)
+        layoutSeat.setPadding(
+            8 * tableSpacing,
+            8 * tableSpacing,
+            8 * tableSpacing,
+            8 * tableSpacing
+        )
         //below line may break stuff
         layout?.addView(layoutSeat)
         var layout: LinearLayout? = null
@@ -94,8 +125,7 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
                 view.setBackgroundResource(R.drawable.ic_emergency_exit)
                 layout!!.addView(view)
                 tableViewList.add(view)
-            }
-            else if (tables[index] == 'T') {
+            } else if (tables[index] == 'T') {
                 val view = TextView(this)
                 val layoutParams = LinearLayout.LayoutParams(150, 150)
                 layoutParams.setMargins(tableSpacing, tableSpacing, tableSpacing, tableSpacing)
@@ -106,8 +136,7 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
                 view.setBackgroundResource(R.drawable.ic_tv)
                 layout!!.addView(view)
                 tableViewList.add(view)
-            }
-            else if (tables[index] == 'B') {
+            } else if (tables[index] == 'B') {
                 val view = TextView(this)
                 val layoutParams = LinearLayout.LayoutParams(150, 150)
                 layoutParams.setMargins(tableSpacing, tableSpacing, tableSpacing, tableSpacing)
@@ -118,8 +147,7 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
                 view.setBackgroundResource(R.drawable.ic_bar)
                 layout!!.addView(view)
                 tableViewList.add(view)
-            }
-            else if (tables[index] == 'b') {
+            } else if (tables[index] == 'b') {
                 val view = TextView(this)
                 val layoutParams = LinearLayout.LayoutParams(150, 150)
                 layoutParams.setMargins(tableSpacing, tableSpacing, tableSpacing, tableSpacing)
@@ -130,8 +158,7 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
                 view.setBackgroundResource(R.drawable.ic_bathroom)
                 layout!!.addView(view)
                 tableViewList.add(view)
-            }
-                else if (tables[index] == '_') {
+            } else if (tables[index] == '_') {
                 val view = TextView(this)
                 val layoutParams = LinearLayout.LayoutParams(tableSize, tableSize)
                 layoutParams.setMargins(tableSpacing, tableSpacing, tableSpacing, tableSpacing)
@@ -155,8 +182,15 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
             }
         } else if (view.tag as Int == STATUS_BOOKED) {
             Toast.makeText(this, "Seat " + view.id + " is Booked", Toast.LENGTH_SHORT).show()
-        /**} else if (view.tag as Int == STATUS_RESERVED) {
+            /**} else if (view.tag as Int == STATUS_RESERVED) {
             Toast.makeText(this, "Seat " + view.id + " is Reserved", Toast.LENGTH_SHORT).show() **/
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(toggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
