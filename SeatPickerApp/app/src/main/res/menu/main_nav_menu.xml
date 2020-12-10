@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/menuLogout"
+            android:title="Logout" />
+        <item
+            android:id="@+id/menuTime"
+            android:title="Pick a time"
+            />
+        <item
+            android:id="@+id/menuViewBookings"
+            android:title="View bookings"
+            />
+    </group>
+
+</menu>
