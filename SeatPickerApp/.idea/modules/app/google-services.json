@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "929017721335",
+    "firebase_url": "https://seatpickerapp.firebaseio.com",
+    "project_id": "seatpickerapp",
+    "storage_bucket": "seatpickerapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929017721335:android:336b436607bc2055127ef2",
+        "android_client_info": {
+          "package_name": "com.example.seatpickerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "929017721335-0hak0m6d00m8481i9krbiab670kcocei.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.seatpickerapp",
+            "certificate_hash": "81bc88ecfae1e733037d8c532ff3b4c8a03d45d6"
+          }
+        },
+        {
+          "client_id": "929017721335-f9n8htbbon1t41gscpe2s4diquabh8vr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDN2u03vrjOt-fP1V5sMmvv--a_7nWWXI4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "929017721335-f9n8htbbon1t41gscpe2s4diquabh8vr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
