@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ReservationActivity"
+    >
+
+    <com.shuhart.stepview.StepView
+        android:id="@+id/stepView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        app:sv_selectedCircleColor="@color/colorAccent"
+        app:sv_selectedTextColor="@color/colorAccent"
+        app:sv_stepLineWidth="1dp"
+        app:sv_stepPadding="4dp"
+        app:sv_nextTextColor="@color/colorAccent"
+        app:sv_nextStepLineColor="@color/colorAccent"
+        app:sv_doneCircleColor="@color/colorAccent"
+        app:sv_doneStepLineColor="@color/colorAccent"
+        app:sv_doneCircleRadius="12dp"
+        app:sv_selectedCircleRadius="12dp"
+        app:sv_selectedStepNumberColor="@color/colorPrimary"
+        app:sv_stepViewStyle="@style/StepView"
+        app:sv_doneStepMarkColor="@color/colorPrimary"
+        app:sv_stepNumberTextSize="12sp"
+        app:sv_animationType="Line"/>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="582dp"
+        android:layout_above="@+id/linear_layout_btn"
+        android:layout_below="@+id/stepView"
+        android:layout_marginTop="-1dp"
+        android:layout_marginBottom="1dp" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:weightSum="2"
+        android:padding="6dp">
+
+        <Button
+            android:id="@+id/back_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="16dp"
+            android:text="Back"
+            />
+
+        <Button
+            android:id="@+id/next_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="16dp"
+            android:text="Next"
+            />
+        
+    </LinearLayout>
+
+</RelativeLayout>
