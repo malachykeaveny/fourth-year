@@ -1,98 +1,73 @@
 package com.example.seatpickerapp
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.util.Patterns
+import android.text.TextUtils
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
-import com.google.firebase.FirebaseApp
+import androidx.appcompat.app.AppCompatActivity
+import com.example.seatpickerapp.DashboardActivity
+import com.example.seatpickerapp.SignUpActivity
+import com.example.seatpickerapp.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.sign_up_activity.*
 
 class Login : AppCompatActivity() {
-
-    private lateinit var auth: FirebaseAuth
-
-
+    private var mLoginButton: Button?= null
+    private var mSignUpButton: TextView? = null
+    private var mEmail: EditText? = null
+    private var mPassword: EditText? = null
+    private var auth: FirebaseAuth? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        // Initialize Firebase Auth
+        setContentView(R.layout.activity_login)
         auth = FirebaseAuth.getInstance()
-        FirebaseApp.initializeApp(this);
-        //auth = FirebaseAuth.getInstance()
+        mSignUpButton = findViewById(R.id.signup_txtview)
+        mEmail = findViewById(R.id.login_email)
+        mPassword = findViewById(R.id.login_password)
+        mLoginButton = findViewById(R.id.login_btn)
 
-        signup_btn.setOnClickListener {
-            startActivity(Intent(this, SignUpActivity::class.java))
-            finish()
-        }
-
-        login_btn.setOnClickListener {
-            doLogin()
-        }
-    }
-
-    private fun doLogin() {
-        if (loginUsername.text.toString().isEmpty()) {
-            loginUsername.error = "Enter email"
-            loginUsername.requestFocus()
-            return
-        }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(loginUsername.text.toString()).matches()) {
-            loginUsername.error = "Enter a valid email"
-            loginUsername.requestFocus()
-            return
-        }
-
-        if (loginPassword.text.toString().isEmpty()) {
-            loginPassword.error = "Enter email"
-            loginPassword.requestFocus()
-            return
-        }
-
-        auth.signInWithEmailAndPassword(loginUsername.text.toString(), loginPassword.text.toString())
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    val user = auth.currentUser
-                    updateUI(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Toast.makeText(baseContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT).show()
-                    updateUI(null)
-                    // ...
-                }
+        mLoginButton!!.setOnClickListener(View.OnClickListener { // validate input
+            val emailAddress = mEmail!!.getText().toString().trim { it <= ' ' }
+            val password = mPassword!!.getText().toString().trim { it <= ' ' }
+            if (TextUtils.isEmpty(emailAddress)) {
+                mEmail!!.setError("Email is a required field")
+                return@OnClickListener
             }
-    }
-
-    public override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        updateUI(currentUser)
-    }
-
-    private fun updateUI(currentUser: FirebaseUser?) {
-        if (currentUser != null) {
-            if(currentUser.isEmailVerified) {
-            startActivity(Intent(this,DashboardActivity::class.java))
-                finish()
-                }
-            else {
-                Toast.makeText(
-                    baseContext, "Please enter a valid email address.",
-                    Toast.LENGTH_SHORT).show()
+            if (TextUtils.isEmpty(password)) {
+                mPassword!!.setError("Passsword is a required field")
+                return@OnClickListener
             }
-        }
-        else {
-            Toast.makeText(
-                baseContext, "Login failed",
-                Toast.LENGTH_SHORT).show()
-        }
+            if (password.length < 7) {
+                mPassword!!.setError("Password must be at least 7 characters")
+                return@OnClickListener
+            }
+
+            //sign in user
+            auth!!.signInWithEmailAndPassword(emailAddress, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this@Login, "User has been logged in", Toast.LENGTH_SHORT)
+                            .show()
+                        startActivity(Intent(applicationContext, HomePageActivity::class.java))
+                    } else {
+                        Toast.makeText(
+                            this@Login,
+                            "Error: " + task.exception!!.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+        })
+        mSignUpButton!!.setOnClickListener(View.OnClickListener {
+            startActivity(
+                Intent(
+                    applicationContext,
+                    SignUpActivity::class.java
+                )
+            )
+        })
     }
 }

@@ -3,6 +3,7 @@ package com.example.kotlinpractice
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -15,7 +16,10 @@ import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
 
+    val db = FirebaseFirestore.getInstance()
+    val docref = db.collection("Tables").document("tableOne")
     private val personCollectionRef = Firebase.firestore.collection("users")
+    private val tableCollectionRef = Firebase.firestore.collection("Tables").document("tableOne").collection("Monday")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,11 +33,11 @@ class MainActivity : AppCompatActivity() {
             saveUser(user)
         }
 
-        subscribeToRealtimeUpdates()
+        //subscribeToRealtimeUpdates()
 
-        /*btnRetrieveData.setOnClickListener {
-            retrieveUsers()
-        }*/
+        btnRetrieveData.setOnClickListener {
+            subscribeToRealtimeUpdatesTable()
+        }
     }
 
     private fun subscribeToRealtimeUpdates() {
@@ -47,6 +51,23 @@ class MainActivity : AppCompatActivity() {
                 for(document in it) {
                     val user = document.toObject<User>()
                     sb.append("$user\n")
+                }
+                tvUsers.text = sb.toString()
+            }
+        }
+    }
+
+    private fun subscribeToRealtimeUpdatesTable() {
+        tableCollectionRef.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            firebaseFirestoreException?.let {
+                Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                return@addSnapshotListener
+            }
+            querySnapshot?.let {
+                val sb = StringBuilder()
+                for(document in it) {
+                    val table = document.id + " reserved: " + document.get("reserved")
+                    sb.append("$table\n")
                 }
                 tvUsers.text = sb.toString()
             }
@@ -85,4 +106,26 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun retrieveTables() = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val querySnapshot = tableCollectionRef.get().await()
+            //val querySnapshot = tableCollectionRef.document()
+            val sb = StringBuilder()
+            for(document in querySnapshot.documents) {
+                //val table = document.toObject<Day>()
+                val table = document.id + " reserved: " + document.get("reserved")
+                sb.append("$table\n")
+                }
+            withContext(Dispatchers.Main) {
+                tvUsers.text = sb.toString()
+            }
+        }
+        catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 }

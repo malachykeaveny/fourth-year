@@ -1,5 +1,6 @@
 package com.example.seatpickerapp
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,11 +17,15 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import kotlinx.android.synthetic.main.activity_dashboard.*
+import com.example.seatpickerapp.databinding.ActivityDashboardBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.ArrayList
 
 class DashboardActivity : AppCompatActivity(), View.OnClickListener {
 
+    var db: FirebaseFirestore? = null
+    var auth: FirebaseAuth? = null
     lateinit var toggle: ActionBarDrawerToggle
     var layout: ViewGroup? = null
     var tables = ("E___T___/"
@@ -36,27 +41,33 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
     var STATUS_AVAILABLE = 1
     var STATUS_BOOKED = 2
     var selectedIds = ""
+    private lateinit var binding: ActivityDashboardBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dashboard)
+        binding = ActivityDashboardBinding.inflate(layoutInflater)
+        val views = binding.root
+        setContentView(views)
+        //setContentView(R.layout.activity_dashboard)
 
-        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
-        drawerLayout.addDrawerListener(toggle)
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
+        toggle = ActionBarDrawerToggle(this, binding.drawerLayout, R.string.open, R.string.close)
+        binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         //set up back arrow
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        navView.setNavigationItemSelectedListener {
+        binding.navView.setNavigationItemSelectedListener {
             when(it.itemId) {
-                R.id.menuLogout -> Toast.makeText(applicationContext, "Clicked logout", Toast.LENGTH_SHORT).show()
+                R.id.menuLogout -> signOut()
                 R.id.menuTime -> Toast.makeText(applicationContext, "Clicked time", Toast.LENGTH_SHORT).show()
                 R.id.menuViewBookings -> Toast.makeText(applicationContext, "Clicked view bookings", Toast.LENGTH_SHORT).show()
             }
             true
         }
 
-        layout = layoutTable
+        layout = binding.layoutTable
         tables = "/$tables"
         val layoutSeat = LinearLayout(this)
         val params = LinearLayout.LayoutParams(
@@ -185,6 +196,12 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
             /**} else if (view.tag as Int == STATUS_RESERVED) {
             Toast.makeText(this, "Seat " + view.id + " is Reserved", Toast.LENGTH_SHORT).show() **/
         }
+    }
+
+    private fun signOut() {
+        auth!!.signOut()
+        startActivity(Intent(applicationContext, Login::class.java))
+        Toast.makeText(applicationContext, "Clicked logout", Toast.LENGTH_SHORT).show()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

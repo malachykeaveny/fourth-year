@@ -6,4 +6,10 @@
     <string name="password">Password</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="login_btn">Login</string>
+    <string name="signup_btn">Sign Up</string>
+    <string name="createaccount">Enter details for new account</string>
+    <string name="loginaccount">Enter details to login</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
