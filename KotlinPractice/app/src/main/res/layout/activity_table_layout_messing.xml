@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TableLayoutMessing">
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="356dp"
+        android:layout_height="488dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.49"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.942" />
+
+    <ImageView
+        android:id="@+id/ivTableOne"
+        android:layout_width="108dp"
+        android:layout_height="78dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="80dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintStart_toStartOf="@+id/view2"
+        app:layout_constraintTop_toTopOf="@+id/view2"
+        app:srcCompat="@drawable/ic_table_available" />
+
+    <ImageView
+        android:id="@+id/ivTableTwo"
+        android:layout_width="108dp"
+        android:layout_height="78dp"
+        android:layout_marginTop="32dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintEnd_toEndOf="@+id/ivTableOne"
+        app:layout_constraintTop_toBottomOf="@+id/ivTableOne"
+        app:srcCompat="@drawable/ic_table_available" />
+
+    <ImageView
+        android:id="@+id/ivTableThree"
+        android:layout_width="108dp"
+        android:layout_height="78dp"
+        android:layout_marginTop="32dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintEnd_toEndOf="@+id/ivTableTwo"
+        app:layout_constraintTop_toBottomOf="@+id/ivTableTwo"
+        app:srcCompat="@drawable/ic_table_available" />
+
+    <ImageView
+        android:id="@+id/ivTableFour"
+        android:layout_width="108dp"
+        android:layout_height="78dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintEnd_toEndOf="@+id/view2"
+        app:layout_constraintStart_toEndOf="@+id/ivTableOne"
+        app:layout_constraintTop_toTopOf="@+id/ivTableOne"
+        app:srcCompat="@drawable/ic_table_available" />
+
+    <ImageView
+        android:id="@+id/ivTableFive"
+        android:layout_width="108dp"
+        android:layout_height="78dp"
+        android:layout_marginTop="32dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintEnd_toEndOf="@+id/ivTableFour"
+        app:layout_constraintTop_toBottomOf="@+id/ivTableFour"
+        app:srcCompat="@drawable/ic_table_available" />
+
+    <ImageView
+        android:id="@+id/ivTableSix"
+        android:layout_width="108dp"
+        android:layout_height="78dp"
+        android:layout_marginTop="32dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintEnd_toEndOf="@+id/ivTableFive"
+        app:layout_constraintTop_toBottomOf="@+id/ivTableFive"
+        app:srcCompat="@drawable/ic_table_available" />
+
+    <ImageView
+        android:id="@+id/ivTableSeven"
+        android:layout_width="108dp"
+        android:layout_height="78dp"
+        android:layout_marginTop="16dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintEnd_toStartOf="@+id/ivTableEight"
+        app:layout_constraintHorizontal_bias="0.421"
+        app:layout_constraintStart_toStartOf="@+id/view2"
+        app:layout_constraintTop_toBottomOf="@+id/ivTableThree"
+        app:srcCompat="@drawable/ic_table_available" />
+
+    <ImageView
+        android:id="@+id/ivTableEight"
+        android:layout_width="108dp"
+        android:layout_height="78dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="52dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintBottom_toBottomOf="@+id/ivTableSeven"
+        app:layout_constraintEnd_toEndOf="@+id/view2"
+        app:layout_constraintTop_toBottomOf="@+id/ivTableSix"
+        app:srcCompat="@drawable/ic_table_available" />
+
+    <Button
+        android:id="@+id/selectDateBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/fourPmBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/twoPmBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="14:00"
+        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintEnd_toStartOf="@+id/fourPmBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"/>
+
+    <Button
+        android:id="@+id/fourPmBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="16:00"
+        app:layout_constraintEnd_toStartOf="@+id/sixPmBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/twoPmBtn"
+        app:layout_constraintTop_toTopOf="@+id/twoPmBtn"
+        android:visibility="invisible"/>
+
+    <Button
+        android:id="@+id/sixPmBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="18:00"
+        app:layout_constraintEnd_toStartOf="@+id/eightPmBtn"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fourPmBtn"
+        app:layout_constraintTop_toTopOf="@+id/twoPmBtn"
+        android:visibility="invisible"/>
+
+    <Button
+        android:id="@+id/eightPmBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20:00"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/sixPmBtn"
+        app:layout_constraintTop_toTopOf="@+id/twoPmBtn"
+        android:visibility="invisible"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

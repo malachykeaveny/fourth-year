@@ -99,7 +99,7 @@ class RsrvStepOneFragment : Fragment() {
         }
     }
 
-    fun onRestaurantLoadFailed(message: String?) {
+    private fun onRestaurantLoadFailed(message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 

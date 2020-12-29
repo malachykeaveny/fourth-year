@@ -1,4 +1,4 @@
-package com.example.seatpickerapp.adapter
+ package com.example.seatpickerapp.adapter
 
 import android.view.LayoutInflater
 import android.view.View

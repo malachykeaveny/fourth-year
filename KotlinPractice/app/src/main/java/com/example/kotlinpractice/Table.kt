@@ -1,5 +1,5 @@
 package com.example.kotlinpractice
 
-data class Table (
-    var seats: String = ""
+class Table (
+    var time: String = ""
 )

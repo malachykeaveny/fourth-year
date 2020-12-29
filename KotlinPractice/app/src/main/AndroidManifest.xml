@@ -9,9 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".ReservationStepTwo"/>
-        <activity android:name=".DashboardActivity">
+        <activity android:name=".DashboardActivity"></activity>
+        <activity android:name=".ButtonAttempt" />
+        <activity android:name=".ReservationStepTwo" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".ReservationStepThree" />
+        <activity android:name=".TableLayoutMessing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

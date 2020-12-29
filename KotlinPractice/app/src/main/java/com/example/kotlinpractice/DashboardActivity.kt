@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import org.w3c.dom.Text
 import java.util.*
 
 
@@ -35,7 +36,7 @@ class DashboardActivity: AppCompatActivity(), View.OnClickListener {
     var tables = ("E___T___/"
             + "_A__A__A/"
             + "________/"
-            + "B_A__A__/"
+            + "B_A__U__/"
             + "_________b/"
             + "_A__A__A/"
             )
@@ -45,13 +46,11 @@ class DashboardActivity: AppCompatActivity(), View.OnClickListener {
     var STATUS_AVAILABLE = 1
     var STATUS_BOOKED = 2
     var selectedIds = ""
+    val view: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
-
-
-
 
         layout = layoutTable
         tables = "/$tables"
@@ -77,7 +76,7 @@ class DashboardActivity: AppCompatActivity(), View.OnClickListener {
                 layout = LinearLayout(this)
                 layout.orientation = LinearLayout.HORIZONTAL
                 layoutSeat.addView(layout)
-                /**} else if (tables[index] == 'U') {
+                } else if (tables[index] == 'U') {
                 count++
                 val view = TextView(this)
                 val layoutParams = LinearLayout.LayoutParams(tableSize, tableSize)
@@ -93,7 +92,7 @@ class DashboardActivity: AppCompatActivity(), View.OnClickListener {
                 view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f)
                 layout!!.addView(view)
                 tableViewList.add(view)
-                view.setOnClickListener(this) */
+                view.setOnClickListener(this)
             } else if (tables[index] == 'A') {
                 count++
                 val view = TextView(this)
@@ -165,17 +164,39 @@ class DashboardActivity: AppCompatActivity(), View.OnClickListener {
                 layout!!.addView(view)
             }
         }
+
+        changeTableButton.setOnClickListener{
+            changeTable(view)
+            //val myc = findViewById<TextView>(view.id.)
+    }
+
+    }
+
+    private fun changeTable(view: View?) {
+        var myView = findViewById<HorizontalScrollView>(R.id.layoutTable)
+        layoutTable.getChildAt(0)
+            if (view?.id.toString() == "1") {
+                view?.setBackgroundResource(R.drawable.ic_table_reserved_big)
+            }
+            else {
+                Toast.makeText(this@DashboardActivity, "View id: " + view?.id.toString(), Toast.LENGTH_SHORT).show()
+            }
+
+
     }
 
     override fun onClick(view: View?) {
+        Log.d("TableId", view.toString())
+        Toast.makeText(this@DashboardActivity, ("table number: " + view?.toString()), Toast.LENGTH_SHORT).show()
         if (view?.tag as Int == STATUS_AVAILABLE) {
             val popupMenu: PopupMenu = PopupMenu(this, view)
             //popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
             //popupMenu.show()
             Log.d("DbAct: Table No: ", view.id.toString())
-            val intent = Intent(this@DashboardActivity, ReservationStepTwo::class.java)
-            intent.putExtra("tableNumber", view.id.toString())
-            startActivity(intent)
+            //val intent = Intent(this@DashboardActivity, ReservationStepTwo::class.java)
+            //ntent.putExtra("tableNumber", view.id.toString())
+            //startActivity(intent)
+            //Toast.makeText(this@DashboardActivity, ("table number: " + view.id.toString()), Toast.LENGTH_SHORT).show()
         }
     }
 
