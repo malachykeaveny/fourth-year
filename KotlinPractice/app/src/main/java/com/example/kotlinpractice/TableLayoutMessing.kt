@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_button_attempt.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_reservation_step_two.*
 import kotlinx.android.synthetic.main.activity_table_layout_messing.*
 import kotlinx.coroutines.CoroutineScope
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.lang.Exception
+import java.lang.StringBuilder
 import java.util.*
 
 class TableLayoutMessing : AppCompatActivity() {
@@ -42,7 +44,44 @@ class TableLayoutMessing : AppCompatActivity() {
         }
 
         twoPmBtn.setOnClickListener {
+            getAvailableTimes(date!!, "14.00")
             getAvailableTables(date!!, "14.00")
+        }
+    }
+
+    private fun getAvailableTables(date: String, time: String) = CoroutineScope(Dispatchers.IO).launch{
+        val tables = mutableListOf("tableOne", "tableTwo", "tableThree", "tableFour", "tableFive", "tableSix", "tableSeven", "tableEight")
+        for (i in tables) {
+            val tableCollectionRef = db.collection("Tables").document(i).collection(date)
+
+            try {
+                val querySnapshot = tableCollectionRef.get().await()
+                val sb = StringBuilder()
+                for(document in querySnapshot.documents) {
+
+                    if (document.get("time") == time) {
+                        //val table = i + " " + document.id + " time: " + document.get("time")
+                        val table = document.get("time")
+                        sb.append("$table\n")
+
+                        when (i) {
+                            "tableOne" -> ivTableOne.setImageResource(R.drawable.ic_table_reserved_big)
+                            "tableTwo" -> ivTableTwo.setImageResource(R.drawable.ic_table_reserved_big)
+                            "tableFive" -> ivTableFive.setImageResource(R.drawable.ic_table_reserved_big)
+                        }
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    //tvUsers.text = sb.toString()
+                    Log.d("TestingTables", sb.toString())
+                }
+
+            }
+            catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@TableLayoutMessing, e.message, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -63,7 +102,7 @@ class TableLayoutMessing : AppCompatActivity() {
         dpd.show()
     }
 
-    private fun getAvailableTables(date: String, time: String) = CoroutineScope(Dispatchers.IO).launch{
+    private fun getAvailableTimes(date: String, time: String) = CoroutineScope(Dispatchers.IO).launch{
         val tableCollectionRef = db.collection("Tables").document("tableEight").collection(date)
 
         try {
