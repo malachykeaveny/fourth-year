@@ -1,6 +1,7 @@
 package com.example.kotlinpractice
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -43,6 +44,11 @@ class TableLayoutMessing : AppCompatActivity() {
         setContentView(R.layout.activity_table_layout_messing)
         view2.setBackgroundResource(R.drawable.ic_launcher_background)
 
+        openBookingsBtn.setOnClickListener{
+            val intent = Intent(this, DisplayBookings::class.java)
+            startActivity(intent)
+        }
+
         selectDateBtn.setOnClickListener {
             setDate()
         }
@@ -78,25 +84,99 @@ class TableLayoutMessing : AppCompatActivity() {
                 Toast.makeText(this@TableLayoutMessing, "Pick a date or a time", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Confirm booking")
-                builder.setMessage("Date: " + date + "\nTime: " + time + "\nTable Number: " + "1")
-//builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
-
-                builder.setPositiveButton(android.R.string.yes) { dialog, which ->
-                    createBooking(date!!, time!!, "tableOne")
-                }
-
-                builder.setNegativeButton(android.R.string.no) { dialog, which ->
-                    Toast.makeText(
-                        applicationContext,
-                        android.R.string.no, Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                builder.show()
+                bookingDialog(date!!, time!!, "tableOne")
             }
         }
+
+        ivTableTwo.setOnClickListener {
+
+            if (date == null || time == null) {
+                Toast.makeText(this@TableLayoutMessing, "Pick a date or a time", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                bookingDialog(date!!, time!!, "tableTwo")
+            }
+        }
+
+        ivTableThree.setOnClickListener {
+
+            if (date == null || time == null) {
+                Toast.makeText(this@TableLayoutMessing, "Pick a date or a time", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                bookingDialog(date!!, time!!, "tableThree")
+            }
+        }
+
+        ivTableFour.setOnClickListener {
+
+            if (date == null || time == null) {
+                Toast.makeText(this@TableLayoutMessing, "Pick a date or a time", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                bookingDialog(date!!, time!!, "tableFour")
+            }
+        }
+
+        ivTableFive.setOnClickListener {
+
+            if (date == null || time == null) {
+                Toast.makeText(this@TableLayoutMessing, "Pick a date or a time", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                bookingDialog(date!!, time!!, "tableFive")
+            }
+        }
+
+        ivTableSix.setOnClickListener {
+
+            if (date == null || time == null) {
+                Toast.makeText(this@TableLayoutMessing, "Pick a date or a time", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                bookingDialog(date!!, time!!, "tableSix")
+            }
+        }
+
+        ivTableSeven.setOnClickListener {
+
+            if (date == null || time == null) {
+                Toast.makeText(this@TableLayoutMessing, "Pick a date or a time", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                bookingDialog(date!!, time!!, "tableSeven")
+            }
+        }
+
+        ivTableEight.setOnClickListener {
+
+            if (date == null || time == null) {
+                Toast.makeText(this@TableLayoutMessing, "Pick a date or a time", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                bookingDialog(date!!, time!!, "tableEight")
+            }
+        }
+    }
+
+    private fun bookingDialog(date: String, time: String, tableNo: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Confirm booking")
+        builder.setMessage("Date: " + date + "\nTime: " + time + "\nTable Number: " + tableNo)
+//builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
+
+        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+            createBooking(date!!, time!!, tableNo)
+        }
+
+        builder.setNegativeButton(android.R.string.no) { dialog, which ->
+            Toast.makeText(
+                applicationContext,
+                android.R.string.no, Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        builder.show()
     }
 
     private fun createBooking(date: String, time: String, tableNo: String) =
@@ -115,6 +195,7 @@ class TableLayoutMessing : AppCompatActivity() {
                     "Booking created!",
                     Toast.LENGTH_SHORT
                 ).show()
+                getAvailableTables(date!!, time!!)
                 //personCollectionRef.document("Uykv5wvCCEcuIARFQ6hx").update("booking", "2pm 15th Jan")
 
                 val booking = Booking(date, time, tableNo)
