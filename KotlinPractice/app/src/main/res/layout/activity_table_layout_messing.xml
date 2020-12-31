@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TableLayoutMessing">
+    tools:context=".TableLayoutMessing"
+    android:animateLayoutChanges="true">
+
+
 
     <View
         android:id="@+id/view2"
-        android:layout_width="356dp"
-        android:layout_height="488dp"
+        android:layout_width="362dp"
+        android:layout_height="393dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +26,6 @@
         android:layout_width="108dp"
         android:layout_height="78dp"
         android:layout_marginStart="36dp"
-        android:layout_marginTop="80dp"
         android:scaleX="1.5"
         android:scaleY="1.5"
         app:layout_constraintStart_toStartOf="@+id/view2"
@@ -111,6 +113,7 @@
         app:layout_constraintTop_toBottomOf="@+id/ivTableSix"
         app:srcCompat="@drawable/ic_table_available" />
 
+
     <Button
         android:id="@+id/selectDateBtn"
         android:layout_width="wrap_content"
@@ -126,12 +129,13 @@
         android:id="@+id/twoPmBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:text="14:00"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/view2"
         app:layout_constraintEnd_toStartOf="@+id/fourPmBtn"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="invisible"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/fourPmBtn"

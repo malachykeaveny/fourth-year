@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             val firstName  = etFirstName.text.toString()
             val secondName = etLastName.text.toString()
             val phoneNumber = etPhoneNumber.text.toString()
-            val user = User(firstName, secondName, phoneNumber, null)
+            val user = User(firstName, secondName, phoneNumber)
             saveUser(user)
         }
 
