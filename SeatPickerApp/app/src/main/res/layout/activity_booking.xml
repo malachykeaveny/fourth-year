@@ -12,7 +12,7 @@
         android:id="@+id/selectDateBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="100dp"
         android:text="Select a date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -65,6 +65,7 @@
         app:layout_constraintTop_toTopOf="@+id/twoPmBtn" />
 
     <ScrollView
+        android:id="@+id/bookingScrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -75,10 +76,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fourPmBtn"
-        android:id="@+id/myScrollView">
+        app:layout_constraintTop_toBottomOf="@+id/fourPmBtn">
 
         <HorizontalScrollView
+            android:id="@+id/bookingScrollViewHoriz"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 

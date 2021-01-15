@@ -3,6 +3,7 @@ package com.example.seatpickerapp
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.seatpickerapp.Fragments.BookingsFragment
 import com.example.seatpickerapp.Fragments.HomeFragment
 import com.example.seatpickerapp.Fragments.ProfileFragment
 import com.example.seatpickerapp.databinding.ActivityHomepageBinding
@@ -19,11 +20,13 @@ class HomePageActivity : AppCompatActivity() {
 
         val homeFragment = HomeFragment()
         val profileFragment = ProfileFragment()
+        val bookingsFragment = BookingsFragment()
         setFragment(homeFragment)
 
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.miHome -> setFragment(homeFragment)
+                R.id.miBookings -> setFragment(bookingsFragment)
                 R.id.miProfile -> setFragment(profileFragment)
             }
             true

@@ -3,6 +3,7 @@ package com.example.seatpickerapp
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -20,6 +21,7 @@ class Login : AppCompatActivity() {
     private var mEmail: EditText? = null
     private var mPassword: EditText? = null
     private var auth: FirebaseAuth? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -28,6 +30,8 @@ class Login : AppCompatActivity() {
         mEmail = findViewById(R.id.login_email)
         mPassword = findViewById(R.id.login_password)
         mLoginButton = findViewById(R.id.login_btn)
+
+        checkIfLoggedIn()
 
         mLoginButton!!.setOnClickListener(View.OnClickListener { // validate input
             val emailAddress = mEmail!!.getText().toString().trim { it <= ' ' }
@@ -70,4 +74,14 @@ class Login : AppCompatActivity() {
             )
         })
     }
+
+    private fun checkIfLoggedIn() {
+        if (auth?.currentUser != null) {
+            Log.d("CheckLogin", auth!!.currentUser.toString())
+            startActivity(Intent(applicationContext, HomePageActivity::class.java))
+        }
+
+    }
+
+
 }

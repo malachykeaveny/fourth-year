@@ -7,6 +7,12 @@
     android:icon="@drawable/ic_home"/>
 
     <item
+        android:id="@+id/miBookings"
+        android:title="Bookings"
+        android:icon="@drawable/ic_delete"/>
+
+
+    <item
         android:id="@+id/miProfile"
         android:title="Profile"
         android:icon="@drawable/ic_profile"/>

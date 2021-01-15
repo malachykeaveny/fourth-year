@@ -28,7 +28,7 @@ class RsrvStepTwoFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        loadTimes()
+
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_rsrv_step_two, container, false)
         _binding = FragmentRsrvStepTwoBinding.inflate(inflater, container, false)
@@ -36,7 +36,5 @@ class RsrvStepTwoFragment : Fragment() {
         return view
     }
 
-    private fun loadTimes() {
-        val adapter = RevervationTimeAdapter()
-    }
+
 }
