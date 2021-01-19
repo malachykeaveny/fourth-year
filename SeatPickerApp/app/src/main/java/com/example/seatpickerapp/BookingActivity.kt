@@ -5,6 +5,7 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -33,6 +34,7 @@ class BookingActivity : AppCompatActivity() {
     val db = FirebaseFirestore.getInstance()
     private var date: String? = null
     private var time: String? = null
+    private var partySize: String?= null
     private val personCollectionRef = Firebase.firestore.collection("users")
     private var auth: FirebaseAuth? = null
 
@@ -45,6 +47,10 @@ class BookingActivity : AppCompatActivity() {
 
         binding.bookingScrollViewHoriz.setBackgroundResource(R.drawable.ic_floor_plan)
 
+        binding.partySizeBtn.setOnClickListener {
+            setPartySize()
+        }
+
         binding.selectDateBtn.setOnClickListener {
             setDate()
         }
@@ -55,29 +61,31 @@ class BookingActivity : AppCompatActivity() {
 
         binding.twoPmBtn.setOnClickListener {
             //getAvailableTimes(date!!, "14.00")
-            getAvailableTables(date!!, "14.00")
+            getUnsuitableTables(partySize!!)
+            getReservedTables(date!!, "14.00")
             time = "14.00"
         }
 
         binding.fourPmBtn.setOnClickListener {
-            getAvailableTables(date!!, "16.00")
+            getUnsuitableTables(partySize!!)
+            getReservedTables(date!!, "16.00")
             time = "16.00"
         }
 
         binding.sixPmBtn.setOnClickListener {
-            getAvailableTables(date!!, "18.00")
+            getReservedTables(date!!, "18.00")
             time = "18.00"
         }
 
         binding.eightPmBtn.setOnClickListener {
-            getAvailableTables(date!!, "20.00")
+            getReservedTables(date!!, "20.00")
             time = "20.00"
         }
 
         binding.ivTableOne.setOnClickListener {
 
-            if (date == null || time == null) {
-                Toast.makeText(this@BookingActivity, "Pick a date or a time", Toast.LENGTH_SHORT)
+            if (date == null || time == null || partySize == null) {
+                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 bookingDialog(date!!, time!!, "tableOne")
@@ -86,8 +94,8 @@ class BookingActivity : AppCompatActivity() {
 
         binding.ivTableTwo.setOnClickListener {
 
-            if (date == null || time == null) {
-                Toast.makeText(this@BookingActivity, "Pick a date or a time", Toast.LENGTH_SHORT)
+            if (date == null || time == null || partySize == null) {
+                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 bookingDialog(date!!, time!!, "tableTwo")
@@ -96,8 +104,8 @@ class BookingActivity : AppCompatActivity() {
 
         binding.ivTableThree.setOnClickListener {
 
-            if (date == null || time == null) {
-                Toast.makeText(this@BookingActivity, "Pick a date or a time", Toast.LENGTH_SHORT)
+            if (date == null || time == null || partySize == null) {
+                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 bookingDialog(date!!, time!!, "tableThree")
@@ -106,8 +114,8 @@ class BookingActivity : AppCompatActivity() {
 
         binding.ivTableFour.setOnClickListener {
 
-            if (date == null || time == null) {
-                Toast.makeText(this@BookingActivity, "Pick a date or a time", Toast.LENGTH_SHORT)
+            if (date == null || time == null || partySize == null) {
+                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 bookingDialog(date!!, time!!, "tableFour")
@@ -116,8 +124,8 @@ class BookingActivity : AppCompatActivity() {
 
         binding.ivTableFive.setOnClickListener {
 
-            if (date == null || time == null) {
-                Toast.makeText(this@BookingActivity, "Pick a date or a time", Toast.LENGTH_SHORT)
+            if (date == null || time == null || partySize == null) {
+                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 bookingDialog(date!!, time!!, "tableFive")
@@ -126,8 +134,8 @@ class BookingActivity : AppCompatActivity() {
 
         binding.ivTableSix.setOnClickListener {
 
-            if (date == null || time == null) {
-                Toast.makeText(this@BookingActivity, "Pick a date or a time", Toast.LENGTH_SHORT)
+            if (date == null || time == null || partySize == null) {
+                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 bookingDialog(date!!, time!!, "tableSix")
@@ -136,8 +144,8 @@ class BookingActivity : AppCompatActivity() {
 
         binding.ivTableSeven.setOnClickListener {
 
-            if (date == null || time == null) {
-                Toast.makeText(this@BookingActivity, "Pick a date or a time", Toast.LENGTH_SHORT)
+            if (date == null || time == null || partySize == null) {
+                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 bookingDialog(date!!, time!!, "tableSeven")
@@ -146,8 +154,8 @@ class BookingActivity : AppCompatActivity() {
 
         binding.ivTableEight.setOnClickListener {
 
-            if (date == null || time == null) {
-                Toast.makeText(this@BookingActivity, "Pick a date or a time", Toast.LENGTH_SHORT)
+            if (date == null || time == null || partySize == null) {
+                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 bookingDialog(date!!, time!!, "tableEight")
@@ -199,7 +207,7 @@ class BookingActivity : AppCompatActivity() {
                     "Booking created!",
                     Toast.LENGTH_SHORT
                 ).show()
-                getAvailableTables(date, time)
+                getReservedTables(date, time)
                 //personCollectionRef.document("Uykv5wvCCEcuIARFQ6hx").update("booking", "2pm 15th Jan")
 
                 val booking = Booking(date, time, tableNo)
@@ -233,7 +241,50 @@ class BookingActivity : AppCompatActivity() {
             Log.d("checkIfDateExists", date + " " + tableNo + " " + querySnapshot.size().toString())
         }
 
-    private fun getAvailableTables(date: String, time: String) =
+    private fun getUnsuitableTables(partySize: String) =
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val tables = mutableListOf(
+                "tableOne",
+                "tableTwo",
+                "tableThree",
+                "tableFour",
+                "tableFive",
+                "tableSix",
+                "tableSeven",
+                "tableEight"
+            )
+            for (i in tables) {
+            try {
+                val seatDocRef = db.collection("restaurants").document("flanagans").collection("tables").document(i)
+                val querySnapshot = seatDocRef.get().await()
+
+                withContext(Dispatchers.Main) {
+
+                    //Toast.makeText(this@BookingActivity, querySnapshot["seats"].toString() + " " + partySize.toInt(), Toast.LENGTH_SHORT).show()
+                    //Log.d("getUnsuitableTables", querySnapshot["seats"] + " " + partySize.toInt())
+
+                    when (i) {
+                        //querySnapshot["seats"].toString().toInt() < partySize.toInt() -> Toast.makeText(this@BookingActivity, "gotem", Toast.LENGTH_SHORT).show()
+                        "tableOne" -> {
+                            if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                binding.ivTableOne.setImageResource(R.drawable.ic_table_reserved_big)
+                                binding.ivTableOne.isClickable = false
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@BookingActivity, e.message, Toast.LENGTH_SHORT)
+                        .show()
+                    Log.d("getAvailableTables", e.message.toString())
+                }
+            }
+            }
+    }
+
+    private fun getReservedTables(date: String, time: String) =
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main) {
                 setTablesAvailable()
@@ -264,6 +315,7 @@ class BookingActivity : AppCompatActivity() {
                             withContext(Dispatchers.Main) {
                                 when (i) {
                                     "tableOne" -> {
+                                        //binding.ivTableOne.setImageResource(R.drawable.ic_table_reserved_big)
                                         binding.ivTableOne.setImageResource(R.drawable.ic_table_reserved_big)
                                         binding.ivTableOne.isClickable = false
                                     }
@@ -356,6 +408,33 @@ class BookingActivity : AppCompatActivity() {
             }, year, month, day)
         dpd.datePicker.minDate = System.currentTimeMillis() - 1000
         dpd.show()
+    }
+
+    private fun setPartySize() {
+        val seatList = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+        val partySizeDialog = AlertDialog.Builder(this)
+            .setTitle("How many people are in you booking for?")
+            .setSingleChoiceItems(seatList, -1) {dialogInterface, i->}.
+            setPositiveButton("Ok") {dialog, which->
+                val position = (dialog as AlertDialog).listView.checkedItemPosition
+
+                if (position != -1) {
+                    partySize = seatList[position]
+                    //Toast.makeText(this, "You picked: ${seatList[position]}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "You picked: $partySize", Toast.LENGTH_SHORT).show()
+                }
+            }.create()
+
+        partySizeDialog.show()
+
+        partySizeDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+
+        partySizeDialog.listView.onItemClickListener =
+            AdapterView.OnItemClickListener { parent, view, position, id ->
+                // enable positive button when user select an item
+                partySizeDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .isEnabled = position != -1
+            }
     }
 
     private fun getAvailableTimes(date: String, time: String) =
