@@ -189,7 +189,7 @@ class DashboardActivity : AppCompatActivity(), View.OnClickListener {
                 view.setBackgroundResource(R.drawable.ic_table_available)
             } else {
                 selectedIds = selectedIds + view.id + ","
-                view.setBackgroundResource(R.drawable.ic_table_selected)
+                view.setBackgroundResource(R.drawable.ic_table_reserved_big)
             }
         } else if (view.tag as Int == STATUS_BOOKED) {
             Toast.makeText(this, "Seat " + view.id + " is Booked", Toast.LENGTH_SHORT).show()

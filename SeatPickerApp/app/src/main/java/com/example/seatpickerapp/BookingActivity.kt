@@ -14,11 +14,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.lang.Exception
 import java.lang.StringBuilder
 import java.util.*
@@ -34,9 +32,18 @@ class BookingActivity : AppCompatActivity() {
     val db = FirebaseFirestore.getInstance()
     private var date: String? = null
     private var time: String? = null
-    private var partySize: String?= null
+    private var partySize: String? = null
     private val personCollectionRef = Firebase.firestore.collection("users")
     private var auth: FirebaseAuth? = null
+    private var tableOneSelected: Boolean = false
+    private var tableTwoSelected: Boolean = false
+    private var tableThreeSelected: Boolean = false
+    private var tableFourSelected: Boolean = false
+    private var tableFiveSelected: Boolean = false
+    private var tableSixSelected: Boolean = false
+    private var tableSevenSelected: Boolean = false
+    private var tableEightSelected: Boolean = false
+    private var canSelectMultipleTables: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +52,7 @@ class BookingActivity : AppCompatActivity() {
         setContentView(view)
         auth = FirebaseAuth.getInstance()
 
-        binding.bookingScrollViewHoriz.setBackgroundResource(R.drawable.ic_floor_plan)
+        //binding.bookingScrollViewHoriz.setBackgroundResource(R.drawable.ic_floor_plan)
 
         binding.partySizeBtn.setOnClickListener {
             setPartySize()
@@ -55,31 +62,38 @@ class BookingActivity : AppCompatActivity() {
             setDate()
         }
 
-        binding.ivTableOne.setOnClickListener {
-            binding.ivTableOne.setImageResource(R.drawable.ic_table_reserved_big)
-        }
-
         binding.twoPmBtn.setOnClickListener {
-            //getAvailableTimes(date!!, "14.00")
-            getUnsuitableTables(partySize!!)
+            deSelectTables()
             getReservedTables(date!!, "14.00")
             time = "14.00"
+            when (canSelectMultipleTables) {
+                false -> getUnsuitableTables(partySize!!)
+            }
         }
 
         binding.fourPmBtn.setOnClickListener {
-            getUnsuitableTables(partySize!!)
+            deSelectTables()
             getReservedTables(date!!, "16.00")
             time = "16.00"
+            when (canSelectMultipleTables) {
+                false -> getUnsuitableTables(partySize!!)
+            }
         }
 
         binding.sixPmBtn.setOnClickListener {
             getReservedTables(date!!, "18.00")
             time = "18.00"
+            when (canSelectMultipleTables) {
+                false -> getUnsuitableTables(partySize!!)
+            }
         }
 
         binding.eightPmBtn.setOnClickListener {
             getReservedTables(date!!, "20.00")
             time = "20.00"
+            when (canSelectMultipleTables) {
+                false -> getUnsuitableTables(partySize!!)
+            }
         }
 
         binding.ivTableOne.setOnClickListener {
@@ -88,7 +102,12 @@ class BookingActivity : AppCompatActivity() {
                 Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                bookingDialog(date!!, time!!, "tableOne")
+                //bookingDialog(date!!, time!!, "tableOne")
+                    when (canSelectMultipleTables) {
+                        false -> deSelectTables()
+                    }
+                binding.ivTableOne.setImageResource(R.drawable.ic_table_selected_big)
+                tableOneSelected = true
             }
         }
 
@@ -98,7 +117,12 @@ class BookingActivity : AppCompatActivity() {
                 Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                bookingDialog(date!!, time!!, "tableTwo")
+                //bookingDialog(date!!, time!!, "tableTwo")
+                when (canSelectMultipleTables) {
+                    false -> deSelectTables()
+                }
+                binding.ivTableTwo.setImageResource(R.drawable.ic_table_selected_big)
+                tableTwoSelected = true
             }
         }
 
@@ -108,7 +132,22 @@ class BookingActivity : AppCompatActivity() {
                 Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                bookingDialog(date!!, time!!, "tableThree")
+                //bookingDialog(date!!, time!!, "tableThree")
+                /**tableThreeSelected = when (tableThreeSelected) {
+                false -> {
+                binding.ivTableThree.setImageResource(R.drawable.ic_table_selected_big)
+                true
+                }
+                true -> {
+                binding.ivTableThree.setImageResource(R.drawable.ic_table_available)
+                false
+                }
+                } */
+                when (canSelectMultipleTables) {
+                    false -> deSelectTables()
+                }
+                binding.ivTableThree.setImageResource(R.drawable.ic_table_selected_big)
+                tableThreeSelected = true
             }
         }
 
@@ -118,7 +157,12 @@ class BookingActivity : AppCompatActivity() {
                 Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                bookingDialog(date!!, time!!, "tableFour")
+                //bookingDialog(date!!, time!!, "tableFour")
+                when (canSelectMultipleTables) {
+                    false -> deSelectTables()
+                }
+                binding.ivTableFour.setImageResource(R.drawable.ic_table_selected_big)
+                tableFourSelected = true
             }
         }
 
@@ -128,39 +172,72 @@ class BookingActivity : AppCompatActivity() {
                 Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                bookingDialog(date!!, time!!, "tableFive")
+                //bookingDialog(date!!, time!!, "tableFive")
+                when (canSelectMultipleTables) {
+                    false -> deSelectTables()
+                }
+                binding.ivTableFive.setImageResource(R.drawable.ic_table_selected_big)
+                tableFiveSelected = true
             }
         }
 
         binding.ivTableSix.setOnClickListener {
 
             if (date == null || time == null || partySize == null) {
-                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    this,
+                    "Pick a date, time and party size first",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             } else {
-                bookingDialog(date!!, time!!, "tableSix")
+                //bookingDialog(date!!, time!!, "tableSix")
+                when (canSelectMultipleTables) {
+                    false -> deSelectTables()
+                }
+                binding.ivTableSix.setImageResource(R.drawable.ic_table_selected_big)
+                tableSixSelected = true
             }
         }
 
         binding.ivTableSeven.setOnClickListener {
 
             if (date == null || time == null || partySize == null) {
-                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    this,
+                    "Pick a date, time and party size first",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             } else {
-                bookingDialog(date!!, time!!, "tableSeven")
+                //bookingDialog(date!!, time!!, "tableSeven")
+                when (canSelectMultipleTables) {
+                    false -> deSelectTables()
+                }
+                binding.ivTableSeven.setImageResource(R.drawable.ic_table_selected_big)
+                tableSevenSelected = true
             }
         }
 
         binding.ivTableEight.setOnClickListener {
 
             if (date == null || time == null || partySize == null) {
-                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    this,
+                    "Pick a date, time and party size first",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             } else {
-                bookingDialog(date!!, time!!, "tableEight")
+                //bookingDialog(date!!, time!!, "tableEight")
+                when (canSelectMultipleTables) {
+                    false -> deSelectTables()
+                }
+                binding.ivTableEight.setImageResource(R.drawable.ic_table_selected_big)
+                tableEightSelected = true
             }
         }
+
     }
 
     private fun bookingDialog(date: String, time: String, tableNo: String) {
@@ -190,7 +267,9 @@ class BookingActivity : AppCompatActivity() {
             val docSnapshot = userDocRef.get().await()
             Log.d("userDoc", docSnapshot.get("name").toString())
 
-            val tableCollectionRef = db.collection("restaurants").document("flanagans").collection("tables").document(tableNo).collection(date)
+            val tableCollectionRef =
+                db.collection("restaurants").document("flanagans").collection("tables")
+                    .document(tableNo).collection(date)
             val querySnapshot = tableCollectionRef.get().await()
 
             val booking = hashMapOf(
@@ -211,11 +290,12 @@ class BookingActivity : AppCompatActivity() {
                 //personCollectionRef.document("Uykv5wvCCEcuIARFQ6hx").update("booking", "2pm 15th Jan")
 
                 val booking = Booking(date, time, tableNo)
-                personCollectionRef.document(auth?.uid.toString()).collection("booking").add(booking)
+                personCollectionRef.document(auth?.uid.toString()).collection("booking")
+                    .add(booking)
                     .addOnSuccessListener { Log.d(TAG, "User updated with booking!") }
                     .addOnFailureListener { e -> Log.w(TAG, "Error updating user with booking", e) }
-            }.addOnFailureListener {
-                    e -> Log.w(TAG, "Error writing document", e)
+            }.addOnFailureListener { e ->
+                Log.w(TAG, "Error writing document", e)
                 Toast.makeText(
                     this@BookingActivity,
                     e.toString(),
@@ -225,18 +305,18 @@ class BookingActivity : AppCompatActivity() {
 
 
             /**withContext(Dispatchers.Main) {
-                when (querySnapshot.size()) {
-                    0 -> Toast.makeText(
-                        this@TableLayoutMessing,
-                        "Date doesn't exist",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    else -> Toast.makeText(
-                        this@TableLayoutMessing,
-                        "Date already exists",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            when (querySnapshot.size()) {
+            0 -> Toast.makeText(
+            this@TableLayoutMessing,
+            "Date doesn't exist",
+            Toast.LENGTH_SHORT
+            ).show()
+            else -> Toast.makeText(
+            this@TableLayoutMessing,
+            "Date already exists",
+            Toast.LENGTH_SHORT
+            ).show()
+            }
             } **/
             Log.d("checkIfDateExists", date + " " + tableNo + " " + querySnapshot.size().toString())
         }
@@ -255,34 +335,78 @@ class BookingActivity : AppCompatActivity() {
                 "tableEight"
             )
             for (i in tables) {
-            try {
-                val seatDocRef = db.collection("restaurants").document("flanagans").collection("tables").document(i)
-                val querySnapshot = seatDocRef.get().await()
+                try {
+                    val seatDocRef =
+                        db.collection("restaurants").document("flanagans").collection("tables")
+                            .document(i)
+                    val querySnapshot = seatDocRef.get().await()
 
-                withContext(Dispatchers.Main) {
+                    withContext(Dispatchers.Main) {
 
-                    //Toast.makeText(this@BookingActivity, querySnapshot["seats"].toString() + " " + partySize.toInt(), Toast.LENGTH_SHORT).show()
-                    //Log.d("getUnsuitableTables", querySnapshot["seats"] + " " + partySize.toInt())
+                        //Toast.makeText(this@BookingActivity, querySnapshot["seats"].toString() + " " + partySize.toInt(), Toast.LENGTH_SHORT).show()
+                        //Log.d("getUnsuitableTables", querySnapshot["seats"] + " " + partySize.toInt())
 
-                    when (i) {
-                        //querySnapshot["seats"].toString().toInt() < partySize.toInt() -> Toast.makeText(this@BookingActivity, "gotem", Toast.LENGTH_SHORT).show()
-                        "tableOne" -> {
-                            if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
-                                binding.ivTableOne.setImageResource(R.drawable.ic_table_reserved_big)
-                                binding.ivTableOne.isClickable = false
+                        when (i) {
+                            //querySnapshot["seats"].toString().toInt() < partySize.toInt() -> Toast.makeText(this@BookingActivity, "gotem", Toast.LENGTH_SHORT).show()
+                            "tableOne" -> {
+                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                    binding.ivTableOne.setImageResource(R.drawable.ic_table_reserved_big)
+                                    binding.ivTableOne.isClickable = false
+                                }
+                            }
+                            "tableTwo" -> {
+                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                    binding.ivTableTwo.setImageResource(R.drawable.ic_table_reserved_big)
+                                    binding.ivTableTwo.isClickable = false
+                                }
+                            }
+                            "tableThree" -> {
+                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                    binding.ivTableThree.setImageResource(R.drawable.ic_table_reserved_big)
+                                    binding.ivTableThree.isClickable = false
+                                }
+                            }
+                            "tableFour" -> {
+                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                    binding.ivTableFour.setImageResource(R.drawable.ic_table_reserved_big)
+                                    binding.ivTableFour.isClickable = false
+                                }
+                            }
+                            "tableFive" -> {
+                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                    binding.ivTableFive.setImageResource(R.drawable.ic_table_reserved_big)
+                                    binding.ivTableFive.isClickable = false
+                                }
+                            }
+                            "tableSix" -> {
+                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                    binding.ivTableSix.setImageResource(R.drawable.ic_table_reserved_big)
+                                    binding.ivTableSix.isClickable = false
+                                }
+                            }
+                            "tableSeven" -> {
+                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                    binding.ivTableSeven.setImageResource(R.drawable.ic_table_reserved_big)
+                                    binding.ivTableSeven.isClickable = false
+                                }
+                            }
+                            "tableEight" -> {
+                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                    binding.ivTableEight.setImageResource(R.drawable.ic_table_reserved_big)
+                                    binding.ivTableEight.isClickable = false
+                                }
                             }
                         }
                     }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@BookingActivity, e.message, Toast.LENGTH_SHORT)
-                        .show()
-                    Log.d("getAvailableTables", e.message.toString())
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@BookingActivity, e.message, Toast.LENGTH_SHORT)
+                            .show()
+                        Log.d("getAvailableTables", e.message.toString())
+                    }
                 }
             }
-            }
-    }
+        }
 
     private fun getReservedTables(date: String, time: String) =
         CoroutineScope(Dispatchers.IO).launch {
@@ -300,7 +424,9 @@ class BookingActivity : AppCompatActivity() {
                 "tableEight"
             )
             for (i in tables) {
-                val tableCollectionRef = db.collection("restaurants").document("flanagans").collection("tables").document(i).collection(date)
+                val tableCollectionRef =
+                    db.collection("restaurants").document("flanagans").collection("tables")
+                        .document(i).collection(date)
 
                 try {
                     val querySnapshot = tableCollectionRef.get().await()
@@ -392,6 +518,63 @@ class BookingActivity : AppCompatActivity() {
         binding.ivTableEight.isClickable = true
     }
 
+    private fun deSelectTables() {
+
+        when {
+            tableOneSelected -> {
+                tableOneSelected = false
+                binding.ivTableOne.setImageResource(R.drawable.ic_table_available)
+            }
+            tableTwoSelected -> {
+                binding.ivTableTwo.setImageResource(R.drawable.ic_table_available)
+                tableTwoSelected = false
+            }
+            tableThreeSelected -> {
+                binding.ivTableThree.setImageResource(R.drawable.ic_table_available)
+                tableThreeSelected = false
+            }
+            tableFourSelected -> {
+                binding.ivTableFour.setImageResource(R.drawable.ic_table_available)
+                tableFourSelected = false
+            }
+            tableFiveSelected -> {
+                binding.ivTableFive.setImageResource(R.drawable.ic_table_available)
+                tableFiveSelected = false
+            }
+            tableSixSelected -> {
+                binding.ivTableSix.setImageResource(R.drawable.ic_table_available)
+                tableSixSelected = false
+            }
+            tableSevenSelected -> {
+                binding.ivTableSeven.setImageResource(R.drawable.ic_table_available)
+                tableSevenSelected = false
+            }
+            tableEightSelected -> {
+                binding.ivTableEight.setImageResource(R.drawable.ic_table_available)
+                tableEightSelected = false
+            }
+        }
+        /**
+        tableOneSelected = false
+        binding.ivTableOne.setImageResource(R.drawable.ic_table_available)
+        tableTwoSelected = false
+        binding.ivTableTwo.setImageResource(R.drawable.ic_table_available)
+        tableThreeSelected = false
+        binding.ivTableThree.setImageResource(R.drawable.ic_table_available)
+        tableFourSelected = false
+        binding.ivTableFour.setImageResource(R.drawable.ic_table_available)
+        tableFiveSelected = false
+        binding.ivTableFive.setImageResource(R.drawable.ic_table_available)
+        tableSixSelected = false
+        binding.ivTableSix.setImageResource(R.drawable.ic_table_available)
+        tableSevenSelected = false
+        binding.ivTableSeven.setImageResource(R.drawable.ic_table_available)
+        tableEightSelected = false
+        binding.ivTableEight.setImageResource(R.drawable.ic_table_available)
+         */
+
+    }
+
     private fun setDate() {
         val dpd =
             DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, mYear, mMonth, mDay ->
@@ -414,19 +597,26 @@ class BookingActivity : AppCompatActivity() {
         val seatList = arrayOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")
         val partySizeDialog = AlertDialog.Builder(this)
             .setTitle("How many people are in you booking for?")
-            .setSingleChoiceItems(seatList, -1) {dialogInterface, i->}.
-            setPositiveButton("Ok") {dialog, which->
+            .setSingleChoiceItems(seatList, -1) { dialogInterface, i -> }
+            .setPositiveButton("Ok") { dialog, which ->
                 val position = (dialog as AlertDialog).listView.checkedItemPosition
 
                 if (position != -1) {
                     partySize = seatList[position]
-                    //Toast.makeText(this, "You picked: ${seatList[position]}", Toast.LENGTH_SHORT).show()
-                    Toast.makeText(this, "You picked: $partySize", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "You picked: $partySize", Toast.LENGTH_SHORT).show()
+                    if (partySize!!.toInt() > 6) {
+                        Toast.makeText(this, "Party size:  $partySize", Toast.LENGTH_SHORT).show()
+                        askToBookMultipleTables(partySize!!)
+                    } else {
+                        canSelectMultipleTables = false
+                    }
                 }
             }.create()
 
         partySizeDialog.show()
 
+        partySizeDialog.setCancelable(false)
+        partySizeDialog.setCanceledOnTouchOutside(false)
         partySizeDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
 
         partySizeDialog.listView.onItemClickListener =
@@ -435,6 +625,20 @@ class BookingActivity : AppCompatActivity() {
                 partySizeDialog.getButton(AlertDialog.BUTTON_POSITIVE)
                     .isEnabled = position != -1
             }
+    }
+
+    private fun askToBookMultipleTables(partySize: String) {
+        val multipleTableDialog = AlertDialog.Builder(this)
+            .setTitle("You have a table size of $partySize, do you want 2 tables?")
+            .setPositiveButton("Yes") { dialog, which ->
+                Toast.makeText(this, "User picked yes", Toast.LENGTH_SHORT).show()
+                canSelectMultipleTables = true
+            }
+            .setNegativeButton("Back") { dialogInterface, which ->
+                setPartySize()
+            }.create()
+
+        multipleTableDialog.show()
     }
 
     private fun getAvailableTimes(date: String, time: String) =

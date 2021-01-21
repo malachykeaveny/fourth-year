@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BookingActivity" />
+        <activity android:name=".FilamentActivity" />
         <activity android:name=".DisplayBookings" />
         <activity android:name=".DashboardActivity" />
         <activity android:name=".ButtonAttempt" />
@@ -17,7 +17,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".ReservationStepThree" />
         <activity
-            android:name=".FilamentActivity"
+            android:name=".BookingActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
             android:screenOrientation="fullSensor">
             <intent-filter>
