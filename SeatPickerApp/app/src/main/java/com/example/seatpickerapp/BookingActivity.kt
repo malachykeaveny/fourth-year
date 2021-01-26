@@ -15,7 +15,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
-import kotlinx.coroutines.selects.select
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import java.lang.StringBuilder
@@ -29,7 +28,7 @@ class BookingActivity : AppCompatActivity() {
     private val year = c.get(Calendar.YEAR)
     private val month = c.get(Calendar.MONTH)
     private val day = c.get(Calendar.DAY_OF_MONTH)
-    val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()
     private var date: String? = null
     private var time: String? = null
     private var partySize: String? = null
@@ -81,6 +80,7 @@ class BookingActivity : AppCompatActivity() {
         }
 
         binding.sixPmBtn.setOnClickListener {
+            deSelectTables()
             getReservedTables(date!!, "18.00")
             time = "18.00"
             when (canSelectMultipleTables) {
@@ -89,6 +89,7 @@ class BookingActivity : AppCompatActivity() {
         }
 
         binding.eightPmBtn.setOnClickListener {
+            deSelectTables()
             getReservedTables(date!!, "20.00")
             time = "20.00"
             when (canSelectMultipleTables) {
@@ -220,7 +221,6 @@ class BookingActivity : AppCompatActivity() {
         }
 
         binding.ivTableEight.setOnClickListener {
-
             if (date == null || time == null || partySize == null) {
                 Toast.makeText(
                     this,
@@ -238,16 +238,100 @@ class BookingActivity : AppCompatActivity() {
             }
         }
 
+        binding.bookBtn.setOnClickListener {
+            when {
+                date == null || time == null || partySize == null -> Toast.makeText(
+                    this,
+                    "Pick a date, time and party size first",
+                    Toast.LENGTH_SHORT
+                ).show()
+                //!tableOneSelected && !tableTwoSelected && !tableThreeSelected && !tableFourSelected && !tableFiveSelected && !tableSixSelected && !tableSevenSelected && !tableEightSelected
+                tableOneSelected == false && tableTwoSelected == false && tableThreeSelected == false && tableFourSelected == false && tableFiveSelected == false && tableSixSelected == false && tableSevenSelected == false && tableEightSelected == false
+                -> Toast.makeText(this, "Please select at least one table", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+            when (canSelectMultipleTables) {
+                true -> {
+                    val sb = StringBuilder()
+                    sb.clear()
+                    if (tableOneSelected)
+                        sb.append("tableOne ")
+                    if (tableTwoSelected)
+                        sb.append("tableTwo ")
+                    if (tableThreeSelected)
+                        sb.append("tableThree ")
+                    if (tableFourSelected)
+                        sb.append("tableFour ")
+                    if (tableFiveSelected)
+                        sb.append("tableFive ")
+                    if (tableSixSelected)
+                        sb.append("tableSix ")
+                    if (tableSevenSelected)
+                        sb.append("tableSeven ")
+                    if (tableEightSelected)
+                        sb.append("tableEight ")
+
+                    val splitBySpace =  sb.toString().split(" ")
+                    val listOfSelectedTables: MutableList<String> = splitBySpace.toMutableList()
+
+                    if (listOfSelectedTables.count() > 1) {
+                        listOfSelectedTables.removeLast()
+                        multipleBookingDialog(date!!, time!!, listOfSelectedTables)
+                    }
+
+
+                    Log.d("mlSize", "size is " + listOfSelectedTables.count().toString())
+
+                }
+                false -> {
+                    when {
+                        tableOneSelected -> bookingDialog(date!!, time!!, "tableOne")
+                        tableTwoSelected -> bookingDialog(date!!, time!!, "tableTwo")
+                        tableThreeSelected -> bookingDialog(date!!, time!!, "tableThree")
+                        tableFourSelected -> bookingDialog(date!!, time!!, "tableFour")
+                        tableFiveSelected -> bookingDialog(date!!, time!!, "tableFive")
+                        tableSixSelected -> bookingDialog(date!!, time!!, "tableSix")
+                        tableSevenSelected -> bookingDialog(date!!, time!!, "tableSeven")
+                        tableEightSelected -> bookingDialog(date!!, time!!, "tableEight")
+                    }
+                }
+            }
+        }
+
     }
 
     private fun bookingDialog(date: String, time: String, tableNo: String) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Confirm booking")
         builder.setMessage("Date: " + date + "\nTime: " + time + "\nTable Number: " + tableNo)
-//builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
+        //builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
 
         builder.setPositiveButton(android.R.string.yes) { dialog, which ->
             createBooking(date!!, time!!, tableNo)
+        }
+
+        builder.setNegativeButton(android.R.string.no) { dialog, which ->
+            Toast.makeText(
+                applicationContext,
+                android.R.string.no, Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        builder.show()
+    }
+
+    private fun multipleBookingDialog(date: String, time: String, tables: List<String>) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Confirm multiple bookings")
+        builder.setMessage("Date: $date\nTime: $time\nTable Number: $tables")
+        //builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
+
+        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+            //createBooking(date!!, time!!, tableNo)
+            for (i in tables) {
+                createBooking(date, time, i)
+            }
         }
 
         builder.setNegativeButton(android.R.string.no) { dialog, which ->
@@ -520,40 +604,39 @@ class BookingActivity : AppCompatActivity() {
 
     private fun deSelectTables() {
 
-        when {
-            tableOneSelected -> {
+            if (tableOneSelected) {
                 tableOneSelected = false
                 binding.ivTableOne.setImageResource(R.drawable.ic_table_available)
             }
-            tableTwoSelected -> {
-                binding.ivTableTwo.setImageResource(R.drawable.ic_table_available)
+            if (tableTwoSelected) {
                 tableTwoSelected = false
+                binding.ivTableTwo.setImageResource(R.drawable.ic_table_available)
             }
-            tableThreeSelected -> {
-                binding.ivTableThree.setImageResource(R.drawable.ic_table_available)
+            if (tableThreeSelected) {
                 tableThreeSelected = false
+                binding.ivTableThree.setImageResource(R.drawable.ic_table_available)
             }
-            tableFourSelected -> {
-                binding.ivTableFour.setImageResource(R.drawable.ic_table_available)
+            if (tableFourSelected) {
                 tableFourSelected = false
+                binding.ivTableFour.setImageResource(R.drawable.ic_table_available)
             }
-            tableFiveSelected -> {
-                binding.ivTableFive.setImageResource(R.drawable.ic_table_available)
+            if (tableFiveSelected) {
                 tableFiveSelected = false
+                binding.ivTableFive.setImageResource(R.drawable.ic_table_available)
             }
-            tableSixSelected -> {
-                binding.ivTableSix.setImageResource(R.drawable.ic_table_available)
+            if (tableSixSelected) {
                 tableSixSelected = false
+                binding.ivTableSix.setImageResource(R.drawable.ic_table_available)
             }
-            tableSevenSelected -> {
-                binding.ivTableSeven.setImageResource(R.drawable.ic_table_available)
+            if (tableSevenSelected) {
                 tableSevenSelected = false
+                binding.ivTableSeven.setImageResource(R.drawable.ic_table_available)
             }
-            tableEightSelected -> {
-                binding.ivTableEight.setImageResource(R.drawable.ic_table_available)
+            if (tableEightSelected) {
                 tableEightSelected = false
+                binding.ivTableEight.setImageResource(R.drawable.ic_table_available)
             }
-        }
+
         /**
         tableOneSelected = false
         binding.ivTableOne.setImageResource(R.drawable.ic_table_available)
