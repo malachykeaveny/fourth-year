@@ -25,8 +25,8 @@ class FilamentActivity : AppCompatActivity() {
         modelViewer = ModelViewer(surfaceView)
         surfaceView.setOnTouchListener(modelViewer)
 
-        //loadGlb("DamagedHelmet")
-        loadGltf("BusterDrone")
+        loadGlb("Restaurant")
+        //loadGltf("Damage")
         loadEnvironment("venetian_crossroads_2k")
 
         val asset = modelViewer.asset!!
@@ -62,6 +62,7 @@ class FilamentActivity : AppCompatActivity() {
 
     private val frameCallback = object : Choreographer.FrameCallback {
         private val startTime = System.nanoTime()
+        /**
         override fun doFrame(currentTime: Long) {
             val seconds = (currentTime - startTime).toDouble() / 1_000_000_000
             choreographer.postFrameCallback(this)
@@ -81,7 +82,11 @@ class FilamentActivity : AppCompatActivity() {
                 val zAxis = Float3(0f, 0f, 1f)
                 this.root.setTransform(rootTransform * rotation(zAxis, degrees))
             }
-
+        }
+        */
+        override fun doFrame(currentTime: Long) {
+            choreographer.postFrameCallback(this)
+            modelViewer.render(currentTime)
         }
     }
 

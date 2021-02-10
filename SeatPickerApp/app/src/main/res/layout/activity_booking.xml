@@ -21,11 +21,11 @@
 
     <Button
         android:id="@+id/twoPmBtn"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="14:00"
-        style="@style/Widget.MaterialComponents.Button"
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/fourPmBtn"
         app:layout_constraintHorizontal_bias="0.5"
@@ -212,6 +212,16 @@
         android:text="Confirm Booking"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/filamentBtn" />
+
+    <Button
+        android:id="@+id/filamentBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View in 3d"
+        app:layout_constraintBottom_toBottomOf="@+id/bookBtn"
+        app:layout_constraintEnd_toStartOf="@+id/bookBtn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 

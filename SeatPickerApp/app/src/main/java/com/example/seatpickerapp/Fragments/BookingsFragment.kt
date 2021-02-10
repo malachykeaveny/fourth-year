@@ -89,9 +89,21 @@ class BookingsFragment : Fragment() {
 
             Log.d("DisplayBookings", date)
 
-            dateTextView.text = date
-            timeTextView.text = time
-            tableNoTextView.text = tableNo
+            dateTextView.text = "Date: $date"
+            timeTextView.text = "Time $time"
+
+            var tableLong: String?= null
+            when (tableNo) {
+                "tableOne" -> tableLong = "1"
+                "tableTwo" -> tableLong = "2"
+                "tableThree" -> tableLong = "3"
+                "tableFour" -> tableLong = "4"
+                "tableFive" -> tableLong = "5"
+                "tableSix" -> tableLong = "6"
+                "tableSeven" -> tableLong = "7"
+                "tableEight" -> tableLong = "8"
+            }
+            tableNoTextView.text = "Table Number: $tableLong"
 
         }
 

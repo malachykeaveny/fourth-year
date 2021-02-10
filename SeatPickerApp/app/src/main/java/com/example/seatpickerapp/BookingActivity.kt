@@ -1,6 +1,7 @@
 package com.example.seatpickerapp
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -51,8 +52,8 @@ class BookingActivity : AppCompatActivity() {
         setContentView(view)
         auth = FirebaseAuth.getInstance()
 
-        //binding.bookingScrollViewHoriz.setBackgroundResource(R.drawable.ic_floor_plan)
-        //binding.bookingScrollView.setBackgroundResource(R.drawable.ic_floor_plan)
+        //binding.bookingScrollViewHoriz.setBackgroundResource(R.drawable.wood_bg_light)
+        //binding.bookingScrollView.setBackgroundResource(R.drawable.wood_bg_light)
 
         setPartySize()
 
@@ -302,12 +303,27 @@ class BookingActivity : AppCompatActivity() {
             }
         }
 
+        binding.filamentBtn.setOnClickListener {
+            startActivity(Intent(applicationContext, FilamentActivity::class.java))
+        }
+
     }
 
     private fun bookingDialog(date: String, time: String, tableNo: String) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Confirm booking")
-        builder.setMessage("Date: " + date + "\nTime: " + time + "\nTable Number: " + tableNo)
+        var tableLong: String?= null
+        when (tableNo) {
+            "tableOne" -> tableLong = "1"
+            "tableTwo" -> tableLong = "2"
+            "tableThree" -> tableLong = "3"
+            "tableFour" -> tableLong = "4"
+            "tableFive" -> tableLong = "5"
+            "tableSix" -> tableLong = "6"
+            "tableSeven" -> tableLong = "7"
+            "tableEight" -> tableLong = "8"
+        }
+        builder.setMessage("Date: " + date + "\nTime: " + time + "\nTable Number: " + tableLong)
         //builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
 
         builder.setPositiveButton(android.R.string.yes) { dialog, which ->
@@ -325,9 +341,25 @@ class BookingActivity : AppCompatActivity() {
     }
 
     private fun multipleBookingDialog(date: String, time: String, tables: List<String>) {
+
+        var sb = StringBuilder()
+        for (i in tables) {
+            when (i) {
+                "tableOne" -> sb.append("1, ")
+                "tableTwo" -> sb.append("2, ")
+                "tableThree" -> sb.append("3, ")
+                "tableFour" -> sb.append("4, ")
+                "tableFive" -> sb.append("5, ")
+                "tableSix" -> sb.append("6, ")
+                "tableSeven" -> sb.append("7, ")
+                "tableEight" -> sb.append("8, ")
+            }
+        }
+
+
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Confirm multiple bookings")
-        builder.setMessage("Date: $date\nTime: $time\nTable Number: $tables")
+        builder.setTitle("Confirm Booking")
+        builder.setMessage("Date: $date\nTime: $time\nTable Numbers: ${sb.dropLast(2)}")
         //builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
 
         builder.setPositiveButton(android.R.string.yes) { dialog, which ->
