@@ -68,6 +68,7 @@ class SignUpActivity : AppCompatActivity() {
                         user.put("name", name)
                         user.put("phoneNo", phoneNumber)
                         user.put("emailAddress", emailAddress)
+                        user.put("hasAdminPrivileges", false)
                         //user["name"] = name
                         //user["phoneNo"] = phoneNumber
                         //user["emailAddress"] = emailAddress
@@ -82,7 +83,7 @@ class SignUpActivity : AppCompatActivity() {
                                 "Firebase create user error:  $e"
                             )
                         }
-                        startActivity(Intent(applicationContext, DashboardActivity::class.java))
+                        startActivity(Intent(applicationContext, HomePageActivity::class.java))
                     } else {
                         Toast.makeText(
                             this@SignUpActivity,

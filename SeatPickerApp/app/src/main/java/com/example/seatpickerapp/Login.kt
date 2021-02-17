@@ -10,14 +10,17 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.seatpickerapp.DashboardActivity
-import com.example.seatpickerapp.SignUpActivity
-import com.example.seatpickerapp.R
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class Login : AppCompatActivity() {
     private var mLoginButton: Button?= null
     private var mSignUpButton: TextView? = null
+    private var mAdminTxtView: TextView?= null
     private var mEmail: EditText? = null
     private var mPassword: EditText? = null
     private var auth: FirebaseAuth? = null
@@ -30,6 +33,7 @@ class Login : AppCompatActivity() {
         mEmail = findViewById(R.id.login_email)
         mPassword = findViewById(R.id.login_password)
         mLoginButton = findViewById(R.id.login_btn)
+        mAdminTxtView = findViewById(R.id.admin_textView)
 
         checkIfLoggedIn()
 
@@ -53,9 +57,9 @@ class Login : AppCompatActivity() {
             auth!!.signInWithEmailAndPassword(emailAddress, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(this@Login, "User has been logged in", Toast.LENGTH_SHORT)
-                            .show()
-                        startActivity(Intent(applicationContext, HomePageActivity::class.java))
+                        checkIfAdmin()
+                        //Toast.makeText(this@Login, "User has been logged in", Toast.LENGTH_SHORT).show()
+                        //startActivity(Intent(applicationContext, HomePageActivity::class.java))
                     } else {
                         Toast.makeText(
                             this@Login,
@@ -73,12 +77,41 @@ class Login : AppCompatActivity() {
                 )
             )
         })
+
+        mAdminTxtView!!.setOnClickListener {
+            startActivity(Intent(applicationContext, SignUpActivity::class.java))
+        }
+
+    }
+
+    private fun checkIfAdmin() {
+        lifecycleScope.launch {
+            try {
+                val userCollectionRef = Firebase.firestore.collection("users")
+                val querySnapshot = userCollectionRef.get().await()
+                for (document in querySnapshot.documents) {
+                    Log.d("adminUid", document.id + " " + auth?.uid.toString())
+                    if (document.id == auth?.uid.toString()) {
+                        val hasAdminPrivileges = document.get("hasAdminPrivileges")
+                        Log.d("hasAdminPriv", hasAdminPrivileges.toString())
+                        when (hasAdminPrivileges) {
+                            true -> startActivity(Intent(applicationContext, AdminHomeActivity::class.java))
+                            false -> startActivity(Intent(applicationContext, HomePageActivity::class.java))
+                        }
+                    }
+                }
+            }
+            catch (e: Exception) {
+                Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
+        }
+        }
     }
 
     private fun checkIfLoggedIn() {
         if (auth?.currentUser != null) {
             Log.d("CheckLogin", auth!!.currentUser.toString())
-            startActivity(Intent(applicationContext, HomePageActivity::class.java))
+            //startActivity(Intent(applicationContext, HomePageActivity::class.java))
+            checkIfAdmin()
         }
 
     }

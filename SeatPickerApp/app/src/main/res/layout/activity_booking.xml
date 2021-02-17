@@ -88,8 +88,8 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_width="700dp"
+                    android:layout_height="600dp"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_floor_plan"
@@ -126,10 +126,8 @@
                     android:layout_width="108dp"
                     android:layout_height="78dp"
                     android:layout_marginTop="50dp"
-                    android:layout_marginBottom="200dp"
                     android:scaleX="1.25"
                     android:scaleY="1.25"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/ivTableTwo"
                     app:layout_constraintTop_toBottomOf="@+id/ivTableTwo"
                     app:srcCompat="@drawable/ic_two_seater_light_blue" />
@@ -149,10 +147,8 @@
                     android:id="@+id/ivTableFive"
                     android:layout_width="108dp"
                     android:layout_height="78dp"
-                    android:layout_marginEnd="250dp"
                     android:scaleX="1.5"
                     android:scaleY="1.5"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/ivTableFour"
                     app:layout_constraintTop_toTopOf="@+id/ivTableFour"
                     app:srcCompat="@drawable/ic_six_seater_light_blue" />
@@ -190,6 +186,7 @@
                     app:layout_constraintStart_toStartOf="@+id/ivTableSix"
                     app:layout_constraintTop_toBottomOf="@+id/ivTableSix"
                     app:srcCompat="@drawable/ic_four_seater_light_blue" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </HorizontalScrollView>
     </ScrollView>
