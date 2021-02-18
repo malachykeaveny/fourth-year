@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.ImageView
@@ -46,6 +47,15 @@ class BookingActivity : AppCompatActivity() {
     private var tableSevenSelected: Boolean = false
     private var tableEightSelected: Boolean = false
     private var canSelectMultipleTables: Boolean = false
+    private var specialLayout: String = ""
+    private var tableOneSeats: Int = 2
+    private var tableTwoSeats: Int = 2
+    private var tableThreeSeats: Int = 2
+    private var tableFourSeats: Int = 6
+    private var tableFiveSeats: Int = 6
+    private var tableSixSeats: Int = 4
+    private var tableSevenSeats: Int = 4
+    private var tableEightSeats: Int = 4
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,10 +120,14 @@ class BookingActivity : AppCompatActivity() {
                     .show()
             } else {
                 //bookingDialog(date!!, time!!, "tableOne")
-                    when (canSelectMultipleTables) {
-                        false -> deSelectTables()
-                    }
-                binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                when (canSelectMultipleTables) {
+                    false -> deSelectTables()
+                }
+                when (specialLayout) {
+                    "default" -> binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                    "twoSeater" -> binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                    "fourSeater" -> binding.ivTableOne.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                }
                 tableOneSelected = true
             }
         }
@@ -128,7 +142,11 @@ class BookingActivity : AppCompatActivity() {
                 when (canSelectMultipleTables) {
                     false -> deSelectTables()
                 }
-                binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                when (specialLayout) {
+                    "default" -> binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                    "twoSeater" -> binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                    "fourSeater" -> binding.ivTableTwo.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                }
                 tableTwoSelected = true
             }
         }
@@ -153,7 +171,11 @@ class BookingActivity : AppCompatActivity() {
                 when (canSelectMultipleTables) {
                     false -> deSelectTables()
                 }
-                binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                when (specialLayout) {
+                    "default" -> binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                    "twoSeater" -> binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                    "fourSeater" -> binding.ivTableThree.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                }
                 tableThreeSelected = true
             }
         }
@@ -164,11 +186,17 @@ class BookingActivity : AppCompatActivity() {
                 Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
                     .show()
             } else {
+                //Toast.makeText(this, "$specialLayout", Toast.LENGTH_SHORT).show()
+                //Log.d("specialLayout", "$specialLayout")
                 //bookingDialog(date!!, time!!, "tableFour")
                 when (canSelectMultipleTables) {
                     false -> deSelectTables()
                 }
-                binding.ivTableFour.setImageResource(R.drawable.ic_six_seater_dark_blue)
+                when (specialLayout) {
+                    "default" -> binding.ivTableFour.setImageResource(R.drawable.ic_six_seater_dark_blue)
+                    "twoSeater" -> binding.ivTableFour.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                    "fourSeater" -> binding.ivTableFour.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                }
                 tableFourSelected = true
             }
         }
@@ -183,7 +211,11 @@ class BookingActivity : AppCompatActivity() {
                 when (canSelectMultipleTables) {
                     false -> deSelectTables()
                 }
-                binding.ivTableFive.setImageResource(R.drawable.ic_six_seater_dark_blue)
+                when (specialLayout) {
+                    "default" -> binding.ivTableFive.setImageResource(R.drawable.ic_six_seater_dark_blue)
+                    "twoSeater" -> binding.ivTableFive.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                    "fourSeater" -> binding.ivTableFive.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                }
                 tableFiveSelected = true
             }
         }
@@ -202,7 +234,11 @@ class BookingActivity : AppCompatActivity() {
                 when (canSelectMultipleTables) {
                     false -> deSelectTables()
                 }
-                binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                when (specialLayout) {
+                    "default" -> binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                    "twoSeater" -> binding.ivTableSix.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                    "fourSeater" -> binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                }
                 tableSixSelected = true
             }
         }
@@ -221,7 +257,11 @@ class BookingActivity : AppCompatActivity() {
                 when (canSelectMultipleTables) {
                     false -> deSelectTables()
                 }
-                binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                when (specialLayout) {
+                    "default" -> binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                    "twoSeater" -> binding.ivTableSeven.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                    "fourSeater" -> binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                }
                 tableSevenSelected = true
             }
         }
@@ -239,7 +279,11 @@ class BookingActivity : AppCompatActivity() {
                 when (canSelectMultipleTables) {
                     false -> deSelectTables()
                 }
-                binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                when (specialLayout) {
+                    "default" -> binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                    "twoSeater" -> binding.ivTableEight.setImageResource(R.drawable.ic_two_seater_dark_blue)
+                    "fourSeater" -> binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_dark_blue)
+                }
                 tableEightSelected = true
             }
         }
@@ -278,7 +322,7 @@ class BookingActivity : AppCompatActivity() {
                     if (tableEightSelected)
                         sb.append("tableEight ")
 
-                    val splitBySpace =  sb.toString().split(" ")
+                    val splitBySpace = sb.toString().split(" ")
                     val listOfSelectedTables: MutableList<String> = splitBySpace.toMutableList()
 
                     if (listOfSelectedTables.count() > 1) {
@@ -314,7 +358,7 @@ class BookingActivity : AppCompatActivity() {
     private fun bookingDialog(date: String, time: String, tableNo: String) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Confirm booking")
-        var tableLong: String?= null
+        var tableLong: String? = null
         when (tableNo) {
             "tableOne" -> tableLong = "1"
             "tableTwo" -> tableLong = "2"
@@ -470,90 +514,122 @@ class BookingActivity : AppCompatActivity() {
                         when (i) {
                             //querySnapshot["seats"].toString().toInt() < partySize.toInt() -> Toast.makeText(this@BookingActivity, "gotem", Toast.LENGTH_SHORT).show()
                             "tableOne" -> {
-                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                if (partySize.toInt() > tableOneSeats) {
                                     binding.ivTableOne.animate().apply {
                                         duration = 750
                                         rotationXBy(180f)
                                     }.withEndAction {
-                                        binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_grey)
+                                        when (specialLayout) {
+                                            "default" -> binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_grey)
+                                            "twoSeater" -> binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_grey)
+                                            "fourSeater" -> binding.ivTableOne.setImageResource(R.drawable.ic_four_seater_grey)
+                                        }
                                         binding.ivTableOne.isClickable = false
                                     }.start()
                                 }
                             }
                             "tableTwo" -> {
-                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                if (partySize.toInt() > tableTwoSeats) {
                                     binding.ivTableTwo.animate().apply {
                                         duration = 750
                                         rotationXBy(180f)
                                     }.withEndAction {
-                                        binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_grey)
+                                        when (specialLayout) {
+                                            "default" -> binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_grey)
+                                            "twoSeater" -> binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_grey)
+                                            "fourSeater" -> binding.ivTableTwo.setImageResource(R.drawable.ic_four_seater_grey)
+                                        }
                                         binding.ivTableTwo.isClickable = false
                                     }.start()
                                 }
                             }
                             "tableThree" -> {
-                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                if (partySize.toInt() > tableThreeSeats) {
                                     binding.ivTableThree.animate().apply {
                                         duration = 750
                                         rotationXBy(180f)
                                     }.withEndAction {
-                                        binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_grey)
+                                        when (specialLayout) {
+                                            "default" -> binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_grey)
+                                            "twoSeater" -> binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_grey)
+                                            "fourSeater" -> binding.ivTableThree.setImageResource(R.drawable.ic_four_seater_grey)
+                                        }
                                         binding.ivTableThree.isClickable = false
                                     }.start()
                                 }
                             }
                             "tableFour" -> {
-                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                if (partySize.toInt() > tableFourSeats) {
                                     binding.ivTableFour.animate().apply {
                                         duration = 750
                                         rotationXBy(180f)
                                     }.withEndAction {
-                                        binding.ivTableFour.setImageResource(R.drawable.ic_six_seater_grey)
+                                        when (specialLayout) {
+                                            "default" -> binding.ivTableFour.setImageResource(R.drawable.ic_six_seater_grey)
+                                            "twoSeater" -> binding.ivTableFour.setImageResource(R.drawable.ic_two_seater_grey)
+                                            "fourSeater" -> binding.ivTableFour.setImageResource(R.drawable.ic_four_seater_grey)
+                                        }
                                         binding.ivTableFour.isClickable = false
                                     }.start()
                                 }
                             }
                             "tableFive" -> {
-                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                if (partySize.toInt() > tableFiveSeats) {
                                     binding.ivTableFive.animate().apply {
                                         duration = 750
                                         rotationXBy(180f)
                                     }.withEndAction {
-                                        binding.ivTableFive.setImageResource(R.drawable.ic_six_seater_grey)
+                                        when (specialLayout) {
+                                            "default" -> binding.ivTableFive.setImageResource(R.drawable.ic_six_seater_grey)
+                                            "twoSeater" -> binding.ivTableFive.setImageResource(R.drawable.ic_two_seater_grey)
+                                            "fourSeater" -> binding.ivTableFive.setImageResource(R.drawable.ic_four_seater_grey)
+                                        }
                                         binding.ivTableFive.isClickable = false
                                     }.start()
                                 }
                             }
                             "tableSix" -> {
-                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                if (partySize.toInt() > tableSixSeats) {
                                     binding.ivTableSix.animate().apply {
                                         duration = 750
                                         rotationXBy(180f)
                                     }.withEndAction {
-                                        binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_grey)
+                                        when (specialLayout) {
+                                            "default" -> binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_grey)
+                                            "twoSeater" -> binding.ivTableSix.setImageResource(R.drawable.ic_two_seater_grey)
+                                            "fourSeater" -> binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_grey)
+                                        }
                                         binding.ivTableSix.isClickable = false
                                     }.start()
                                 }
                             }
                             "tableSeven" -> {
-                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                if (partySize.toInt() > tableSevenSeats) {
                                     binding.ivTableSeven.animate().apply {
                                         duration = 750
                                         rotationXBy(180f)
                                     }.withEndAction {
-                                        binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_grey)
+                                        when (specialLayout) {
+                                            "default" -> binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_grey)
+                                            "twoSeater" -> binding.ivTableSeven.setImageResource(R.drawable.ic_two_seater_grey)
+                                            "fourSeater" -> binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_grey)
+                                        }
                                         binding.ivTableSeven.isClickable = false
                                     }.start()
 
                                 }
                             }
                             "tableEight" -> {
-                                if (partySize.toInt() > querySnapshot["seats"].toString().toInt()) {
+                                if (partySize.toInt() > tableEightSeats) {
                                     binding.ivTableEight.animate().apply {
                                         duration = 750
                                         rotationXBy(180f)
                                     }.withEndAction {
-                                        binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_grey)
+                                        when (specialLayout) {
+                                            "default" -> binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_grey)
+                                            "twoSeater" -> binding.ivTableEight.setImageResource(R.drawable.ic_two_seater_grey)
+                                            "fourSeater" -> binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_grey)
+                                        }
                                         binding.ivTableEight.isClickable = false
                                     }.start()
 
@@ -609,7 +685,11 @@ class BookingActivity : AppCompatActivity() {
                                             duration = 750
                                             rotationXBy(180f)
                                         }.withEndAction {
-                                            binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_black)
+                                            when (specialLayout) {
+                                                "default" -> binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_black)
+                                                "twoSeater" -> binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_black)
+                                                "fourSeater" -> binding.ivTableOne.setImageResource(R.drawable.ic_four_seater_black)
+                                            }
                                             binding.ivTableOne.isClickable = false
                                         }.start()
 
@@ -620,7 +700,11 @@ class BookingActivity : AppCompatActivity() {
                                             duration = 750
                                             rotationXBy(180f)
                                         }.withEndAction {
-                                            binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_black)
+                                            when (specialLayout) {
+                                                "default" -> binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_black)
+                                                "twoSeater" -> binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_black)
+                                                "fourSeater" -> binding.ivTableTwo.setImageResource(R.drawable.ic_four_seater_black)
+                                            }
                                             binding.ivTableTwo.isClickable = false
                                         }.start()
 
@@ -630,7 +714,11 @@ class BookingActivity : AppCompatActivity() {
                                             duration = 750
                                             rotationXBy(180f)
                                         }.withEndAction {
-                                            binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_black)
+                                            when (specialLayout) {
+                                                "default" -> binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_black)
+                                                "twoSeater" -> binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_black)
+                                                "fourSeater" -> binding.ivTableThree.setImageResource(R.drawable.ic_four_seater_black)
+                                            }
                                             binding.ivTableThree.isClickable = false
                                         }.start()
 
@@ -640,7 +728,11 @@ class BookingActivity : AppCompatActivity() {
                                             duration = 750
                                             rotationXBy(180f)
                                         }.withEndAction {
-                                            binding.ivTableFour.setImageResource(R.drawable.ic_six_seater_black)
+                                            when (specialLayout) {
+                                                "default" -> binding.ivTableFour.setImageResource(R.drawable.ic_six_seater_black)
+                                                "twoSeater" -> binding.ivTableFour.setImageResource(R.drawable.ic_two_seater_black)
+                                                "fourSeater" -> binding.ivTableFour.setImageResource(R.drawable.ic_four_seater_black)
+                                            }
                                             binding.ivTableFour.isClickable = false
                                         }.start()
                                     }
@@ -648,8 +740,12 @@ class BookingActivity : AppCompatActivity() {
                                         binding.ivTableFive.animate().apply {
                                             duration = 750
                                             rotationXBy(180f)
-                                        }.withEndAction{
-                                            binding.ivTableFive.setImageResource(R.drawable.ic_six_seater_black)
+                                        }.withEndAction {
+                                            when (specialLayout) {
+                                                "default" -> binding.ivTableFive.setImageResource(R.drawable.ic_six_seater_black)
+                                                "twoSeater" -> binding.ivTableFive.setImageResource(R.drawable.ic_two_seater_black)
+                                                "fourSeater" -> binding.ivTableFive.setImageResource(R.drawable.ic_four_seater_black)
+                                            }
                                             binding.ivTableFive.isClickable = false
                                         }.start()
                                     }
@@ -658,7 +754,11 @@ class BookingActivity : AppCompatActivity() {
                                             duration = 750
                                             rotationXBy(180f)
                                         }.withEndAction {
-                                            binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_black)
+                                            when (specialLayout) {
+                                                "default" -> binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_black)
+                                                "twoSeater" -> binding.ivTableSix.setImageResource(R.drawable.ic_two_seater_black)
+                                                "fourSeater" -> binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_black)
+                                            }
                                             binding.ivTableSix.isClickable = false
                                         }.start()
 
@@ -668,7 +768,11 @@ class BookingActivity : AppCompatActivity() {
                                             duration = 750
                                             rotationXBy(180f)
                                         }.withEndAction {
-                                            binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_black)
+                                            when (specialLayout) {
+                                                "default" -> binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_black)
+                                                "twoSeater" -> binding.ivTableSeven.setImageResource(R.drawable.ic_two_seater_black)
+                                                "fourSeater" -> binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_black)
+                                            }
                                             binding.ivTableSeven.isClickable = false
                                         }.start()
 
@@ -678,7 +782,11 @@ class BookingActivity : AppCompatActivity() {
                                             duration = 750
                                             rotationXBy(180f)
                                         }.withEndAction {
-                                            binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_black)
+                                            when (specialLayout) {
+                                                "default" -> binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_black)
+                                                "twoSeater" -> binding.ivTableEight.setImageResource(R.drawable.ic_two_seater_black)
+                                                "fourSeater" -> binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_black)
+                                            }
                                             binding.ivTableEight.isClickable = false
                                         }.start()
                                     }
@@ -702,65 +810,131 @@ class BookingActivity : AppCompatActivity() {
         }
 
     private fun setTablesAvailable() {
-        binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_light_blue)
+        when (specialLayout) {
+            "default" -> binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_light_blue)
+            "twoSeater" -> binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_light_blue)
+            "fourSeater" -> binding.ivTableOne.setImageResource(R.drawable.ic_four_seater_light_blue)
+        }
         binding.ivTableOne.isClickable = true
 
-        binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_light_blue)
+        when (specialLayout) {
+            "default" -> binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_light_blue)
+            "twoSeater" -> binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_light_blue)
+            "fourSeater" -> binding.ivTableTwo.setImageResource(R.drawable.ic_four_seater_light_blue)
+        }
         binding.ivTableTwo.isClickable = true
 
-        binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_light_blue)
+
+        when (specialLayout) {
+            "default" -> binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_light_blue)
+            "twoSeater" -> binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_light_blue)
+            "fourSeater" -> binding.ivTableThree.setImageResource(R.drawable.ic_four_seater_light_blue)
+        }
         binding.ivTableThree.isClickable = true
 
-        binding.ivTableFour.setImageResource(R.drawable.ic_six_seater_light_blue)
+        when (specialLayout) {
+            "default" -> binding.ivTableFour.setImageResource(R.drawable.ic_six_seater_light_blue)
+            "twoSeater" -> binding.ivTableFour.setImageResource(R.drawable.ic_two_seater_light_blue)
+            "fourSeater" -> binding.ivTableFour.setImageResource(R.drawable.ic_four_seater_light_blue)
+        }
         binding.ivTableFour.isClickable = true
 
-        binding.ivTableFive.setImageResource(R.drawable.ic_six_seater_light_blue)
+        when (specialLayout) {
+            "default" -> binding.ivTableFive.setImageResource(R.drawable.ic_six_seater_light_blue)
+            "twoSeater" -> binding.ivTableFive.setImageResource(R.drawable.ic_two_seater_light_blue)
+            "fourSeater" -> binding.ivTableFive.setImageResource(R.drawable.ic_four_seater_light_blue)
+        }
         binding.ivTableFive.isClickable = true
 
-        binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_light_blue)
+        when (specialLayout) {
+            "default" -> binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_light_blue)
+            "twoSeater" -> binding.ivTableSix.setImageResource(R.drawable.ic_two_seater_light_blue)
+            "fourSeater" -> binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_light_blue)
+        }
         binding.ivTableSix.isClickable = true
 
-        binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_light_blue)
+        when (specialLayout) {
+            "default" -> binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_light_blue)
+            "twoSeater" -> binding.ivTableSeven.setImageResource(R.drawable.ic_two_seater_light_blue)
+            "fourSeater" -> binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_light_blue)
+        }
         binding.ivTableSeven.isClickable = true
 
-        binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_light_blue)
+        when (specialLayout) {
+            "default" -> binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_light_blue)
+            "twoSeater" -> binding.ivTableEight.setImageResource(R.drawable.ic_two_seater_light_blue)
+            "fourSeater" -> binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_light_blue)
+        }
         binding.ivTableEight.isClickable = true
     }
 
     private fun deSelectTables() {
 
-            if (tableOneSelected) {
-                tableOneSelected = false
-                binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_light_blue)
+        if (tableOneSelected) {
+            tableOneSelected = false
+            when (specialLayout) {
+                "default" -> binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_light_blue)
+                "twoSeater" -> binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_light_blue)
+                "fourSeater" -> binding.ivTableOne.setImageResource(R.drawable.ic_four_seater_light_blue)
             }
-            if (tableTwoSelected) {
-                tableTwoSelected = false
-                binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_light_blue)
+
+        }
+        if (tableTwoSelected) {
+            tableTwoSelected = false
+            when (specialLayout) {
+                "default" -> binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_light_blue)
+                "twoSeater" -> binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_light_blue)
+                "fourSeater" -> binding.ivTableTwo.setImageResource(R.drawable.ic_four_seater_light_blue)
             }
-            if (tableThreeSelected) {
-                tableThreeSelected = false
-                binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_light_blue)
+        }
+        if (tableThreeSelected) {
+            tableThreeSelected = false
+            when (specialLayout) {
+                "default" -> binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_light_blue)
+                "twoSeater" -> binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_light_blue)
+                "fourSeater" -> binding.ivTableThree.setImageResource(R.drawable.ic_four_seater_light_blue)
             }
-            if (tableFourSelected) {
-                tableFourSelected = false
-                binding.ivTableFour.setImageResource(R.drawable.ic_six_seater_light_blue)
+        }
+        if (tableFourSelected) {
+            tableFourSelected = false
+            when (specialLayout) {
+                "default" -> binding.ivTableFour.setImageResource(R.drawable.ic_six_seater_light_blue)
+                "twoSeater" -> binding.ivTableFour.setImageResource(R.drawable.ic_two_seater_light_blue)
+                "fourSeater" -> binding.ivTableFour.setImageResource(R.drawable.ic_four_seater_light_blue)
             }
-            if (tableFiveSelected) {
-                tableFiveSelected = false
-                binding.ivTableFive.setImageResource(R.drawable.ic_six_seater_light_blue)
+        }
+        if (tableFiveSelected) {
+            tableFiveSelected = false
+            when (specialLayout) {
+                "default" -> binding.ivTableFive.setImageResource(R.drawable.ic_six_seater_light_blue)
+                "twoSeater" -> binding.ivTableFive.setImageResource(R.drawable.ic_two_seater_light_blue)
+                "fourSeater" -> binding.ivTableFive.setImageResource(R.drawable.ic_four_seater_light_blue)
             }
-            if (tableSixSelected) {
-                tableSixSelected = false
-                binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_light_blue)
+        }
+        if (tableSixSelected) {
+            tableSixSelected = false
+            when (specialLayout) {
+                "default" -> binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_light_blue)
+                "twoSeater" -> binding.ivTableSix.setImageResource(R.drawable.ic_two_seater_light_blue)
+                "fourSeater" -> binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_light_blue)
             }
-            if (tableSevenSelected) {
-                tableSevenSelected = false
-                binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_light_blue)
+        }
+        if (tableSevenSelected) {
+            tableSevenSelected = false
+            when (specialLayout) {
+                "default" -> binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_light_blue)
+                "twoSeater" -> binding.ivTableSeven.setImageResource(R.drawable.ic_two_seater_light_blue)
+                "fourSeater" -> binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_light_blue)
             }
-            if (tableEightSelected) {
-                tableEightSelected = false
-                binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_light_blue)
+        }
+        if (tableEightSelected) {
+            tableEightSelected = false
+            when (specialLayout) {
+                "default" -> binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_light_blue)
+                "twoSeater" -> binding.ivTableEight.setImageResource(R.drawable.ic_two_seater_light_blue)
+                "fourSeater" -> binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_light_blue)
             }
+        }
 
         /**
         tableOneSelected = false
@@ -790,6 +964,7 @@ class BookingActivity : AppCompatActivity() {
                 date = "$mDay.$month.$mYear"
                 binding.selectDateBtn.setText(date)
                 //getAvailableTimes(date!!)
+                getSpecialTableLayout(date)
 
                 binding.twoPmBtn.visibility = Button.VISIBLE
                 binding.fourPmBtn.visibility = Button.VISIBLE
@@ -799,6 +974,287 @@ class BookingActivity : AppCompatActivity() {
             }, year, month, day)
         dpd.datePicker.minDate = System.currentTimeMillis() - 1000
         dpd.show()
+    }
+
+    private fun getSpecialTableLayout(date: String?) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val tableLayoutCollectionRef =
+                db.collection("restaurants").document("flanagans").collection("tableLayouts")
+            val querySnapshot = tableLayoutCollectionRef.get().await()
+            specialLayout = ""
+            for (document in querySnapshot.documents) {
+                if (document.id == date) {
+                    withContext(Dispatchers.Main) {
+                        specialLayout = document.get("tableLayout").toString()
+                        Log.d("BookingActLayout", "$specialLayout")
+                        Toast.makeText(this@BookingActivity, "$specialLayout", Toast.LENGTH_SHORT).show()
+                        checkTableLayout()
+                    }
+                }
+            }
+            if (specialLayout == "") {
+                withContext(Dispatchers.Main) {
+                    specialLayout = "default"
+                    checkTableLayout()
+                }
+            }
+        }
+    }
+
+    private fun checkTableLayout() {
+        Log.d("specialLayout2", "$specialLayout")
+
+        when (specialLayout) {
+            "default" -> {
+                setDefaultTablesLayout()
+                tableOneSeats = 2
+                tableTwoSeats = 2
+                tableThreeSeats = 2
+                tableFourSeats = 6
+                tableFiveSeats = 6
+                tableSixSeats = 4
+                tableSevenSeats = 4
+                tableEightSeats = 4
+            }
+            "twoSeater" -> {
+                setTwoSeaterLayout()
+                tableOneSeats = 2
+                tableTwoSeats = 2
+                tableThreeSeats = 2
+                tableFourSeats = 2
+                tableFiveSeats = 2
+                tableSixSeats = 2
+                tableSevenSeats = 2
+                tableEightSeats = 2
+            }
+            "fourSeater" -> {
+                setFourSeaterLayout()
+                tableOneSeats = 4
+                tableTwoSeats = 4
+                tableThreeSeats = 4
+                tableFourSeats = 4
+                tableFiveSeats = 4
+                tableSixSeats = 4
+                tableSevenSeats = 4
+                tableEightSeats = 4
+            }
+        }
+    }
+
+    private fun setDefaultTablesLayout() {
+        val dpRatio = applicationContext.resources.displayMetrics.density
+        val pixelForDP = 70 * dpRatio
+
+        Log.d("dpTest", "${70 * pixelForDP}")
+        val paramTableOne = binding.ivTableOne.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableTwo = binding.ivTableTwo.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableThree = binding.ivTableThree.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableFour = binding.ivTableFour.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableFive = binding.ivTableFive.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableSix = binding.ivTableSix.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableSeven = binding.ivTableSeven.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableEight = binding.ivTableEight.layoutParams as ViewGroup.MarginLayoutParams
+
+        paramTableOne.topMargin = (20 * dpRatio).toInt()
+        paramTableOne.leftMargin = (20 * dpRatio).toInt()
+        binding.ivTableOne.layoutParams = paramTableOne
+        binding.ivTableOne.scaleX = 1.25F
+        binding.ivTableOne.scaleY = 1.25F
+
+        paramTableTwo.topMargin = (170 * dpRatio).toInt()
+        paramTableTwo.leftMargin = (20 * dpRatio).toInt()
+        binding.ivTableTwo.layoutParams = paramTableTwo
+        binding.ivTableTwo.scaleX = 1.25F
+        binding.ivTableTwo.scaleY = 1.25F
+
+        paramTableThree.topMargin = (320 * dpRatio).toInt()
+        paramTableThree.leftMargin = (20 * dpRatio).toInt()
+        binding.ivTableThree.layoutParams = paramTableThree
+        binding.ivTableThree.scaleX = 1.25F
+        binding.ivTableThree.scaleY = 1.25F
+
+        paramTableFour.topMargin = (50 * dpRatio).toInt()
+        paramTableFour.leftMargin = (250 * dpRatio).toInt()
+        binding.ivTableFour.layoutParams = paramTableFour
+        binding.ivTableFour.scaleX = 1.5F
+        binding.ivTableFour.scaleY = 1.5F
+
+        paramTableFive.topMargin = (200 * dpRatio).toInt()
+        paramTableFive.leftMargin = (250 * dpRatio).toInt()
+        binding.ivTableFive.layoutParams = paramTableFive
+        binding.ivTableFive.scaleX = 1.5F
+        binding.ivTableFive.scaleY = 1.5F
+
+        paramTableSix.topMargin = (500 * dpRatio).toInt()
+        paramTableSix.leftMargin = (20 * dpRatio).toInt()
+        binding.ivTableSix.layoutParams = paramTableSix
+        binding.ivTableSix.scaleX = 1.5F
+        binding.ivTableSix.scaleY = 1.5F
+
+        paramTableSeven.topMargin = (450 * dpRatio).toInt()
+        paramTableSeven.leftMargin = (400 * dpRatio).toInt()
+        binding.ivTableSeven.layoutParams = paramTableSeven
+        binding.ivTableSeven.scaleX = 1.5F
+        binding.ivTableSeven.scaleY = 1.5F
+
+        paramTableEight.topMargin = (400 * dpRatio).toInt()
+        paramTableEight.leftMargin = (250 * dpRatio).toInt()
+        binding.ivTableEight.layoutParams = paramTableEight
+        binding.ivTableEight.scaleX = 1.5F
+        binding.ivTableEight.scaleY = 1.5F
+
+        binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_light_blue)
+        binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_light_blue)
+        binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_light_blue)
+        binding.ivTableFour.setImageResource(R.drawable.ic_six_seater_light_blue)
+        binding.ivTableFive.setImageResource(R.drawable.ic_six_seater_light_blue)
+        binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_light_blue)
+        binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_light_blue)
+        binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_light_blue)
+    }
+
+    private fun setTwoSeaterLayout() {
+        val dpRatio = applicationContext.resources.displayMetrics.density
+        val pixelForDP = 70 * dpRatio
+
+        Log.d("dpTest", "${70 * pixelForDP}")
+        val paramTableOne = binding.ivTableOne.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableTwo = binding.ivTableTwo.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableThree = binding.ivTableThree.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableFour = binding.ivTableFour.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableFive = binding.ivTableFive.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableSix = binding.ivTableSix.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableSeven = binding.ivTableSeven.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableEight = binding.ivTableEight.layoutParams as ViewGroup.MarginLayoutParams
+
+        paramTableOne.topMargin = (50 * dpRatio).toInt()
+        paramTableOne.leftMargin = (20 * dpRatio).toInt()
+        binding.ivTableOne.layoutParams = paramTableOne
+        binding.ivTableOne.scaleX = 1.25F
+        binding.ivTableOne.scaleY = 1.25F
+
+        paramTableTwo.topMargin = (250 * dpRatio).toInt()
+        paramTableTwo.leftMargin = (20 * dpRatio).toInt()
+        binding.ivTableTwo.layoutParams = paramTableTwo
+        binding.ivTableTwo.scaleX = 1.25F
+        binding.ivTableTwo.scaleY = 1.25F
+
+        paramTableThree.topMargin = (450 * dpRatio).toInt()
+        paramTableThree.leftMargin = (20 * dpRatio).toInt()
+        binding.ivTableThree.layoutParams = paramTableThree
+        binding.ivTableThree.scaleX = 1.25F
+        binding.ivTableThree.scaleY = 1.25F
+
+        paramTableFour.topMargin = (150 * dpRatio).toInt()
+        paramTableFour.leftMargin = (175 * dpRatio).toInt()
+        binding.ivTableFour.layoutParams = paramTableFour
+        binding.ivTableFour.scaleX = 1.25F
+        binding.ivTableFour.scaleY = 1.25F
+
+        paramTableFive.topMargin = (350 * dpRatio).toInt()
+        paramTableFive.leftMargin = (175 * dpRatio).toInt()
+        binding.ivTableFive.layoutParams = paramTableFive
+        binding.ivTableFive.scaleX = 1.25F
+        binding.ivTableFive.scaleY = 1.25F
+
+        paramTableSix.topMargin = (50 * dpRatio).toInt()
+        paramTableSix.leftMargin = (330 * dpRatio).toInt()
+        binding.ivTableSix.layoutParams = paramTableSix
+        binding.ivTableSix.scaleX = 1.25F
+        binding.ivTableSix.scaleY = 1.25F
+
+        paramTableSeven.topMargin = (250 * dpRatio).toInt()
+        paramTableSeven.leftMargin = (330 * dpRatio).toInt()
+        binding.ivTableSeven.layoutParams = paramTableSeven
+        binding.ivTableSeven.scaleX = 1.25F
+        binding.ivTableSeven.scaleY = 1.25F
+
+        paramTableEight.topMargin = (450 * dpRatio).toInt()
+        paramTableEight.leftMargin = (330 * dpRatio).toInt()
+        binding.ivTableEight.layoutParams = paramTableEight
+        binding.ivTableEight.scaleX = 1.25F
+        binding.ivTableEight.scaleY = 1.25F
+
+        binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_light_blue)
+        binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_light_blue)
+        binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_light_blue)
+        binding.ivTableFour.setImageResource(R.drawable.ic_two_seater_light_blue)
+        binding.ivTableFive.setImageResource(R.drawable.ic_two_seater_light_blue)
+        binding.ivTableSix.setImageResource(R.drawable.ic_two_seater_light_blue)
+        binding.ivTableSeven.setImageResource(R.drawable.ic_two_seater_light_blue)
+        binding.ivTableEight.setImageResource(R.drawable.ic_two_seater_light_blue)
+    }
+
+    private fun setFourSeaterLayout() {
+        val dpRatio = applicationContext.resources.displayMetrics.density
+        val pixelForDP = 70 * dpRatio
+
+        Log.d("dpTest", "${70 * pixelForDP}")
+        val paramTableOne = binding.ivTableOne.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableTwo = binding.ivTableTwo.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableThree = binding.ivTableThree.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableFour = binding.ivTableFour.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableFive = binding.ivTableFive.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableSix = binding.ivTableSix.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableSeven = binding.ivTableSeven.layoutParams as ViewGroup.MarginLayoutParams
+        val paramTableEight = binding.ivTableEight.layoutParams as ViewGroup.MarginLayoutParams
+
+        paramTableOne.topMargin = (50 * dpRatio).toInt()
+        paramTableOne.leftMargin = (20 * dpRatio).toInt()
+        binding.ivTableOne.layoutParams = paramTableOne
+        binding.ivTableOne.scaleX = 1.5F
+        binding.ivTableOne.scaleY = 1.5F
+
+        paramTableTwo.topMargin = (250 * dpRatio).toInt()
+        paramTableTwo.leftMargin = (20 * dpRatio).toInt()
+        binding.ivTableTwo.layoutParams = paramTableTwo
+        binding.ivTableTwo.scaleX = 1.5F
+        binding.ivTableTwo.scaleY = 1.5F
+
+        paramTableThree.topMargin = (450 * dpRatio).toInt()
+        paramTableThree.leftMargin = (20 * dpRatio).toInt()
+        binding.ivTableThree.layoutParams = paramTableThree
+        binding.ivTableThree.scaleX = 1.5F
+        binding.ivTableThree.scaleY = 1.5F
+
+        paramTableFour.topMargin = (150 * dpRatio).toInt()
+        paramTableFour.leftMargin = (175 * dpRatio).toInt()
+        binding.ivTableFour.layoutParams = paramTableFour
+        binding.ivTableFour.scaleX = 1.5F
+        binding.ivTableFour.scaleY = 1.5F
+
+        paramTableFive.topMargin = (350 * dpRatio).toInt()
+        paramTableFive.leftMargin = (175 * dpRatio).toInt()
+        binding.ivTableFive.layoutParams = paramTableFive
+        binding.ivTableFive.scaleX = 1.5F
+        binding.ivTableFive.scaleY = 1.5F
+
+        paramTableSix.topMargin = (50 * dpRatio).toInt()
+        paramTableSix.leftMargin = (330 * dpRatio).toInt()
+        binding.ivTableSix.layoutParams = paramTableSix
+        binding.ivTableSix.scaleX = 1.5F
+        binding.ivTableSix.scaleY = 1.5F
+
+        paramTableSeven.topMargin = (250 * dpRatio).toInt()
+        paramTableSeven.leftMargin = (330 * dpRatio).toInt()
+        binding.ivTableSeven.layoutParams = paramTableSeven
+        binding.ivTableSeven.scaleX = 1.5F
+        binding.ivTableSeven.scaleY = 1.5F
+
+        paramTableEight.topMargin = (450 * dpRatio).toInt()
+        paramTableEight.leftMargin = (330 * dpRatio).toInt()
+        binding.ivTableEight.layoutParams = paramTableEight
+        binding.ivTableEight.scaleX = 1.5F
+        binding.ivTableEight.scaleY = 1.5F
+
+        binding.ivTableOne.setImageResource(R.drawable.ic_four_seater_light_blue)
+        binding.ivTableTwo.setImageResource(R.drawable.ic_four_seater_light_blue)
+        binding.ivTableThree.setImageResource(R.drawable.ic_four_seater_light_blue)
+        binding.ivTableFour.setImageResource(R.drawable.ic_four_seater_light_blue)
+        binding.ivTableFive.setImageResource(R.drawable.ic_four_seater_light_blue)
+        binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_light_blue)
+        binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_light_blue)
+        binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_light_blue)
     }
 
     private fun setPartySize() {

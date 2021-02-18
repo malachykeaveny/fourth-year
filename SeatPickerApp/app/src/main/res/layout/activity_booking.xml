@@ -114,43 +114,48 @@
                     android:id="@+id/ivTableTwo"
                     android:layout_width="108dp"
                     android:layout_height="78dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="200dp"
                     android:scaleX="1.25"
                     android:scaleY="1.25"
-                    app:layout_constraintStart_toStartOf="@+id/ivTableOne"
-                    app:layout_constraintTop_toBottomOf="@+id/ivTableOne"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_two_seater_light_blue" />
 
                 <ImageView
                     android:id="@+id/ivTableThree"
                     android:layout_width="108dp"
                     android:layout_height="78dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="350dp"
                     android:scaleX="1.25"
                     android:scaleY="1.25"
-                    app:layout_constraintStart_toStartOf="@+id/ivTableTwo"
-                    app:layout_constraintTop_toBottomOf="@+id/ivTableTwo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_two_seater_light_blue" />
 
                 <ImageView
                     android:id="@+id/ivTableFour"
                     android:layout_width="108dp"
                     android:layout_height="78dp"
-                    android:layout_marginStart="50dp"
+                    android:layout_marginStart="250dp"
+                    android:layout_marginTop="50dp"
                     android:scaleX="1.5"
                     android:scaleY="1.5"
-                    app:layout_constraintStart_toEndOf="@+id/ivTableOne"
-                    app:layout_constraintTop_toTopOf="@+id/ivTableOne"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_six_seater_light_blue" />
 
                 <ImageView
                     android:id="@+id/ivTableFive"
                     android:layout_width="108dp"
                     android:layout_height="78dp"
+                    android:layout_marginStart="250dp"
+                    android:layout_marginTop="200dp"
                     android:scaleX="1.5"
                     android:scaleY="1.5"
-                    app:layout_constraintStart_toEndOf="@+id/ivTableFour"
-                    app:layout_constraintTop_toTopOf="@+id/ivTableFour"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_six_seater_light_blue" />
 
                 <ImageView
@@ -158,33 +163,35 @@
                     android:layout_width="108dp"
                     android:layout_height="78dp"
                     android:layout_marginStart="50dp"
+                    android:layout_marginTop="500dp"
                     android:scaleX="1.5"
                     android:scaleY="1.5"
-                    app:layout_constraintBottom_toBottomOf="@+id/ivTableThree"
-                    app:layout_constraintStart_toEndOf="@+id/ivTableThree"
-                    app:layout_constraintTop_toTopOf="@+id/ivTableTwo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_four_seater_light_blue" />
 
                 <ImageView
                     android:id="@+id/ivTableSeven"
                     android:layout_width="108dp"
                     android:layout_height="78dp"
+                    android:layout_marginStart="400dp"
+                    android:layout_marginTop="450dp"
                     android:scaleX="1.5"
                     android:scaleY="1.5"
-                    app:layout_constraintStart_toEndOf="@+id/ivTableSix"
-                    app:layout_constraintTop_toTopOf="@+id/ivTableSix"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_four_seater_light_blue" />
 
                 <ImageView
                     android:id="@+id/ivTableEight"
                     android:layout_width="108dp"
                     android:layout_height="78dp"
-                    android:layout_marginTop="100dp"
+                    android:layout_marginStart="250dp"
+                    android:layout_marginTop="400dp"
                     android:scaleX="1.5"
                     android:scaleY="1.5"
-                    app:layout_constraintEnd_toEndOf="@+id/ivTableSeven"
-                    app:layout_constraintStart_toStartOf="@+id/ivTableSix"
-                    app:layout_constraintTop_toBottomOf="@+id/ivTableSix"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_four_seater_light_blue" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
