@@ -35,8 +35,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.rsrvCardView.setOnClickListener {
             startActivity(Intent(context, BookingActivity::class.java))
+        }
+
+        binding.rsrvCardView2.setOnClickListener {
+
         }
     }
 

@@ -9,12 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.seatpickerapp.DashboardActivity
-import com.example.seatpickerapp.LoadRestaurantListener
-import com.example.seatpickerapp.ReservationActivity
 import com.example.seatpickerapp.databinding.FragmentRsrvStepOneBinding
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.jaredrummler.materialspinner.MaterialSpinner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
