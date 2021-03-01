@@ -10,10 +10,9 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.seatpickerapp.DashboardActivity
-import com.example.seatpickerapp.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
 import java.util.*
 
 class SignUpActivity : AppCompatActivity() {
@@ -26,6 +25,7 @@ class SignUpActivity : AppCompatActivity() {
     private var mLogin: TextView? = null
     private var mSignUpBtn: Button? = null
     private var userID: String? = null
+    private var userToken: String?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,8 +58,7 @@ class SignUpActivity : AppCompatActivity() {
             auth!!.createUserWithEmailAndPassword(emailAddress, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(this@SignUpActivity, "User has been created", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(this@SignUpActivity, "User has been created", Toast.LENGTH_SHORT).show()
                         userID = auth!!.currentUser!!.uid
                         val documentReference = db!!.collection("users").document(
                             userID!!
@@ -69,6 +68,10 @@ class SignUpActivity : AppCompatActivity() {
                         user.put("phoneNo", phoneNumber)
                         user.put("emailAddress", emailAddress)
                         user.put("hasAdminPrivileges", false)
+                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                            userToken = it.token
+                        }
+                        user.put("token", userToken.toString())
                         //user["name"] = name
                         //user["phoneNo"] = phoneNumber
                         //user["emailAddress"] = emailAddress

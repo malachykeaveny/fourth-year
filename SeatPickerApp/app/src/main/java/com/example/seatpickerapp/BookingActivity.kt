@@ -433,8 +433,7 @@ class BookingActivity : AppCompatActivity() {
             Log.d("userDoc", docSnapshot.get("name").toString())
 
             val tableCollectionRef =
-                db.collection("restaurants").document("flanagans").collection("tables")
-                    .document(tableNo).collection(date)
+                db.collection("restaurants").document("flanagans").collection("tables").document(tableNo).collection(date)
             val querySnapshot = tableCollectionRef.get().await()
 
             val booking = hashMapOf(
@@ -442,6 +441,7 @@ class BookingActivity : AppCompatActivity() {
                 "name" to docSnapshot.get("name").toString(),
                 "phoneNo" to docSnapshot.get("phoneNo").toString(),
                 "email" to docSnapshot.get("emailAddress").toString(),
+                "token" to docSnapshot.get("token").toString()
             )
 
             tableCollectionRef.document(time).set(booking).addOnSuccessListener {

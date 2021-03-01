@@ -1,6 +1,5 @@
 package com.example.seatpickerapp.Fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,9 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seatpickerapp.Booking
 import com.example.seatpickerapp.R
-import com.example.seatpickerapp.ReservationActivity
 import com.example.seatpickerapp.databinding.FragmentBookingsBinding
-import com.example.seatpickerapp.databinding.FragmentHomeBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
@@ -29,7 +26,6 @@ class BookingsFragment : Fragment() {
     private var auth: FirebaseAuth? = null
     private var adapter: BookingsFragment.ProductFirestoreRecyclerAdapter? = null
     val db = FirebaseFirestore.getInstance()
-    val bookingCollectionRef = db.collection("users").document("4QM8lSsAaTgX0YUC0DtV7ETSgBy2").collection("booking")
     private var _binding: FragmentBookingsBinding? = null
     private val binding get() = _binding!!
 
@@ -45,18 +41,19 @@ class BookingsFragment : Fragment() {
         _binding = FragmentBookingsBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        binding.bookingsRecyclerView.layoutManager = LinearLayoutManager(context)
-        val options = FirestoreRecyclerOptions.Builder<Booking>().setQuery(bookingCollectionRef, Booking::class.java).build()
-
-        adapter = ProductFirestoreRecyclerAdapter(options)
-        binding.bookingsRecyclerView.adapter = adapter
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         auth = FirebaseAuth.getInstance()
+
+        val bookingCollectionRef = db.collection("users").document(auth?.uid.toString()).collection("booking")
+        binding.bookingsRecyclerView.layoutManager = LinearLayoutManager(context)
+        val options = FirestoreRecyclerOptions.Builder<Booking>().setQuery(bookingCollectionRef, Booking::class.java).build()
+
+        adapter = ProductFirestoreRecyclerAdapter(options)
+        binding.bookingsRecyclerView.adapter = adapter
     }
 
     override fun onDestroyView() {
