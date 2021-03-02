@@ -9,7 +9,7 @@
     <item
         android:id="@+id/miBookings"
         android:title="Bookings"
-        android:icon="@drawable/ic_delete"/>
+        android:icon="@drawable/ic_down_spinner"/>
 
 
     <item

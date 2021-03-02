@@ -3,7 +3,7 @@
     package="com.example.seatpickerapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <application
         android:allowBackup="true"
@@ -11,15 +11,20 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
-        <service android:name=".firebaseNotifications.FirebaseService"
+        android:theme="@style/AppTheme">
+        <activity android:name=".LoginActivity"></activity>
+
+        <service
+            android:name=".firebaseNotifications.FirebaseService"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-        <activity android:name=".ReportPositiveCovidTestActivity"/>
+
+        <activity android:name=".Login" />
+        <activity android:name=".ReportPositiveCovidTestActivity" />
         <activity android:name=".StaffToTablesActivity" />
         <activity android:name=".ChangeSeatingActivity" />
         <activity android:name=".AdminHomeActivity" />
@@ -27,7 +32,7 @@
         <activity android:name=".BookingActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".HomePageActivity" />
-        <activity android:name=".Login">
+        <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

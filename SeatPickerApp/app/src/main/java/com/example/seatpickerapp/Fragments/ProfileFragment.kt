@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.seatpickerapp.Login
+import com.example.seatpickerapp.LoginActivity
 import com.example.seatpickerapp.R
 import com.example.seatpickerapp.databinding.FragmentHomeBinding
 import com.example.seatpickerapp.databinding.FragmentProfileBinding
@@ -56,7 +57,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private fun logOut() {
         auth?.signOut()
-        startActivity(Intent(context, Login::class.java))
+        startActivity(Intent(context, LoginActivity::class.java))
         Toast.makeText(context, "User has been logged out", Toast.LENGTH_SHORT)
             .show()
     }
