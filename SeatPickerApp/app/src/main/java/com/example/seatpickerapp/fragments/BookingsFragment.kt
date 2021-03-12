@@ -1,4 +1,4 @@
-package com.example.seatpickerapp.Fragments
+    package com.example.seatpickerapp.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.seatpickerapp.Booking
+import com.example.seatpickerapp.dataClasses.Booking
 import com.example.seatpickerapp.R
 import com.example.seatpickerapp.databinding.FragmentBookingsBinding
 import com.google.firebase.firestore.FirebaseFirestore
@@ -31,7 +31,6 @@ class BookingsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -121,6 +120,19 @@ class BookingsFragment : Fragment() {
                     .addOnSuccessListener { Log.d("BookingsFragment", "Restaurant DocumentSnapshot successfully deleted!")
                         Toast.makeText(context, "Booking deleted!", Toast.LENGTH_SHORT).show()}
                     .addOnFailureListener { e -> Log.w("BookingsFragment", "Error deleting restaurant document", e) }
+
+                val adminCollectionRef = db.collection("restaurants").document("flanagans").collection("bookingsMgmt").document("tableBookings").collection(date)
+                val adminRef = adminCollectionRef.whereEqualTo("time", time).whereEqualTo("tableNo", tableNo)
+                adminRef.get().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result!!) {
+                            adminCollectionRef.document(document.id).delete()
+                        }
+                    } else {
+                        Log.d("BookingsFragmentadmin", "Error getting documents: ", task.exception)
+                    }
+                }
+
             }
         }
     }

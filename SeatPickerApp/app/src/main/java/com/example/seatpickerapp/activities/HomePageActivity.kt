@@ -1,11 +1,12 @@
-package com.example.seatpickerapp
+package com.example.seatpickerapp.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.seatpickerapp.Fragments.BookingsFragment
-import com.example.seatpickerapp.Fragments.HomeFragment
-import com.example.seatpickerapp.Fragments.ProfileFragment
+import com.example.seatpickerapp.fragments.BookingsFragment
+import com.example.seatpickerapp.fragments.HomeFragment
+import com.example.seatpickerapp.fragments.ProfileFragment
+import com.example.seatpickerapp.R
 import com.example.seatpickerapp.databinding.ActivityHomepageBinding
 
 class HomePageActivity : AppCompatActivity() {

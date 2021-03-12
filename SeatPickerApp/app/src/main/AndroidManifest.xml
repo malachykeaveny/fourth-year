@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".activities.ManageContactTracingActivity"></activity>
+        <activity android:name=".activities.LoginActivity" />
 
         <service
             android:name=".firebaseNotifications.FirebaseService"
@@ -24,15 +25,15 @@
         </service>
 
         <activity android:name=".Login" />
-        <activity android:name=".ReportPositiveCovidTestActivity" />
-        <activity android:name=".StaffToTablesActivity" />
-        <activity android:name=".ChangeSeatingActivity" />
-        <activity android:name=".AdminHomeActivity" />
-        <activity android:name=".FilamentActivity" />
-        <activity android:name=".BookingActivity" />
+        <activity android:name=".activities.ReportPositiveCovidTestActivity" />
+        <activity android:name=".activities.StaffToTablesActivity" />
+        <activity android:name=".activities.ChangeSeatingActivity" />
+        <activity android:name=".activities.AdminHomeActivity" />
+        <activity android:name=".activities.FilamentActivity" />
+        <activity android:name=".activities.BookingActivity" />
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".HomePageActivity" />
-        <activity android:name=".WelcomeActivity">
+        <activity android:name=".activities.HomePageActivity" />
+        <activity android:name=".activities.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

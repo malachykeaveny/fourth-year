@@ -1,4 +1,4 @@
-package com.example.seatpickerapp.Fragments
+package com.example.seatpickerapp.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,22 +9,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.seatpickerapp.Login
-import com.example.seatpickerapp.LoginActivity
+import com.example.seatpickerapp.activities.LoginActivity
 import com.example.seatpickerapp.R
-import com.example.seatpickerapp.databinding.FragmentHomeBinding
 import com.example.seatpickerapp.databinding.FragmentProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.lang.Exception
-import java.lang.StringBuilder
 
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {

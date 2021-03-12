@@ -1,18 +1,18 @@
-package com.example.seatpickerapp
+package com.example.seatpickerapp.activities
 
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
+import com.example.seatpickerapp.R
+import com.example.seatpickerapp.dataClasses.Booking
 import com.example.seatpickerapp.databinding.ActivityBookingBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,9 +20,8 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
-import java.lang.StringBuilder
 import java.util.*
+
 
 class BookingActivity : AppCompatActivity() {
 
@@ -349,10 +348,6 @@ class BookingActivity : AppCompatActivity() {
             }
         }
 
-        binding.filamentBtn.setOnClickListener {
-            startActivity(Intent(applicationContext, FilamentActivity::class.java))
-        }
-
     }
 
     private fun bookingDialog(date: String, time: String, tableNo: String) {
@@ -433,7 +428,9 @@ class BookingActivity : AppCompatActivity() {
             Log.d("userDoc", docSnapshot.get("name").toString())
 
             val tableCollectionRef =
-                db.collection("restaurants").document("flanagans").collection("tables").document(tableNo).collection(date)
+                db.collection("restaurants").document("flanagans").collection("tables").document(
+                    tableNo
+                ).collection(date)
             val querySnapshot = tableCollectionRef.get().await()
 
             val booking = hashMapOf(
@@ -454,11 +451,37 @@ class BookingActivity : AppCompatActivity() {
                 getReservedTables(date, time)
                 //personCollectionRef.document("Uykv5wvCCEcuIARFQ6hx").update("booking", "2pm 15th Jan")
 
-                val booking = Booking(date, time, tableNo)
+                val userBooking = Booking(date, time, tableNo)
                 personCollectionRef.document(auth?.uid.toString()).collection("booking")
-                    .add(booking)
+                    .add(userBooking)
                     .addOnSuccessListener { Log.d(TAG, "User updated with booking!") }
                     .addOnFailureListener { e -> Log.w(TAG, "Error updating user with booking", e) }
+
+                val adminCollectionRef =
+                    db.collection("restaurants").document("flanagans").collection(
+                        "bookingsMgmt"
+                    ).document("tableBookings").collection(date)
+                val adminBooking = hashMapOf(
+                    "date" to date,
+                    "time" to time,
+                    "tableNo" to tableNo,
+                    "name" to docSnapshot.get("name").toString(),
+                    "phoneNo" to docSnapshot.get("phoneNo").toString(),
+                    "email" to docSnapshot.get("emailAddress").toString()
+                )
+                adminCollectionRef.add(adminBooking)
+                    .addOnSuccessListener { Log.d(TAG, "Admin updated with booking!") }
+                    .addOnFailureListener { e ->
+                        Log.w(
+                            TAG,
+                            "Error updating admin collection with booking",
+                            e
+                        )
+                    }
+
+                //Log.d(TAG, adminRef.toString())
+
+
             }.addOnFailureListener { e ->
                 Log.w(TAG, "Error writing document", e)
                 Toast.makeText(
@@ -688,7 +711,9 @@ class BookingActivity : AppCompatActivity() {
                                             when (specialLayout) {
                                                 "default" -> binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_black)
                                                 "twoSeater" -> binding.ivTableOne.setImageResource(R.drawable.ic_two_seater_black)
-                                                "fourSeater" -> binding.ivTableOne.setImageResource(R.drawable.ic_four_seater_black)
+                                                "fourSeater" -> binding.ivTableOne.setImageResource(
+                                                    R.drawable.ic_four_seater_black
+                                                )
                                             }
                                             binding.ivTableOne.isClickable = false
                                         }.start()
@@ -703,7 +728,9 @@ class BookingActivity : AppCompatActivity() {
                                             when (specialLayout) {
                                                 "default" -> binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_black)
                                                 "twoSeater" -> binding.ivTableTwo.setImageResource(R.drawable.ic_two_seater_black)
-                                                "fourSeater" -> binding.ivTableTwo.setImageResource(R.drawable.ic_four_seater_black)
+                                                "fourSeater" -> binding.ivTableTwo.setImageResource(
+                                                    R.drawable.ic_four_seater_black
+                                                )
                                             }
                                             binding.ivTableTwo.isClickable = false
                                         }.start()
@@ -716,8 +743,12 @@ class BookingActivity : AppCompatActivity() {
                                         }.withEndAction {
                                             when (specialLayout) {
                                                 "default" -> binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_black)
-                                                "twoSeater" -> binding.ivTableThree.setImageResource(R.drawable.ic_two_seater_black)
-                                                "fourSeater" -> binding.ivTableThree.setImageResource(R.drawable.ic_four_seater_black)
+                                                "twoSeater" -> binding.ivTableThree.setImageResource(
+                                                    R.drawable.ic_two_seater_black
+                                                )
+                                                "fourSeater" -> binding.ivTableThree.setImageResource(
+                                                    R.drawable.ic_four_seater_black
+                                                )
                                             }
                                             binding.ivTableThree.isClickable = false
                                         }.start()
@@ -730,8 +761,12 @@ class BookingActivity : AppCompatActivity() {
                                         }.withEndAction {
                                             when (specialLayout) {
                                                 "default" -> binding.ivTableFour.setImageResource(R.drawable.ic_six_seater_black)
-                                                "twoSeater" -> binding.ivTableFour.setImageResource(R.drawable.ic_two_seater_black)
-                                                "fourSeater" -> binding.ivTableFour.setImageResource(R.drawable.ic_four_seater_black)
+                                                "twoSeater" -> binding.ivTableFour.setImageResource(
+                                                    R.drawable.ic_two_seater_black
+                                                )
+                                                "fourSeater" -> binding.ivTableFour.setImageResource(
+                                                    R.drawable.ic_four_seater_black
+                                                )
                                             }
                                             binding.ivTableFour.isClickable = false
                                         }.start()
@@ -743,8 +778,12 @@ class BookingActivity : AppCompatActivity() {
                                         }.withEndAction {
                                             when (specialLayout) {
                                                 "default" -> binding.ivTableFive.setImageResource(R.drawable.ic_six_seater_black)
-                                                "twoSeater" -> binding.ivTableFive.setImageResource(R.drawable.ic_two_seater_black)
-                                                "fourSeater" -> binding.ivTableFive.setImageResource(R.drawable.ic_four_seater_black)
+                                                "twoSeater" -> binding.ivTableFive.setImageResource(
+                                                    R.drawable.ic_two_seater_black
+                                                )
+                                                "fourSeater" -> binding.ivTableFive.setImageResource(
+                                                    R.drawable.ic_four_seater_black
+                                                )
                                             }
                                             binding.ivTableFive.isClickable = false
                                         }.start()
@@ -757,7 +796,9 @@ class BookingActivity : AppCompatActivity() {
                                             when (specialLayout) {
                                                 "default" -> binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_black)
                                                 "twoSeater" -> binding.ivTableSix.setImageResource(R.drawable.ic_two_seater_black)
-                                                "fourSeater" -> binding.ivTableSix.setImageResource(R.drawable.ic_four_seater_black)
+                                                "fourSeater" -> binding.ivTableSix.setImageResource(
+                                                    R.drawable.ic_four_seater_black
+                                                )
                                             }
                                             binding.ivTableSix.isClickable = false
                                         }.start()
@@ -770,8 +811,12 @@ class BookingActivity : AppCompatActivity() {
                                         }.withEndAction {
                                             when (specialLayout) {
                                                 "default" -> binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_black)
-                                                "twoSeater" -> binding.ivTableSeven.setImageResource(R.drawable.ic_two_seater_black)
-                                                "fourSeater" -> binding.ivTableSeven.setImageResource(R.drawable.ic_four_seater_black)
+                                                "twoSeater" -> binding.ivTableSeven.setImageResource(
+                                                    R.drawable.ic_two_seater_black
+                                                )
+                                                "fourSeater" -> binding.ivTableSeven.setImageResource(
+                                                    R.drawable.ic_four_seater_black
+                                                )
                                             }
                                             binding.ivTableSeven.isClickable = false
                                         }.start()
@@ -784,8 +829,12 @@ class BookingActivity : AppCompatActivity() {
                                         }.withEndAction {
                                             when (specialLayout) {
                                                 "default" -> binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_black)
-                                                "twoSeater" -> binding.ivTableEight.setImageResource(R.drawable.ic_two_seater_black)
-                                                "fourSeater" -> binding.ivTableEight.setImageResource(R.drawable.ic_four_seater_black)
+                                                "twoSeater" -> binding.ivTableEight.setImageResource(
+                                                    R.drawable.ic_two_seater_black
+                                                )
+                                                "fourSeater" -> binding.ivTableEight.setImageResource(
+                                                    R.drawable.ic_four_seater_black
+                                                )
                                             }
                                             binding.ivTableEight.isClickable = false
                                         }.start()
@@ -987,7 +1036,8 @@ class BookingActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         specialLayout = document.get("tableLayout").toString()
                         Log.d("BookingActLayout", "$specialLayout")
-                        Toast.makeText(this@BookingActivity, "$specialLayout", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@BookingActivity, "$specialLayout", Toast.LENGTH_SHORT)
+                            .show()
                         checkTableLayout()
                     }
                 }

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    tools:context=".BookingActivity">
+    android:background="@color/lightBackground"
+    tools:context=".activities.BookingActivity">
 
 
     <Button
@@ -13,7 +14,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Select a date"
+        android:background="@drawable/button_shape_blue"
+        android:padding="10dp"
+        android:text="Select date"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/partySizeBtn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,11 +25,13 @@
 
     <Button
         android:id="@+id/twoPmBtn"
-        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:background="@drawable/button_shape_1"
+        android:padding="10dp"
         android:text="14:00"
+        android:textColor="@color/white"
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/fourPmBtn"
         app:layout_constraintHorizontal_bias="0.5"
@@ -36,7 +42,10 @@
         android:id="@+id/fourPmBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_shape_1"
+        android:padding="10dp"
         android:text="16:00"
+        android:textColor="@color/white"
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/sixPmBtn"
         app:layout_constraintHorizontal_bias="0.5"
@@ -47,7 +56,10 @@
         android:id="@+id/sixPmBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_shape_1"
+        android:padding="10dp"
         android:text="18:00"
+        android:textColor="@color/white"
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/eightPmBtn"
         app:layout_constraintHorizontal_bias="0.5"
@@ -58,7 +70,10 @@
         android:id="@+id/eightPmBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_shape_1"
+        android:padding="10dp"
         android:text="20:00"
+        android:textColor="@color/white"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -202,7 +217,10 @@
         android:id="@+id/partySizeBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_shape_blue"
+        android:padding="10dp"
         android:text="Party Size"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/selectDateBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -217,16 +235,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/filamentBtn" />
-
-    <Button
-        android:id="@+id/filamentBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View in 3d"
-        app:layout_constraintBottom_toBottomOf="@+id/bookBtn"
-        app:layout_constraintEnd_toStartOf="@+id/bookBtn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/button_shape_blue"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

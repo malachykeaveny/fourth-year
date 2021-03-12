@@ -1,4 +1,4 @@
-package com.example.seatpickerapp
+package com.example.seatpickerapp.dataClasses
 
 data class Booking(
     var date: String = "",

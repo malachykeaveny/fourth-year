@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.BookingsFragment"
+    tools:context=".fragments.BookingsFragment"
     android:background="@color/lightBackground">
 
     <androidx.recyclerview.widget.RecyclerView
