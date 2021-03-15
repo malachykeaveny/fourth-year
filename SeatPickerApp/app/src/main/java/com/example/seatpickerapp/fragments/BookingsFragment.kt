@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seatpickerapp.dataClasses.Booking
@@ -49,6 +50,7 @@ class BookingsFragment : Fragment() {
 
         val bookingCollectionRef = db.collection("users").document(auth?.uid.toString()).collection("booking")
         binding.bookingsRecyclerView.layoutManager = LinearLayoutManager(context)
+        //binding.bookingsRecyclerView.layoutManager = GridLayoutManager(context, 2)
         val options = FirestoreRecyclerOptions.Builder<Booking>().setQuery(bookingCollectionRef, Booking::class.java).build()
 
         adapter = ProductFirestoreRecyclerAdapter(options)

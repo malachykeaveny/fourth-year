@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.seatpickerapp.*
 import com.example.seatpickerapp.activities.BookingActivity
+import com.example.seatpickerapp.activities.OrderFoodActivity
 import com.example.seatpickerapp.activities.ReportPositiveCovidTestActivity
 import com.example.seatpickerapp.databinding.FragmentHomeBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -51,6 +52,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         binding.reportLayout.setOnClickListener {
             startActivity(Intent(context, ReportPositiveCovidTestActivity::class.java))
+        }
+
+        binding.foodLayout.setOnClickListener {
+            startActivity(Intent(context, OrderFoodActivity::class.java))
         }
 
         lifecycleScope.launch {
