@@ -8,6 +8,7 @@ import com.example.seatpickerapp.fragments.HomeFragment
 import com.example.seatpickerapp.fragments.ProfileFragment
 import com.example.seatpickerapp.R
 import com.example.seatpickerapp.databinding.ActivityHomepageBinding
+import com.example.seatpickerapp.fragments.OrdersFragment
 
 class HomePageActivity : AppCompatActivity() {
 
@@ -22,12 +23,14 @@ class HomePageActivity : AppCompatActivity() {
         val homeFragment = HomeFragment()
         val profileFragment = ProfileFragment()
         val bookingsFragment = BookingsFragment()
+        val ordersFragment = OrdersFragment()
         setFragment(homeFragment)
 
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.miHome -> setFragment(homeFragment)
                 R.id.miBookings -> setFragment(bookingsFragment)
+                R.id.miOrders -> setFragment(ordersFragment)
                 R.id.miProfile -> setFragment(profileFragment)
             }
             true

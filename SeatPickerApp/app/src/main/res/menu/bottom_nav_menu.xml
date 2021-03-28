@@ -11,6 +11,11 @@
         android:title="Bookings"
         android:icon="@drawable/ic_down_spinner"/>
 
+    <item
+        android:id="@+id/miOrders"
+        android:title="Orders"
+        android:icon="@drawable/ic_baseline_food_bank_24"/>
+
 
     <item
         android:id="@+id/miProfile"
