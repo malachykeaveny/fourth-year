@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+        <EditText
+            android:id="@+id/addressLine1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address line 1"/>
+
+        <EditText
+            android:id="@+id/addressLine2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address line 2"/>
+
+
+        <EditText
+            android:id="@+id/addressLine3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Address line 3"/>
+
+
+        <EditText
+            android:id="@+id/eirCode"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:hint="Eircode"/>
+
+    <TextView
+        android:text="Payment"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp">
+
+        <RadioButton
+            android:id="@+id/cardPaymentRB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:textSize="16dp"
+            android:text="Card payment"/>
+
+        <RadioButton
+            android:id="@+id/cashPaymentRB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="16dp"
+            android:text="Cash on delivery"/>
+
+    </RadioGroup>
+
+</LinearLayout>

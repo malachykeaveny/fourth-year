@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.StaffToTablesActivity">
+
+    <Button
+        android:id="@+id/dateBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Select Date"
+        app:layout_constraintEnd_toStartOf="@+id/spinner"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_margin="20dp"
+        android:spinnerMode="dialog"
+        app:layout_constraintBottom_toBottomOf="@+id/dateBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dateBtn"
+        app:layout_constraintTop_toTopOf="@+id/dateBtn" />
+
+    <ScrollView
+        android:id="@+id/bookingScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/confirmStaffToTable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <HorizontalScrollView
+            android:id="@+id/bookingScrollViewHoriz"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/bookingCL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="700dp"
+                    android:layout_height="600dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_floor_plan"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <ImageView
+                    android:id="@+id/ivTableOne"
+                    android:layout_width="108dp"
+                    android:layout_height="78dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="50dp"
+                    android:scaleX="1.25"
+                    android:scaleY="1.25"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_two_seater_light_blue" />
+
+                <ImageView
+                    android:id="@+id/ivTableTwo"
+                    android:layout_width="108dp"
+                    android:layout_height="78dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="200dp"
+                    android:scaleX="1.25"
+                    android:scaleY="1.25"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_two_seater_light_blue" />
+
+                <ImageView
+                    android:id="@+id/ivTableThree"
+                    android:layout_width="108dp"
+                    android:layout_height="78dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="350dp"
+                    android:scaleX="1.25"
+                    android:scaleY="1.25"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_two_seater_light_blue" />
+
+                <ImageView
+                    android:id="@+id/ivTableFour"
+                    android:layout_width="108dp"
+                    android:layout_height="78dp"
+                    android:layout_marginStart="250dp"
+                    android:layout_marginTop="50dp"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_six_seater_light_blue" />
+
+                <ImageView
+                    android:id="@+id/ivTableFive"
+                    android:layout_width="108dp"
+                    android:layout_height="78dp"
+                    android:layout_marginStart="250dp"
+                    android:layout_marginTop="200dp"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_six_seater_light_blue" />
+
+                <ImageView
+                    android:id="@+id/ivTableSix"
+                    android:layout_width="108dp"
+                    android:layout_height="78dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="500dp"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_four_seater_light_blue" />
+
+                <ImageView
+                    android:id="@+id/ivTableSeven"
+                    android:layout_width="108dp"
+                    android:layout_height="78dp"
+                    android:layout_marginStart="400dp"
+                    android:layout_marginTop="450dp"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_four_seater_light_blue" />
+
+                <ImageView
+                    android:id="@+id/ivTableEight"
+                    android:layout_width="108dp"
+                    android:layout_height="78dp"
+                    android:layout_marginStart="250dp"
+                    android:layout_marginTop="400dp"
+                    android:scaleX="1.5"
+                    android:scaleY="1.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_four_seater_light_blue" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </HorizontalScrollView>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/confirmStaffToTable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Confirm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
