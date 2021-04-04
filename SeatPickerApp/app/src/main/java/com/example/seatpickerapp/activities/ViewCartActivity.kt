@@ -27,8 +27,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import com.stripe.android.*
+import com.stripe.android.model.Address
 import com.stripe.android.model.ConfirmPaymentIntentParams
 import com.stripe.android.model.PaymentMethod
+import com.stripe.android.model.ShippingInformation
 import com.stripe.android.view.BillingAddressFields
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -77,6 +79,7 @@ class ViewCartActivity : AppCompatActivity() {
         binding.orderDetailsTxtView.setOnClickListener {
             //setupAlertDialog()
             paymentSession.presentPaymentMethodSelection()
+            paymentSession.presentShippingFlow()
         }
 
         binding.goToPaymentButton.setOnClickListener {
@@ -220,7 +223,20 @@ class ViewCartActivity : AppCompatActivity() {
     private fun setUpPaymentSession() {
         CustomerSession.initCustomerSession(this, FirebaseEphemeralKeyProvider())
         paymentSession = PaymentSession(this, PaymentSessionConfig.Builder()
-            .setShippingInfoRequired(false)
+            .setPrepopulatedShippingInfo(
+                ShippingInformation(
+                Address.Builder()
+                    .setLine1("123 Market St")
+                    .setCity("San Francisco")
+                    .setState("CA")
+                    .setPostalCode("94107")
+                    .setCountry("US")
+                    .build(),
+                "Jenny Rosen",
+                "4158675309"
+            )
+            )
+            .setShippingInfoRequired(true)
             .setShippingMethodsRequired(false)
             .setBillingAddressFields(BillingAddressFields.None)
             .setShouldShowGooglePay(true)

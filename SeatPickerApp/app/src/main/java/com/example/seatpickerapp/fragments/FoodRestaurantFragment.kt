@@ -1,6 +1,7 @@
 package com.example.seatpickerapp.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -56,6 +58,24 @@ class FoodRestaurantFragment : Fragment() {
         binding.restaurantRV.adapter = adapter
         communicator = activity as Communicator
 
+        binding.setUserAddressButton.setOnClickListener {
+            addAddress()
+        }
+    }
+
+    private fun addAddress() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Add address")
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_address, null)
+
+        builder.setView(view)
+        builder.setNegativeButton("Cancel") { dialogInterface, _ -> dialogInterface.dismiss() }
+            .setPositiveButton("Done", null)
+
+        val dialog = builder.create()
+        dialog.show()
+
+        //Log.d("FoodItemsFragment", "$name ${price.toString()}")
     }
 
     override fun onDestroyView() {
