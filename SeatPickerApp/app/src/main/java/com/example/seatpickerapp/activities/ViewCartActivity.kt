@@ -11,10 +11,12 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.example.seatpickerapp.R
+import com.example.seatpickerapp.activities.OrderFoodActivity.Companion.currentRestaurant
 import com.example.seatpickerapp.dataClasses.CartItem
 import com.example.seatpickerapp.databinding.ActivityViewCartBinding
 import com.example.seatpickerapp.stripe.FirebaseEphemeralKeyProvider
@@ -32,6 +34,7 @@ import com.stripe.android.model.ConfirmPaymentIntentParams
 import com.stripe.android.model.PaymentMethod
 import com.stripe.android.model.ShippingInformation
 import com.stripe.android.view.BillingAddressFields
+import com.stripe.android.view.ShippingInfoWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,6 +56,12 @@ class ViewCartActivity : AppCompatActivity() {
     private val stripe: Stripe by lazy { Stripe(applicationContext, "pk_test_51IbvMoJlkOTSiWNOr3RM4HFPbNUF2g8AEbJwbhn8ubivrMpsZffRbkTsv8kDhK01V5YaReWvcT8nuWN5gzQu5ssR00GKQ5T4B3") }
     private lateinit var selectedPaymentMethod: PaymentMethod
     private var currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+    private var name: String = ""
+    private var phoneNo: String = ""
+    private var addressLine1: String = ""
+    private var eirCode: String = ""
+    private var county: String = ""
+    private var cartTotal: Double = 0.0
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +72,8 @@ class ViewCartActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         PaymentConfiguration.init(applicationContext, "pk_test_51IbvMoJlkOTSiWNOr3RM4HFPbNUF2g8AEbJwbhn8ubivrMpsZffRbkTsv8kDhK01V5YaReWvcT8nuWN5gzQu5ssR00GKQ5T4B3")
 
-        setUpPaymentSession()
+        //setUpPaymentSession()
+        //binding.goToPaymentButton.isEnabled = false
 
         val userCartRef = db.collection("users").document(auth?.uid.toString()).collection("cart")
         binding.cartItemsRV.layoutManager = LinearLayoutManager(this)
@@ -75,8 +85,9 @@ class ViewCartActivity : AppCompatActivity() {
         binding.cartItemsRV.adapter = adapter
 
         cartTotals()
+        getUserInformation()
 
-        binding.orderDetailsTxtView.setOnClickListener {
+        binding.setupPaymentButton.setOnClickListener {
             //setupAlertDialog()
             paymentSession.presentPaymentMethodSelection()
             paymentSession.presentShippingFlow()
@@ -84,8 +95,31 @@ class ViewCartActivity : AppCompatActivity() {
 
         binding.goToPaymentButton.setOnClickListener {
             confirmPayment(selectedPaymentMethod.id!!)
+            Log.d("payButton", "YUP")
         }
     }
+
+    private fun getUserInformation() {
+        val docRef = db.collection("users").document(auth?.uid.toString())
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    name = document.get("name").toString()
+                    phoneNo = document.get("phoneNo").toString()
+                    addressLine1 = document.get("addressLine1").toString()
+                    county = document.get("addressCounty").toString()
+                    eirCode = document.get("addressEircode").toString()
+                    Log.d("ViewCartActivity", "DocumentSnapshot data: ${document.data}")
+                    setUpPaymentSession()
+                } else {
+                    Log.d("ViewCartActivity", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("ViewCartActivity", "get failed with ", exception)
+            }
+    }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setupAlertDialog() {
@@ -216,24 +250,33 @@ class ViewCartActivity : AppCompatActivity() {
                 var orderTotal = total + deliveryAmount
                 val roundedTotal = String.format("%.2f", orderTotal)
                 binding.totalPriceAmount.text = "€$roundedTotal"
+                cartTotal = roundedTotal.toDouble() * 100
+
+                Log.d("cartTotalCHECKING11", cartTotal.toInt().toString())
             }
         }
     }
 
     private fun setUpPaymentSession() {
+
+        Log.d("setupPaymentCheckingAdd", "$addressLine1, $county, $name")
+
         CustomerSession.initCustomerSession(this, FirebaseEphemeralKeyProvider())
         paymentSession = PaymentSession(this, PaymentSessionConfig.Builder()
+            .setHiddenShippingInfoFields(
+                ShippingInfoWidget.CustomizableShippingField.STATE_FIELD
+            )
+            .setAllowedShippingCountryCodes(setOf("IE"))
             .setPrepopulatedShippingInfo(
                 ShippingInformation(
                 Address.Builder()
-                    .setLine1("123 Market St")
-                    .setCity("San Francisco")
-                    .setState("CA")
-                    .setPostalCode("94107")
-                    .setCountry("US")
+                    .setLine1(addressLine1)
+                    .setCity(county)
+                    .setPostalCode(eirCode)
+                    .setCountry("IE")
                     .build(),
-                "Jenny Rosen",
-                "4158675309"
+                name,
+                phoneNo
             )
             )
             .setShippingInfoRequired(true)
@@ -254,8 +297,9 @@ class ViewCartActivity : AppCompatActivity() {
 
                         data.paymentMethod?.let {
                             Log.d("PaymentSession", "PaymentMethod $it selected")
-                            binding.orderDetailsTxtView.text = "${it.card?.brand} card ends with ${it.card?.last4}"
+                            binding.setupPaymentButton.text = "${it.card?.brand} card ends with ${it.card?.last4}"
                             selectedPaymentMethod = it
+                            binding.goToPaymentButton.isEnabled = true
                         }
                     }
                 }
@@ -279,9 +323,13 @@ class ViewCartActivity : AppCompatActivity() {
             .collection("payments")
 
         // Add a new document with a generated ID
+
+
+        Log.d("cartTotalCHECKING", cartTotal.toInt().toString())
+
         paymentCollection.add(hashMapOf(
-            "amount" to 8800,
-            "currency" to "hkd"
+            "amount" to cartTotal.toInt(),
+            "currency" to "eur"
         ))
             .addOnSuccessListener { documentReference ->
                 Log.d("payment", "DocumentSnapshot added with ID: ${documentReference.id}")
@@ -301,6 +349,9 @@ class ViewCartActivity : AppCompatActivity() {
                                 (it as String)
                             ))
 
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                createOrder()
+                            }
                             //checkoutSummary.text = "Thank you for your payment"
                             Toast.makeText(applicationContext, "Payment Done!!", Toast.LENGTH_LONG).show()
                         }
@@ -314,6 +365,63 @@ class ViewCartActivity : AppCompatActivity() {
                 Log.w("payment", "Error adding document", e)
                 binding.goToPaymentButton.isEnabled = true
             }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createOrder() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val userCartRef = db.collection("users").document(auth?.uid.toString()).collection("cart")
+            val userOrderRef = db.collection("users").document(auth?.uid.toString()).collection("order")
+            val current = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
+            val formatted = current.format(formatter)
+            val date = formatted.split(" ")[0]
+            val time = formatted.split(" ")[1]
+
+            try {
+                val querySnapshot = userCartRef.get().await()
+                val builder = StringBuilder()
+                for (document in querySnapshot.documents) {
+                    var name = document.get("itemName")
+                    builder.append(name)
+                        .append(",")
+                }
+
+                val order = hashMapOf(
+                    "restaurant" to currentRestaurant,
+                    "items" to builder.toString(),
+                    "date" to date,
+                    "time" to time
+                )
+
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(applicationContext, order.toString(), Toast.LENGTH_SHORT).show()
+                }
+
+                userOrderRef.add(order)
+                    .addOnSuccessListener {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            Log.d("FoodItemsFragment", "Admin updated with booking!")
+                            val querySnapshot1 = userCartRef.get().await()
+                            for (document in querySnapshot1.documents) {
+                                userCartRef.document(document.id).delete()
+                                    .addOnSuccessListener { Log.d("ViewCartActivity", "User DocumentSnapshot successfully deleted!") }
+                                    .addOnFailureListener { e -> Log.w("ViewCartActivity", "Error deleting document", e) }
+                            }
+                        }
+                    }
+                    .addOnFailureListener { e -> Log.w("ViewCartActivity", "Error updating admin collection with booking", e) }
+
+                startActivity(Intent(applicationContext, HomePageActivity::class.java))
+                Log.d("ViewCartActivity", formatted)
+
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    //Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                    Log.d("FoodItemsFragment", e.message.toString())
+                }
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

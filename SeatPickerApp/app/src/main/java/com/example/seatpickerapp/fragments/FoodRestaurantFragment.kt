@@ -6,11 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seatpickerapp.R
@@ -22,7 +21,12 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 import java.util.*
 
 class FoodRestaurantFragment : Fragment() {
@@ -58,8 +62,31 @@ class FoodRestaurantFragment : Fragment() {
         binding.restaurantRV.adapter = adapter
         communicator = activity as Communicator
 
+        getAddress()
+
         binding.setUserAddressButton.setOnClickListener {
             addAddress()
+        }
+    }
+
+    private fun getAddress() {
+        lifecycleScope.launch {
+            try {
+                val userCollectionRef = Firebase.firestore.collection("users")
+                val querySnapshot = userCollectionRef.get().await()
+                for (document in querySnapshot.documents) {
+                    //Log.d("FoodRestaurantFragment", document.id + " " + auth?.uid.toString())
+                    if (document.id == auth?.uid.toString()) {
+                        val addressLine1 = document.get("addressLine1").toString()
+                        val addressEircode = document.get("addressEircode").toString()
+                        Log.d("FoodRestaurantFragment", "$addressLine1 $addressEircode")
+                        binding.userAddressTxtView.text = "$addressLine1, $addressEircode"
+                    }
+                }
+            }
+            catch (e: Exception) {
+                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -67,6 +94,11 @@ class FoodRestaurantFragment : Fragment() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Add address")
         val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_address, null)
+        val addressLine1 = view.findViewById<EditText>(R.id.address1)
+        val addressLine2 = view.findViewById<EditText>(R.id.address2)
+        val addressLine3 = view.findViewById<EditText>(R.id.address3)
+        val addressCounty = view.findViewById<EditText>(R.id.addressCounty)
+        val eirCode = view.findViewById<EditText>(R.id.eirCodeEt)
 
         builder.setView(view)
         builder.setNegativeButton("Cancel") { dialogInterface, _ -> dialogInterface.dismiss() }
@@ -76,6 +108,42 @@ class FoodRestaurantFragment : Fragment() {
         dialog.show()
 
         //Log.d("FoodItemsFragment", "$name ${price.toString()}")
+        val confirmButton: Button = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        confirmButton.setOnClickListener {
+            when {
+                addressLine1.text.isEmpty() -> addressLine1.setError("Cannot be empty")
+                addressCounty.text.isEmpty() -> addressCounty.setError("Cannot be empty")
+                eirCode.text.isEmpty() -> eirCode.setError("Cannot be empty")
+                else -> {
+                    val addressData = hashMapOf(
+                        "addressLine1" to addressLine1.text.toString(),
+                        "addressLine2" to addressLine2.text.toString(),
+                        "addressLine3" to addressLine3.text.toString(),
+                        "addressCounty" to addressCounty.text.toString(),
+                        "eirCode" to eirCode.text.toString()
+                    )
+
+                    Log.d("addAddressCheck", addressData.toString())
+                    val addressDocRef = db.collection("users").document(auth?.uid.toString())
+
+                    addressDocRef.update(
+                        "addressLine1", addressLine1.text.toString(),
+                        "addressLine2", addressLine2.text.toString(),
+                        "addressLine3", addressLine3.text.toString(),
+                        "addressCounty", addressCounty.text.toString(),
+                        "addressEircode", eirCode.text.toString()
+                    )
+                        .addOnSuccessListener {
+                            Log.d("FoodRestaurantFragment", "DocumentSnapshot successfully updated!")
+                            Toast.makeText(requireContext(), "Address successfully updated!", Toast.LENGTH_SHORT).show()
+                            getAddress()
+                        }
+                        .addOnFailureListener { e -> Log.w("EditMenuActivity", "Error updating document", e) }
+
+                    dialog.dismiss()
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

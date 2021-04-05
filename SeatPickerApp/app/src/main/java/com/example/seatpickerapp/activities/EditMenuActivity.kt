@@ -237,10 +237,8 @@ class EditMenuActivity : AppCompatActivity() {
 
                         itemDocRef
                             .update(
-                                "name",
-                                itemName.text.toString(),
-                                "price",
-                                itemPrice.text.toString().toDouble()
+                                "name", itemName.text.toString(),
+                                "price", itemPrice.text.toString().toDouble()
                             )
                             .addOnSuccessListener {
                                 Log.d("EditMenuActivity", "DocumentSnapshot successfully updated!")
