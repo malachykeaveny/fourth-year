@@ -12,6 +12,7 @@ import com.example.seatpickerapp.*
 import com.example.seatpickerapp.activities.BookingActivity
 import com.example.seatpickerapp.activities.OrderFoodActivity
 import com.example.seatpickerapp.activities.ReportPositiveCovidTestActivity
+import com.example.seatpickerapp.activities.TableBookingActivity
 import com.example.seatpickerapp.databinding.FragmentHomeBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -47,7 +48,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         auth = FirebaseAuth.getInstance()
 
         binding.bookingLayout.setOnClickListener {
-            startActivity(Intent(context, BookingActivity::class.java))
+            //startActivity(Intent(context, BookingActivity::class.java))
+            startActivity(Intent(context, TableBookingActivity::class.java))
         }
 
         binding.reportLayout.setOnClickListener {

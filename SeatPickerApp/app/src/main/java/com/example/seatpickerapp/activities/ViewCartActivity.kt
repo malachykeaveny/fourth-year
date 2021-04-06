@@ -53,6 +53,7 @@ class ViewCartActivity : AppCompatActivity() {
     val db = FirebaseFirestore.getInstance()
     private var adapter: ViewCartActivity.ProductFirestoreRecyclerAdapter? = null
     private lateinit var paymentSession: PaymentSession
+    //private var paymentSession: PaymentSession?= null
     private val stripe: Stripe by lazy { Stripe(applicationContext, "pk_test_51IbvMoJlkOTSiWNOr3RM4HFPbNUF2g8AEbJwbhn8ubivrMpsZffRbkTsv8kDhK01V5YaReWvcT8nuWN5gzQu5ssR00GKQ5T4B3") }
     private lateinit var selectedPaymentMethod: PaymentMethod
     private var currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
