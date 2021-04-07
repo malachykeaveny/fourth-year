@@ -20,9 +20,10 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
+import java.util.*
 
 
-class BookingsFragment : Fragment() {
+    class BookingsFragment : Fragment() {
 
     private var auth: FirebaseAuth? = null
     private var adapter: BookingsFragment.ProductFirestoreRecyclerAdapter? = null
@@ -79,7 +80,8 @@ class BookingsFragment : Fragment() {
     private inner class ProductViewHolder internal constructor(private val view: View) : RecyclerView.ViewHolder(view) {
         val db = FirebaseFirestore.getInstance()
 
-        fun setProductName(date: String, time: String, tableNo: String) {
+        fun setProductName(restaurant: String, date: String, time: String, tableNo: String) {
+            val restaurantTextView = view.findViewById<TextView>(R.id.booking_restaurant_text_view)
             val dateTextView = view.findViewById<TextView>(R.id.booking_date_text_view)
             val timeTextView = view.findViewById<TextView>(R.id.booking_time_text_view)
             val tableNoTextView = view.findViewById<TextView>(R.id.booking_tableNo_text_view)
@@ -87,6 +89,7 @@ class BookingsFragment : Fragment() {
 
             Log.d("DisplayBookings", date)
 
+            restaurantTextView.text = "Restaurant: $restaurant"
             dateTextView.text = "Date: $date"
             timeTextView.text = "Time $time"
 
@@ -105,7 +108,7 @@ class BookingsFragment : Fragment() {
 
         }
 
-        fun deleteBooking(documentId: String, date: String, tableNo: String, time: String) {
+        fun deleteBooking(documentId: String, restaurant: String, date: String, tableNo: String, time: String) {
             val delete_btn = view.findViewById<FloatingActionButton>(R.id.fl_btn_delete)
             delete_btn.setOnClickListener {
 
@@ -117,7 +120,8 @@ class BookingsFragment : Fragment() {
 
                 //Toast.makeText(context, documentId + " " + date + " " + tableNo + " " + time, Toast.LENGTH_SHORT).show()
 
-                db.collection("restaurants").document("flanagans").collection("tables").document(tableNo).collection(date).document(time)
+                db.collection("restaurants").document(restaurant.replace("\\s".toRegex(), "")
+                    .decapitalize(Locale.ROOT)).collection("tables").document(tableNo).collection(date).document(time)
                     .delete()
                     .addOnSuccessListener { Log.d("BookingsFragment", "Restaurant DocumentSnapshot successfully deleted!")
                         Toast.makeText(context, "Booking deleted!", Toast.LENGTH_SHORT).show()}
@@ -141,9 +145,9 @@ class BookingsFragment : Fragment() {
 
     private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<Booking>) : FirestoreRecyclerAdapter<Booking, BookingsFragment.ProductViewHolder>(options) {
         override fun onBindViewHolder(productViewHolder: BookingsFragment.ProductViewHolder, position: Int, booking: Booking) {
-            productViewHolder.setProductName(booking.date, booking.time, booking.tableNo)
+            productViewHolder.setProductName(booking.restaurant, booking.date, booking.time, booking.tableNo)
 
-            productViewHolder.deleteBooking(snapshots.getSnapshot(position).id, booking.date, booking.tableNo, booking.time)
+            productViewHolder.deleteBooking(snapshots.getSnapshot(position).id, booking.restaurant, booking.date, booking.tableNo, booking.time)
 
         }
 

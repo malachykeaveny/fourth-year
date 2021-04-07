@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/lightBackground"
-    tools:context=".fragments.FlanagansFragment">
+    tools:context=".fragments.OakFirePizzaFragment">
 
     <Button
         android:id="@+id/selectDateBtn"
@@ -103,11 +103,11 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:layout_width="700dp"
-                    android:layout_height="600dp"
+                    android:layout_width="900dp"
+                    android:layout_height="700dp"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/flanagans_floor_plan"
+                    android:src="@drawable/ic_floor_plan"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -159,7 +159,7 @@
                     android:scaleY="1.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_six_seater_light_blue" />
+                    app:srcCompat="@drawable/ic_two_seater_light_blue" />
 
                 <ImageView
                     android:id="@+id/ivTableFive"
@@ -171,7 +171,7 @@
                     android:scaleY="1.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_six_seater_light_blue" />
+                    app:srcCompat="@drawable/ic_two_seater_light_blue" />
 
                 <ImageView
                     android:id="@+id/ivTableSix"
@@ -183,7 +183,7 @@
                     android:scaleY="1.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_four_seater_light_blue" />
+                    app:srcCompat="@drawable/ic_two_seater_light_blue" />
 
                 <ImageView
                     android:id="@+id/ivTableSeven"
@@ -195,7 +195,7 @@
                     android:scaleY="1.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_four_seater_light_blue" />
+                    app:srcCompat="@drawable/ic_two_seater_light_blue" />
 
                 <ImageView
                     android:id="@+id/ivTableEight"
@@ -207,7 +207,7 @@
                     android:scaleY="1.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_four_seater_light_blue" />
+                    app:srcCompat="@drawable/ic_two_seater_light_blue" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </HorizontalScrollView>

@@ -83,12 +83,13 @@ class OrdersFragment : Fragment() {
             val timeTextView = view.findViewById<TextView>(R.id.orderTimeTextView)
             val addressTextView = view.findViewById<TextView>(R.id.orderAddressTextView)
 
+            restaurantTxtView.text = restaurant
             itemsTextView.text = items.dropLast(1)
             dateTextView.text = date
             timeTextView.text = time
             addressTextView.text = address
 
-            val docRef = db.collection("restaurants").document(restaurant)
+            /** val docRef = db.collection("restaurants").document(restaurant)
             docRef.get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
@@ -100,10 +101,8 @@ class OrdersFragment : Fragment() {
                 }
                 .addOnFailureListener { exception ->
                     Log.d("OrdersFragment", "get failed with ", exception)
-                }
+                } */
         }
-
-
     }
 
     private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<Order>) : FirestoreRecyclerAdapter<Order, OrdersFragment.ProductViewHolder>(options) {

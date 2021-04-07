@@ -450,7 +450,7 @@ class FlanagansFragment : Fragment() {
                 getReservedTables(date, time)
                 //personCollectionRef.document("Uykv5wvCCEcuIARFQ6hx").update("booking", "2pm 15th Jan")
 
-                val userBooking = Booking(date, time, tableNo)
+                val userBooking = Booking("Flanagans", date, time, tableNo)
                 personCollectionRef.document(auth?.uid.toString()).collection("booking")
                     .add(userBooking)
                     .addOnSuccessListener { Log.d(TAG, "User updated with booking!") }

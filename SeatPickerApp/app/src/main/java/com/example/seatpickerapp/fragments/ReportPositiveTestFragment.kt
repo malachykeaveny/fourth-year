@@ -91,7 +91,8 @@ class ReportPositiveTestFragment : Fragment() {
     private inner class ProductViewHolder internal constructor(private val view: View) : RecyclerView.ViewHolder(view) {
         val db = FirebaseFirestore.getInstance()
 
-        fun setProductName(date: String, time: String, tableNo: String) {
+        fun setProductName(restaurant: String, date: String, time: String, tableNo: String) {
+            val restaurantTextView = view.findViewById<TextView>(R.id.report_restaurant_text_view)
             val dateTextView = view.findViewById<TextView>(R.id.report_date_text_view)
             val timeTextView = view.findViewById<TextView>(R.id.report_time_text_view)
             val tableNoTextView = view.findViewById<TextView>(R.id.report_tableNo_text_view)
@@ -99,6 +100,7 @@ class ReportPositiveTestFragment : Fragment() {
 
             Log.d("DisplayBookingsReport", date)
 
+            restaurantTextView.text = "Restaurant: $restaurant"
             dateTextView.text = "Date: $date"
             timeTextView.text = "Time $time"
 
@@ -209,7 +211,7 @@ class ReportPositiveTestFragment : Fragment() {
 
     private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<Booking>) : FirestoreRecyclerAdapter<Booking, ReportPositiveTestFragment.ProductViewHolder>(options) {
         override fun onBindViewHolder(productViewHolder: ReportPositiveTestFragment.ProductViewHolder, position: Int, booking: Booking) {
-            productViewHolder.setProductName(booking.date, booking.time, booking.tableNo)
+            productViewHolder.setProductName(booking.restaurant, booking.date, booking.time, booking.tableNo)
 
             productViewHolder.reportPositiveTest(snapshots.getSnapshot(position).id, booking.date, booking.tableNo, booking.time)
         }

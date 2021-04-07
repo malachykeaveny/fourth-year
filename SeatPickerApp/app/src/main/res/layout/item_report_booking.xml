@@ -30,7 +30,7 @@
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
-            android:id="@+id/report_date_text_view"
+            android:id="@+id/report_restaurant_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -43,6 +43,21 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/ivthumbcv"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/report_date_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="4dp"
+            android:text="TextView"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ivthumbcv"
+            app:layout_constraintTop_toBottomOf="@+id/report_restaurant_text_view" />
 
         <TextView
             android:id="@+id/report_time_text_view"
