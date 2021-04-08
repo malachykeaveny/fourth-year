@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seatpickerapp.R
+import com.example.seatpickerapp.activities.AdminHomeActivity
 import com.example.seatpickerapp.activities.TOPIC
 import com.example.seatpickerapp.dataClasses.BookingMgmt
 import com.example.seatpickerapp.databinding.FragmentManageContactTracingBinding
@@ -47,6 +48,7 @@ class ManageContactTracingFragment : Fragment() {
     private val year = c.get(Calendar.YEAR)
     private val month = c.get(Calendar.MONTH)
     private val day = c.get(Calendar.DAY_OF_MONTH)
+    private var adminCurrentRestaurant: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,11 +67,14 @@ class ManageContactTracingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         auth = FirebaseAuth.getInstance()
 
+        adminCurrentRestaurant = AdminHomeActivity.adminRestaurantName.replace("\\s".toRegex(), "").decapitalize(Locale.ROOT)
+        Log.d("ManageContactTracingFr", adminCurrentRestaurant!!)
+
         binding.managerCFDateButton.setOnClickListener {
             setDate()
         }
 
-        val bookingCollectionRef = db.collection("restaurants").document("flanagans").collection("bookingsMgmt").document("tableBookings").collection(date.toString())
+        val bookingCollectionRef = db.collection("restaurants").document(adminCurrentRestaurant).collection("bookingsMgmt").document("tableBookings").collection(date.toString())
         binding.managerCFRV.layoutManager = LinearLayoutManager(context)
         val options = FirestoreRecyclerOptions.Builder<BookingMgmt>().setQuery(bookingCollectionRef, BookingMgmt::class.java).build()
 
@@ -92,7 +97,7 @@ class ManageContactTracingFragment : Fragment() {
 
     private fun setupRecyclerView(date: String?) {
         adapter?.stopListening()
-        val bookingCollectionRef = db.collection("restaurants").document("flanagans").collection("bookingsMgmt").document("tableBookings").collection(date.toString())
+        val bookingCollectionRef = db.collection("restaurants").document(adminCurrentRestaurant).collection("bookingsMgmt").document("tableBookings").collection(date.toString())
         binding.managerCFRV.layoutManager = LinearLayoutManager(context)
         val options = FirestoreRecyclerOptions.Builder<BookingMgmt>()
             .setQuery(bookingCollectionRef, BookingMgmt::class.java).build()

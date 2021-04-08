@@ -13,7 +13,10 @@ class AdminHomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAdminHomeBinding
     private var auth: FirebaseAuth? = null
-    private var restaurantName: String?= null
+
+    companion object {
+        var adminRestaurantName: String = ""
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,9 +30,9 @@ class AdminHomeActivity : AppCompatActivity() {
         docRef.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    restaurantName = document.get("name").toString()
-                    Log.d("OrdersFragment", "DocumentSnapshot data: $restaurantName")
-                    binding.restaurantNameTxtView.text = restaurantName
+                    adminRestaurantName = document.get("name").toString()
+                    Log.d("OrdersFragment", "DocumentSnapshot data: $adminRestaurantName")
+                    binding.restaurantNameTxtView.text = adminRestaurantName
                 } else {
                     Log.d("OrdersFragment", "No such document")
                 }
@@ -47,12 +50,15 @@ class AdminHomeActivity : AppCompatActivity() {
         }
 
         binding.contTracingCdVw.setOnClickListener {
-            startActivity(Intent(applicationContext, ManageContactTracingActivity::class.java))
+            //startActivity(Intent(applicationContext, ManageContactTracingActivity::class.java))
+            intent = Intent(this, ManageContactTracingActivity::class.java)
+            intent.putExtra("restaurant", adminRestaurantName)
+            startActivity(intent)
         }
 
         binding.editMenuCdVw.setOnClickListener {
             intent = Intent(this, EditMenuActivity::class.java)
-            intent.putExtra("restaurant", restaurantName)
+            intent.putExtra("restaurant", adminRestaurantName)
             startActivity(intent)
         }
 

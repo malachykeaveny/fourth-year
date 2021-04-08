@@ -13,6 +13,8 @@ import com.example.seatpickerapp.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.iid.FirebaseInstanceIdReceiver
+import com.google.firebase.messaging.FirebaseMessaging
 import java.util.HashMap
 
 
@@ -95,9 +97,13 @@ class SignUpFragment : Fragment() {
                         user.put("phoneNo", phoneNo!!)
                         user.put("emailAddress", email!!)
                         user.put("hasAdminPrivileges", false)
-                        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
+                         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
                             userToken = it.token
                         }
+
+                        userToken = FirebaseInstanceId.getInstance().getToken().toString()
+                        Log.d("checkingToken", " token: $userToken")
+
                         user.put("token", userToken.toString())
                         //user["name"] = name
                         //user["phoneNo"] = phoneNumber

@@ -41,6 +41,7 @@
 
     <EditText
         android:id="@+id/signup_password_et"
+        android:inputType="textPassword"
         android:hint="Password"
         android:padding="10dp"
         android:layout_width="0dp"
