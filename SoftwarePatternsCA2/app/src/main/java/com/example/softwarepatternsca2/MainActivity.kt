@@ -19,6 +19,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         auth = FirebaseAuth.getInstance()
 
+        binding.viewItemsBtn.setOnClickListener {
+            startActivity(Intent(applicationContext, ViewItemsActivity::class.java))
+        }
+
         binding.logOutBtn.setOnClickListener {
             auth?.signOut()
             startActivity(Intent(applicationContext, LoginActivity::class.java))

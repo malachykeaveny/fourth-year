@@ -51,4 +51,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'com.firebaseui:firebase-ui-firestore:4.1.0'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 }
