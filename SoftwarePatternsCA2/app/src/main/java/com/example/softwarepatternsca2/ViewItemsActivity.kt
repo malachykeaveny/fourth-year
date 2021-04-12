@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
@@ -25,6 +22,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class ViewItemsActivity : AppCompatActivity() {
@@ -129,13 +131,77 @@ class ViewItemsActivity : AppCompatActivity() {
             }
         }
 
+        fun itemSelected(itemName: String, price: Double, image: String, stock: Int) {
+            val cardViewItem= view.findViewById<CardView>(R.id.cardViewItem)
+
+            cardViewItem.setOnClickListener {
+
+                val dialogView = layoutInflater.inflate(R.layout.dialog_add_to_cart, null)
+                val customDialog = AlertDialog.Builder(this@ViewItemsActivity, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                    .setView(dialogView)
+
+                Log.d("FoodItemsFragment", "$itemName ${price.toString()}")
+
+                val alertD: AlertDialog = customDialog.show()
+
+                val nameTextView = dialogView.findViewById<TextView>(R.id.item_name_dialog)
+                val priceText = dialogView.findViewById<TextView>(R.id.item_price_dialog)
+                nameTextView.text = itemName
+                val rounded = String.format("%.2f", price)
+                priceText.text = "€$rounded"
+
+                dialogView.findViewById<LinearLayout>(R.id.order_button_container).setOnClickListener {
+                    //Toast.makeText(context, "$name $rounded", Toast.LENGTH_SHORT).show()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val userCartrRef = db.collection("users").document(auth?.uid.toString()).collection("cart")
+                        var foundDuplicate = false
+                        try {
+                            val querySnapshot = userCartrRef.get().await()
+                            for (document in querySnapshot.documents) {
+                                if (document.get("itemName") == itemName) {
+                                    foundDuplicate = true
+                                    val quantity = document.get("quantity").toString().toInt()
+                                    userCartrRef.document(document.id).update("quantity", quantity + 1)
+                                    withContext(Dispatchers.Main) {
+                                        Toast.makeText(applicationContext, "We've updated the items quantity in the cart!", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+
+                            if (!foundDuplicate) {
+                                val itemToCart = hashMapOf(
+                                    "itemName" to itemName,
+                                    "itemPrice" to price,
+                                    "quantity" to 1,
+                                    "image" to image
+                                )
+
+                                userCartrRef.add(itemToCart)
+                                    .addOnSuccessListener { Log.d("FoodItemsFragment", "$itemName added to cart") }
+                                    .addOnFailureListener { e -> Log.w("FoodItemsFragment", "Error updating admin collection with booking", e) }
+                            }
+
+                        } catch (e: Exception) {
+                            withContext(Dispatchers.Main) {
+                                //Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                                Log.d("FoodItemsFragment", e.message.toString())
+                            }
+                        }
+                    }
+
+                    alertD.dismiss()
+                }
+
+            }
+        }
+
     }
 
     private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<Item>) : FirestoreRecyclerAdapter<Item, ProductViewHolder>(options) {
 
         override fun onBindViewHolder(productViewHolder: ViewItemsActivity.ProductViewHolder, position: Int, item: Item) {
             productViewHolder.setContent(item.itemName, item.category, item.manufacturer, item.price, item.image, item.stock)
-
+            productViewHolder.itemSelected(item.itemName, item.price, item.image, item.stock)
             //productViewHolder.deleteItem(snapshots.getSnapshot(position).id)
         }
 

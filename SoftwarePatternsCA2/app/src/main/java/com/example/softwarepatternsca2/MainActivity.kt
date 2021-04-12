@@ -23,6 +23,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(applicationContext, ViewItemsActivity::class.java))
         }
 
+        binding.viewCartBtn.setOnClickListener {
+            startActivity(Intent(applicationContext, CartActivity::class.java))
+        }
+
         binding.logOutBtn.setOnClickListener {
             auth?.signOut()
             startActivity(Intent(applicationContext, LoginActivity::class.java))
