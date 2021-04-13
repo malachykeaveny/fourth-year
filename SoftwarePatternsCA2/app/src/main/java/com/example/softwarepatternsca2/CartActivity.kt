@@ -1,24 +1,32 @@
 package com.example.softwarepatternsca2
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.example.softwarepatternsca2.databinding.ActivityCartBinding
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.api.Distribution
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.lang.StringBuilder
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class CartActivity : AppCompatActivity() {
 
@@ -27,6 +35,11 @@ class CartActivity : AppCompatActivity() {
     private val db = FirebaseFirestore.getInstance()
     private var adapter: CartActivity.ProductFirestoreRecyclerAdapter? = null
     private var cartTotal: Double = 0.0
+    private var addressLine1: EditText?= null
+    private var addressLine2: EditText?= null
+    private var addressLine3: EditText?= null
+    private var eircode: EditText?= null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +55,112 @@ class CartActivity : AppCompatActivity() {
         val options = FirestoreRecyclerOptions.Builder<CartItem>().setQuery(userCartRef, CartItem::class.java).build()
         adapter = ProductFirestoreRecyclerAdapter(options)
         binding.cartRV.adapter = adapter
+
+        binding.goToPaymentButton.setOnClickListener {
+            setupAlertDialog()
+        }
+    }
+
+    private fun setupAlertDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Add address")
+        val view = LayoutInflater.from(application).inflate(R.layout.dialog_place_order, null)
+        addressLine1 = view.findViewById<EditText>(R.id.addressLine1)
+        addressLine2 = view.findViewById<EditText>(R.id.addressLine2)
+        addressLine3 = view.findViewById<EditText>(R.id.addressLine3)
+        eircode = view.findViewById<EditText>(R.id.eirCode)
+        var cardPayment = view.findViewById<RadioButton>(R.id.cardPaymentRB)
+
+        builder.setView(view)
+        builder.setNegativeButton("Cancel") { dialogInterface, _ -> dialogInterface.dismiss() }
+            .setPositiveButton("Done") { dialogInterface, _ ->
+                if (cardPayment.isChecked) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        //completePayment(addressLine1.text.toString(), addressLine2.text.toString(), addressLine3.text.toString(), eircode.text.toString())
+                        cardPayment()
+                    }
+                }}
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun cardPayment() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Add address")
+        val view = LayoutInflater.from(application).inflate(R.layout.dialog_card_payment, null)
+        val cardNumber = view.findViewById<EditText>(R.id.cardNumberEditText)
+        val cardHolder = view.findViewById<EditText>(R.id.cardHolderNameEditText)
+        val cardExpiryDate = view.findViewById<EditText>(R.id.expiryDateEditText)
+        val cardCVV = view.findViewById<EditText>(R.id.cvvEditText)
+
+        builder.setView(view)
+        builder.setNegativeButton("Cancel") { dialogInterface, _ -> dialogInterface.dismiss() }
+            .setPositiveButton("Done") { dialogInterface, _ ->
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    completePayment()
+                }
+
+            }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun completePayment() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val userCartRef = db.collection("users").document(auth?.uid.toString()).collection("cart")
+            val userOrderRef = db.collection("users").document(auth?.uid.toString()).collection("order")
+            val current = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
+            val formatted = current.format(formatter)
+            val date = formatted.split(" ")[0]
+            val time = formatted.split(" ")[1]
+
+            try {
+                val querySnapshot = userCartRef.get().await()
+                val builder = StringBuilder()
+                for (document in querySnapshot.documents) {
+                    var name = document.get("itemName")
+                    builder.append(name)
+                        .append(",")
+                }
+
+                val order = hashMapOf(
+                    "address" to "${addressLine1?.text}, ${addressLine2?.text}, ${addressLine3?.text}, ${eircode ?.text}",
+                    "items" to builder.toString(),
+                    "date" to date,
+                    "time" to time
+                )
+
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(applicationContext, order.toString(), Toast.LENGTH_SHORT).show()
+                }
+
+                userOrderRef.add(order)
+                    .addOnSuccessListener {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            Log.d("CartActivity", "Admin updated with booking!")
+                            val querySnapshot1 = userCartRef.get().await()
+                            for (document in querySnapshot1.documents) {
+                                userCartRef.document(document.id).delete()
+                                    .addOnSuccessListener { Log.d("CartActivity", "User DocumentSnapshot successfully deleted!") }
+                                    .addOnFailureListener { e -> Log.w("CartActivity", "Error deleting document", e) }
+                            }
+                        }
+                    }
+                    .addOnFailureListener { e -> Log.w("CartActivity", "Error updating admin collection with booking", e) }
+
+                Log.d("ViewCartActivity", formatted)
+
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    //Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                    Log.d("FoodItemsFragment", e.message.toString())
+                }
+            }
+        }
     }
 
     private fun cartTotals() {

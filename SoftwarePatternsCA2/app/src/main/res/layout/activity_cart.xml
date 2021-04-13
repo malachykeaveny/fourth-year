@@ -110,20 +110,6 @@
         app:layout_constraintTop_toBottomOf="@id/deliveryTxtView" />
 
     <Button
-        android:id="@+id/setupPaymentButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="8dp"
-        android:text="Payment details"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/goToPaymentButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
         android:id="@+id/goToPaymentButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
