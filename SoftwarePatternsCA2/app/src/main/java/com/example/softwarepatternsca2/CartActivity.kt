@@ -144,6 +144,9 @@ class CartActivity : AppCompatActivity() {
                             Log.d("CartActivity", "Admin updated with booking!")
                             val querySnapshot1 = userCartRef.get().await()
                             for (document in querySnapshot1.documents) {
+
+                                updateStock(document.get("itemName").toString())
+
                                 userCartRef.document(document.id).delete()
                                     .addOnSuccessListener { Log.d("CartActivity", "User DocumentSnapshot successfully deleted!") }
                                     .addOnFailureListener { e -> Log.w("CartActivity", "Error deleting document", e) }
@@ -161,6 +164,30 @@ class CartActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun updateStock(itemName: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            Log.d("CartActivityStock", itemName)
+
+            val stockRef = db.collection("items")
+            val querySnapshot = stockRef.get().await()
+            for (document in querySnapshot.documents) {
+                if (document.get("itemName") == itemName) {
+                    var stock: Int = document.get("stock").toString().toInt()
+                    Log.d("CartActivityStockLoop", itemName)
+                    stockRef.document(document.id).
+                    update("stock", stock -1)
+                        .addOnSuccessListener { Log.d("CartActivity", "DocumentSnapshot successfully updated!") }
+                        .addOnFailureListener { e -> Log.w("CartActivity", "Error updating document", e) }
+                }
+                else {
+                    Log.d("CartActivityStockLoop", "didn't find $itemName")
+                }
+            }
+
+        }
+
     }
 
     private fun cartTotals() {

@@ -25,8 +25,31 @@
             android:textStyle="bold"
             android:textSize="26sp"
             android:padding="8dp"
-            android:layout_marginBottom="200dp"
+            android:layout_marginBottom="75dp"
             />
+
+        <LinearLayout
+            android:id="@+id/adminUpdateStockContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="invisible">
+
+            <EditText
+                android:id="@+id/adminUpdateStockEditText"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="75dp"
+                android:hint="Update stock"/>
+
+            <Button
+                android:id="@+id/updateStockBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update stock"/>
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/order_button_container"
@@ -47,13 +70,13 @@
                 android:textStyle="bold"/>
 
             <View
-                android:layout_width="100dp"
+                android:layout_width="70dp"
                 android:layout_height="match_parent"/>
 
             <TextView
                 android:id="@+id/item_price_dialog"
                 android:layout_margin="6dp"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="€8.50"
                 android:textSize="18sp"

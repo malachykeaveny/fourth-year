@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,10 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.softwarepatternsca2.databinding.ActivityViewItemsBinding
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -133,10 +130,11 @@ class ViewItemsActivity : AppCompatActivity() {
 
         fun itemSelected(itemName: String, price: Double, image: String, stock: Int) {
             val cardViewItem= view.findViewById<CardView>(R.id.cardViewItem)
-
             cardViewItem.setOnClickListener {
 
                 val dialogView = layoutInflater.inflate(R.layout.dialog_add_to_cart, null)
+                val stockEditText = dialogView.findViewById<EditText>(R.id.adminUpdateStockEditText)
+                val stockContainer = dialogView.findViewById<LinearLayout>(R.id.adminUpdateStockContainer)
                 val customDialog = AlertDialog.Builder(this@ViewItemsActivity, R.style.Theme_AppCompat_Light_Dialog_Alert)
                     .setView(dialogView)
 
@@ -149,6 +147,32 @@ class ViewItemsActivity : AppCompatActivity() {
                 nameTextView.text = itemName
                 val rounded = String.format("%.2f", price)
                 priceText.text = "€$rounded"
+
+                val userRef = db.collection("users").document(auth?.uid.toString())
+                userRef.get()
+                    .addOnSuccessListener { document ->
+                        if (document != null) {
+                            Log.d("ViewItemsActivity", "DocumentSnapshot data: ${document.data}")
+                            if (document.get("hasAdminPrivileges") == true) {
+                                stockContainer.visibility = View.VISIBLE
+                                stockEditText.setText(stock.toString())
+                            }
+                            else {
+                                stockContainer.visibility = View.INVISIBLE
+                            }
+                        } else {
+                            Log.d("ViewItemsActivity", "No such document")
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.d("ViewItemsActivity", "get failed with ", exception)
+                    }
+
+                dialogView.findViewById<Button>(R.id.updateStockBtn).setOnClickListener {
+                    updateStock(itemName, stockEditText.text.toString().toInt())
+                    alertD.dismiss()
+                }
+
 
                 dialogView.findViewById<LinearLayout>(R.id.order_button_container).setOnClickListener {
                     //Toast.makeText(context, "$name $rounded", Toast.LENGTH_SHORT).show()
@@ -190,6 +214,32 @@ class ViewItemsActivity : AppCompatActivity() {
                     }
 
                     alertD.dismiss()
+                }
+
+            }
+        }
+
+        private fun updateStock(itemName: String, stock: Int) {
+            CoroutineScope(Dispatchers.IO).launch {
+                Log.d("CartActivityStock", stock.toString())
+
+                val stockRef = db.collection("items")
+                val querySnapshot = stockRef.get().await()
+                for (document in querySnapshot.documents) {
+                    if (document.get("itemName") == itemName) {
+                        //var stock: Int = document.get("stock").toString().toInt()
+                        Log.d("ViewItemsStockLoop", itemName)
+                        stockRef.document(document.id).
+                        update("stock", stock)
+                            .addOnSuccessListener {
+                                Toast.makeText(applicationContext, "$itemName stock updated!", Toast.LENGTH_SHORT).show()
+                                Log.d("ViewItemsActivity", "DocumentSnapshot successfully updated!")
+                            }
+                            .addOnFailureListener { e -> Log.w("ViewItemsActivity", "Error updating document", e) }
+                    }
+                    else {
+                        Log.d("ViewItemsStockLoop", "didn't find $itemName")
+                    }
                 }
 
             }

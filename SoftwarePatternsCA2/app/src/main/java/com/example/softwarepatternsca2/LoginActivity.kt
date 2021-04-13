@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -11,6 +12,11 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.softwarepatternsca2.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class LoginActivity : AppCompatActivity() {
 
@@ -20,6 +26,7 @@ class LoginActivity : AppCompatActivity() {
     private var mEmail: EditText? = null
     private var mPassword: EditText? = null
     private var auth: FirebaseAuth? = null
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +59,8 @@ class LoginActivity : AppCompatActivity() {
             auth!!.signInWithEmailAndPassword(emailAddress, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(this@LoginActivity, "User has been logged in", Toast.LENGTH_SHORT)
-                            .show()
-                        startActivity(Intent(applicationContext, MainActivity::class.java))
+                        //Toast.makeText(this@LoginActivity, "User has been logged in", Toast.LENGTH_SHORT).show()
+                            checkIfAdmin()
                     } else {
                         Toast.makeText(
                             this@LoginActivity,
@@ -74,5 +80,28 @@ class LoginActivity : AppCompatActivity() {
         })
 
 
+    }
+
+    private fun checkIfAdmin() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val userCollectionRef = db.collection("users")
+                val querySnapshot = userCollectionRef.get().await()
+                for (document in querySnapshot.documents) {
+                    Log.d("adminUid", document.id + " " + auth?.uid.toString())
+                    if (document.id == auth?.uid.toString()) {
+                        val hasAdminPrivileges = document.get("hasAdminPrivileges")
+                        Log.d("hasAdminPriv", hasAdminPrivileges.toString())
+                        when (hasAdminPrivileges) {
+                            true -> startActivity(Intent(applicationContext, AdminMainActivity::class.java))
+                            false -> startActivity(Intent(applicationContext, MainActivity::class.java))
+                        }
+                    }
+                }
+            }
+            catch (e: Exception) {
+                Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
