@@ -114,7 +114,7 @@ class ViewCustomerOrdersActivity : AppCompatActivity() {
         })
 
 
-        
+
     }
 
     override fun onStart() {

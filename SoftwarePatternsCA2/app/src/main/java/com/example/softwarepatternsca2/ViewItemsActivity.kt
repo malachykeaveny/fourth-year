@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.*
+import kotlin.math.roundToLong
 
 class ViewItemsActivity : AppCompatActivity() {
 
@@ -109,23 +110,27 @@ class ViewItemsActivity : AppCompatActivity() {
 
     private inner class ProductViewHolder internal constructor(private val view: View) :
             RecyclerView.ViewHolder(view) {
-        fun setContent(itemName: String, category: String, manufacturer: String, price: Double, image: String, stock: Int) {
+        fun setContent(itemName: String, category: String, manufacturer: String, price: Double, image: String, stock: Int, reviewsTotalSum: Int, noOfReviews: Int) {
             val categoryTextView = view.findViewById<TextView>(R.id.itemCategoryTxtView)
             val manufacturerTextView = view.findViewById<TextView>(R.id.itemManufacturerTxtView)
             val nameTextView = view.findViewById<TextView>(R.id.itemNameTxtView)
             val imageView = view.findViewById<ImageView>(R.id.itemImage)
             val priceTextView = view.findViewById<TextView>(R.id.itemPriceTextView)
             val stockTextView = view.findViewById<TextView>(R.id.itemStockTxtView)
+            val reviewTextView = view.findViewById<TextView>(R.id.itemRatingTxtView)
 
             categoryTextView.text = category
             manufacturerTextView.text = manufacturer
             nameTextView.text = itemName
             priceTextView.text = "€${price.toString()}"
-            stockTextView.text = "Number in stock: ${stock.toString()}"
+            stockTextView.text = "${stock.toString()} in stock"
 
             if (image.isNotEmpty()) {
                 Picasso.with(applicationContext).load(image).into(imageView)
             }
+
+            var reviewScore = reviewsTotalSum.toDouble() / noOfReviews
+            reviewTextView.text = "${reviewScore.roundToLong()}/5 rating($noOfReviews votes)"
         }
 
         fun itemSelected(itemName: String, price: Double, image: String, stock: Int) {
@@ -250,7 +255,7 @@ class ViewItemsActivity : AppCompatActivity() {
     private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<Item>) : FirestoreRecyclerAdapter<Item, ProductViewHolder>(options) {
 
         override fun onBindViewHolder(productViewHolder: ViewItemsActivity.ProductViewHolder, position: Int, item: Item) {
-            productViewHolder.setContent(item.itemName, item.category, item.manufacturer, item.price, item.image, item.stock)
+            productViewHolder.setContent(item.itemName, item.category, item.manufacturer, item.price, item.image, item.stock, item.reviewsTotalSum, item.noOfReviews)
             productViewHolder.itemSelected(item.itemName, item.price, item.image, item.stock)
             //productViewHolder.deleteItem(snapshots.getSnapshot(position).id)
         }
