@@ -60,7 +60,17 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         //Toast.makeText(this@LoginActivity, "User has been logged in", Toast.LENGTH_SHORT).show()
-                            checkIfAdmin()
+
+                            val checkForPrivileges = PrivilegesLoginCheck()
+
+                            when (checkForPrivileges.hasAdminPrivileges()) {
+                                true -> startActivity(Intent(applicationContext, AdminMainActivity::class.java))
+                                false -> startActivity(Intent(applicationContext, MainActivity::class.java))
+                            }
+
+                            Log.d("didItWork", checkForPrivileges.hasAdminPrivileges().toString())
+
+                            //checkIfAdmin()
                     } else {
                         Toast.makeText(
                             this@LoginActivity,
