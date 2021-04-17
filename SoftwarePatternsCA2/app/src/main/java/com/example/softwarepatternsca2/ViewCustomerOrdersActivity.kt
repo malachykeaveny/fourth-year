@@ -99,21 +99,22 @@ class ViewCustomerOrdersActivity : AppCompatActivity() {
                     if (document.getString("name") == selectedUser) {
                         userDocId = document.id
                         Log.d("checkForID", userDocId)
+
+                        Log.d("checkHasIDReached", "$userDocId got this far")
+                        adapter?.stopListening()
+                        var orderCollectionRef = db.collection("users").document(userDocId).collection("order")
+                        binding.viewUserOrdersRv.layoutManager = LinearLayoutManager(applicationContext)
+                        val options = FirestoreRecyclerOptions.Builder<Order>().setQuery(orderCollectionRef, Order::class.java).build()
+                        adapter = ProductFirestoreRecyclerAdapter(options)
+                        binding.viewUserOrdersRv.adapter = adapter
+                        adapter!!.startListening()
                     }
                 }
             }
         })
 
 
-        if (userDocId.isNotEmpty()) {
-            adapter?.stopListening()
-            var orderCollectionRef = db.collection("users").document(userDocId).collection("order")
-            binding.viewUserOrdersRv.layoutManager = LinearLayoutManager(applicationContext)
-            val options = FirestoreRecyclerOptions.Builder<Order>().setQuery(orderCollectionRef, Order::class.java).build()
-            adapter = ProductFirestoreRecyclerAdapter(options)
-            binding.viewUserOrdersRv.adapter = adapter
-            adapter!!.startListening()
-        }
+        
     }
 
     override fun onStart() {
