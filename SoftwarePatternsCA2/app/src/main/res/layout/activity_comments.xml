@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".CommentsActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_margin="16dp"
+        android:id="@+id/commentsRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="249dp"
+        tools:layout_editor_absoluteY="155dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

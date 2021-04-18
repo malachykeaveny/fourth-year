@@ -1,5 +1,6 @@
 package com.example.softwarepatternsca2
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -311,6 +312,16 @@ class ViewItemsActivity : AppCompatActivity() {
             }
         }
 
+        fun viewComments(documentId: String) {
+            val viewCommentsBtn = view.findViewById<FloatingActionButton>(R.id.viewCommentsFAB)
+
+            viewCommentsBtn.setOnClickListener {
+                val intent = Intent(applicationContext, CommentsActivity::class.java)
+                intent.putExtra("documentId", documentId)
+                startActivity(intent)
+            }
+        }
+
     }
 
     private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<Item>) : FirestoreRecyclerAdapter<Item, ProductViewHolder>(options) {
@@ -320,6 +331,7 @@ class ViewItemsActivity : AppCompatActivity() {
             productViewHolder.itemSelected(item.itemName, item.price, item.image, item.stock)
             productViewHolder.addRating(snapshots.getSnapshot(position).id, item.reviewsTotalSum, item.noOfReviews)
             productViewHolder.addComment(snapshots.getSnapshot(position).id)
+            productViewHolder.viewComments(snapshots.getSnapshot(position).id)
             //productViewHolder.deleteItem(snapshots.getSnapshot(position).id)
         }
 
