@@ -161,6 +161,8 @@ class CartActivity : AppCompatActivity() {
                     }
                     .addOnFailureListener { e -> Log.w("CartActivity", "Error updating admin collection with booking", e) }
 
+                updateNumberOfUserOrders()
+
                 Log.d("ViewCartActivity", formatted)
 
             } catch (e: Exception) {
@@ -170,6 +172,29 @@ class CartActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun updateNumberOfUserOrders() {
+        val userDocRef = db.collection("users").document(auth?.uid.toString())
+        userDocRef
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    var numberOfOrders = document.get("numberOfOrders").toString().toInt()
+                    Log.d("CartActivity", "DocumentSnapshot data: ${document.data}")
+
+                    userDocRef
+                        .update("numberOfOrders", numberOfOrders + 1)
+                        .addOnSuccessListener { Log.d("CartActivity", "DocumentSnapshot successfully updated!") }
+                        .addOnFailureListener { e -> Log.w("CartActivity", "Error updating document", e) }
+
+                } else {
+                    Log.d("CartActivity", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("CartActivity", "get failed with ", exception)
+            }
     }
 
     private fun updateStock(itemName: String) {
@@ -197,8 +222,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun cartTotals() {
-        val userCartRef =
-            db.collection("users").document(auth?.uid.toString()).collection("cart")
+        val userCartRef = db.collection("users").document(auth?.uid.toString()).collection("cart")
         userCartRef.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
             firebaseFirestoreException?.let {
                 Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
@@ -224,18 +248,49 @@ class CartActivity : AppCompatActivity() {
                 var roundedItemsAmount = String.format("%.2f", total)
                 binding.cartTotalAmount.text = "€$roundedItemsAmount"
 
-                var deliveryAmount = 2.50
-                var roundedDeliveryAmount = String.format("%.2f", deliveryAmount)
-                binding.deliveryAmount.text = "€$roundedDeliveryAmount"
+                val userDocRef = db.collection("users").document(auth?.uid.toString())
 
-                var orderTotal = total + deliveryAmount
+                //var deliveryAmount = 2.50
+                //var roundedDeliveryAmount = String.format("%.2f", deliveryAmount)
+                //binding.deliveryAmount.text = "€$roundedDeliveryAmount"
+
+                var orderTotal = total
                 val roundedTotal = String.format("%.2f", orderTotal)
                 binding.totalPriceAmount.text = "€$roundedTotal"
-                cartTotal = roundedTotal.toDouble() * 100
+                cartTotal = roundedTotal.toDouble()
+
+                calculateLoyaltyDiscount()
 
                 Log.d("cartTotalCHECKING11", cartTotal.toInt().toString())
             }
         }
+    }
+
+    private fun calculateLoyaltyDiscount() {
+        val userDocRef = db.collection("users").document(auth?.uid.toString())
+        userDocRef
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    var numberOfOrders = document.get("numberOfOrders").toString().toInt()
+                    Log.d("CartActivity", "DocumentSnapshot data: ${document.data}")
+
+                    if (numberOfOrders >= 3) {
+                        binding.loyaltyDiscountAmount.text = "10% loyalty discount active"
+                        cartTotal *= 0.9
+                        binding.totalPriceAmount.text = "€$cartTotal"
+                    }
+                    else {
+                        binding.loyaltyDiscountAmount.text = "Loyalty discount not active"
+                    }
+
+                } else {
+                    Log.d("CartActivity", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("CartActivity", "get failed with ", exception)
+            }
     }
 
     override fun onStart() {
