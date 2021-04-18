@@ -266,8 +266,8 @@ class ViewItemsActivity : AppCompatActivity() {
                         }
                         .setPositiveButton("OK") { dialogInterface, i ->
                             Log.d("ratingsText", ratingEditTxt.text.toString())
-                            var userDocRef = db.collection("items").document(documentId)
-                            userDocRef
+                            var itemDocRef = db.collection("items").document(documentId)
+                            itemDocRef
                                     .update("reviewsTotalSum", reviewsTotalSum + ratingEditTxt.text.toString().toInt(), "noOfReviews", noOfReviews + 1 )
                                     .addOnSuccessListener { Log.d("ViewItemsActivity", "DocumentSnapshot successfully updated!") }
                                     .addOnFailureListener { e -> Log.w("ViewItemsActivity", "Error updating document", e) }
@@ -279,7 +279,31 @@ class ViewItemsActivity : AppCompatActivity() {
         }
 
         fun addComment(documentId: String) {
-            TODO("Not yet implemented")
+            val addCommentBtn = view.findViewById<FloatingActionButton>(R.id.commentBtn)
+            val commentEditTxt = EditText(this@ViewItemsActivity)
+
+            addCommentBtn.setOnClickListener {
+                AlertDialog.Builder(this@ViewItemsActivity, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                        .setTitle("Leave a comment/review you have on this item")
+                        .setView(commentEditTxt)
+                        .setNegativeButton("Cancel") { dialogInterface, i ->
+                            val parent = commentEditTxt.parent as ViewGroup
+                            parent.removeAllViews()
+                            dialogInterface.dismiss()
+                        }
+                        .setPositiveButton("OK") { dialogInterface, i ->
+                            Log.d("commentText", commentEditTxt.text.toString())
+                            var itemCommentRef = db.collection("items").document(documentId).collection("comments")
+                            itemCommentRef
+                                    .add(commentEditTxt.text.toString())
+                                    .addOnSuccessListener { documentReference -> Log.d("addComment", "DocumentSnapshot written with ID: ${documentReference.id}") }
+                                    .addOnFailureListener { e -> Log.w("addComment", "Error adding document", e) }
+
+                            val parent = commentEditTxt.parent as ViewGroup
+                            parent.removeAllViews()
+                        }
+                        .show()
+            }
         }
 
     }
