@@ -292,10 +292,15 @@ class ViewItemsActivity : AppCompatActivity() {
                             dialogInterface.dismiss()
                         }
                         .setPositiveButton("OK") { dialogInterface, i ->
+
+                            val comment = hashMapOf(
+                                    "commentText" to commentEditTxt.text.toString()
+                            )
+
                             Log.d("commentText", commentEditTxt.text.toString())
                             var itemCommentRef = db.collection("items").document(documentId).collection("comments")
                             itemCommentRef
-                                    .add(commentEditTxt.text.toString())
+                                    .add(comment)
                                     .addOnSuccessListener { documentReference -> Log.d("addComment", "DocumentSnapshot written with ID: ${documentReference.id}") }
                                     .addOnFailureListener { e -> Log.w("addComment", "Error adding document", e) }
 

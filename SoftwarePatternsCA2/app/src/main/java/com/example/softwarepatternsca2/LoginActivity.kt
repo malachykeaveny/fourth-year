@@ -11,8 +11,10 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.example.softwarepatternsca2.databinding.ActivityLoginBinding
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +23,7 @@ import kotlinx.coroutines.tasks.await
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-    private var mLoginButton: Button?= null
+    private var mLoginButton: Button? = null
     private var mSignUpButton: TextView? = null
     private var mEmail: EditText? = null
     private var mPassword: EditText? = null
@@ -57,38 +59,60 @@ class LoginActivity : AppCompatActivity() {
 
             //sign in user
             auth!!.signInWithEmailAndPassword(emailAddress, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        //Toast.makeText(this@LoginActivity, "User has been logged in", Toast.LENGTH_SHORT).show()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            //Toast.makeText(this@LoginActivity, "User has been logged in", Toast.LENGTH_SHORT).show()
 
                             val checkForPrivileges = PrivilegesLoginCheck()
 
-                            when (checkForPrivileges.hasAdminPrivileges()) {
+                            /*when (checkForPrivileges.hasAdminPrivileges()) {
                                 true -> startActivity(Intent(applicationContext, AdminMainActivity::class.java))
                                 false -> startActivity(Intent(applicationContext, MainActivity::class.java))
                             }
 
+                             */
+
+                            checkIfAdmin()
+
                             Log.d("LoginActivity", checkForPrivileges.hasAdminPrivileges().toString())
 
 
-                    } else {
-                        Toast.makeText(
-                            this@LoginActivity,
-                            "Error: " + task.exception!!.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        } else {
+                            Toast.makeText(
+                                    this@LoginActivity,
+                                    "Error: " + task.exception!!.message,
+                                    Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-                }
         })
         mSignUpButton!!.setOnClickListener(View.OnClickListener {
             startActivity(
-                Intent(
-                    applicationContext,
-                    SignUpActivity::class.java
-                )
+                    Intent(
+                            applicationContext,
+                            SignUpActivity::class.java
+                    )
             )
         })
 
 
+    }
+
+    private fun checkIfAdmin() {
+        val userCollectionRef = db.collection("users")
+        userCollectionRef.get().addOnCompleteListener(OnCompleteListener<QuerySnapshot> { task ->
+            if (task.isSuccessful) {
+                for (document in task.result!!) {
+                    if (document.id == auth?.uid.toString()) {
+                        val hasAdminPrivileges = document.get("hasAdminPrivileges")
+                        Log.d("hasAdminPriv", hasAdminPrivileges.toString())
+                        when (hasAdminPrivileges) {
+                            true -> startActivity(Intent(applicationContext, AdminMainActivity::class.java))
+                            false -> startActivity(Intent(applicationContext, MainActivity::class.java))
+                        }
+                    }
+                }
+            }
+        })
     }
 }

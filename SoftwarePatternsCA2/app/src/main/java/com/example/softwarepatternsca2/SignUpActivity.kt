@@ -72,6 +72,7 @@ class SignUpActivity : AppCompatActivity() {
                         user.put("name", name)
                         user.put("phoneNo", phoneNumber)
                         user.put("emailAddress", emailAddress)
+                        user.put("hasAdminPrivileges", false)
                         //user["name"] = name
                         //user["phoneNo"] = phoneNumber
                         //user["emailAddress"] = emailAddress

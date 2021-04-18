@@ -30,6 +30,10 @@ import java.time.format.DateTimeFormatter
 
 class CartActivity : AppCompatActivity() {
 
+    companion object {
+        val instance = CartActivity()
+    }
+
     private lateinit var binding: ActivityCartBinding
     private var auth: FirebaseAuth? = null
     private val db = FirebaseFirestore.getInstance()
@@ -47,6 +51,8 @@ class CartActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         auth = FirebaseAuth.getInstance()
+
+        CartActivity.instance
 
         cartTotals()
 
