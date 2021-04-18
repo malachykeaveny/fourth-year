@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.softwarepatternsca2.databinding.ActivityViewItemsBinding
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
@@ -250,6 +251,37 @@ class ViewItemsActivity : AppCompatActivity() {
             }
         }
 
+        fun addRating(documentId: String, reviewsTotalSum: Int, noOfReviews: Int) {
+            val addRatingBtn = view.findViewById<FloatingActionButton>(R.id.reviewBtn)
+            val ratingEditTxt = EditText(this@ViewItemsActivity)
+
+            addRatingBtn.setOnClickListener {
+                AlertDialog.Builder(this@ViewItemsActivity, R.style.Theme_AppCompat_Light_Dialog_Alert)
+                        .setTitle("Give rating (1-5)")
+                        .setView(ratingEditTxt)
+                        .setNegativeButton("Cancel") { dialogInterface, i ->
+                            val parent = ratingEditTxt.parent as ViewGroup
+                            parent.removeAllViews()
+                            dialogInterface.dismiss()
+                        }
+                        .setPositiveButton("OK") { dialogInterface, i ->
+                            Log.d("ratingsText", ratingEditTxt.text.toString())
+                            var userDocRef = db.collection("items").document(documentId)
+                            userDocRef
+                                    .update("reviewsTotalSum", reviewsTotalSum + ratingEditTxt.text.toString().toInt(), "noOfReviews", noOfReviews + 1 )
+                                    .addOnSuccessListener { Log.d("ViewItemsActivity", "DocumentSnapshot successfully updated!") }
+                                    .addOnFailureListener { e -> Log.w("ViewItemsActivity", "Error updating document", e) }
+                            val parent = ratingEditTxt.parent as ViewGroup
+                            parent.removeAllViews()
+                        }
+                        .show()
+            }
+        }
+
+        fun addComment(documentId: String) {
+            TODO("Not yet implemented")
+        }
+
     }
 
     private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<Item>) : FirestoreRecyclerAdapter<Item, ProductViewHolder>(options) {
@@ -257,6 +289,8 @@ class ViewItemsActivity : AppCompatActivity() {
         override fun onBindViewHolder(productViewHolder: ViewItemsActivity.ProductViewHolder, position: Int, item: Item) {
             productViewHolder.setContent(item.itemName, item.category, item.manufacturer, item.price, item.image, item.stock, item.reviewsTotalSum, item.noOfReviews)
             productViewHolder.itemSelected(item.itemName, item.price, item.image, item.stock)
+            productViewHolder.addRating(snapshots.getSnapshot(position).id, item.reviewsTotalSum, item.noOfReviews)
+            productViewHolder.addComment(snapshots.getSnapshot(position).id)
             //productViewHolder.deleteItem(snapshots.getSnapshot(position).id)
         }
 

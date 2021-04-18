@@ -68,9 +68,9 @@ class LoginActivity : AppCompatActivity() {
                                 false -> startActivity(Intent(applicationContext, MainActivity::class.java))
                             }
 
-                            Log.d("didItWork", checkForPrivileges.hasAdminPrivileges().toString())
+                            Log.d("LoginActivity", checkForPrivileges.hasAdminPrivileges().toString())
 
-                            //checkIfAdmin()
+
                     } else {
                         Toast.makeText(
                             this@LoginActivity,
@@ -90,28 +90,5 @@ class LoginActivity : AppCompatActivity() {
         })
 
 
-    }
-
-    private fun checkIfAdmin() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val userCollectionRef = db.collection("users")
-                val querySnapshot = userCollectionRef.get().await()
-                for (document in querySnapshot.documents) {
-                    Log.d("adminUid", document.id + " " + auth?.uid.toString())
-                    if (document.id == auth?.uid.toString()) {
-                        val hasAdminPrivileges = document.get("hasAdminPrivileges")
-                        Log.d("hasAdminPriv", hasAdminPrivileges.toString())
-                        when (hasAdminPrivileges) {
-                            true -> startActivity(Intent(applicationContext, AdminMainActivity::class.java))
-                            false -> startActivity(Intent(applicationContext, MainActivity::class.java))
-                        }
-                    }
-                }
-            }
-            catch (e: Exception) {
-                Toast.makeText(applicationContext, e.message, Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 }
