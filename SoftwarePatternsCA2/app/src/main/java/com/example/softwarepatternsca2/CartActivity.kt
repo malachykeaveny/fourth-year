@@ -93,7 +93,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun cardPayment() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Add address")
+        builder.setTitle("Add card details")
         val view = LayoutInflater.from(application).inflate(R.layout.dialog_card_payment, null)
         val cardNumber = view.findViewById<EditText>(R.id.cardNumberEditText)
         val cardHolder = view.findViewById<EditText>(R.id.cardHolderNameEditText)
@@ -152,6 +152,7 @@ class CartActivity : AppCompatActivity() {
                             for (document in querySnapshot1.documents) {
 
                                 updateStock(document.get("itemName").toString())
+                                var updateStock =
 
                                 userCartRef.document(document.id).delete()
                                     .addOnSuccessListener { Log.d("CartActivity", "User DocumentSnapshot successfully deleted!") }
@@ -161,7 +162,12 @@ class CartActivity : AppCompatActivity() {
                     }
                     .addOnFailureListener { e -> Log.w("CartActivity", "Error updating admin collection with booking", e) }
 
-                updateNumberOfUserOrders()
+
+
+
+                var updateUser = User("","","",false,1)
+                var updateNumberOfOrders = UpdateNumberOfOrders()
+                updateNumberOfOrders.execute(updateUser)
 
                 Log.d("ViewCartActivity", formatted)
 
@@ -172,29 +178,6 @@ class CartActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun updateNumberOfUserOrders() {
-        val userDocRef = db.collection("users").document(auth?.uid.toString())
-        userDocRef
-            .get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    var numberOfOrders = document.get("numberOfOrders").toString().toInt()
-                    Log.d("CartActivity", "DocumentSnapshot data: ${document.data}")
-
-                    userDocRef
-                        .update("numberOfOrders", numberOfOrders + 1)
-                        .addOnSuccessListener { Log.d("CartActivity", "DocumentSnapshot successfully updated!") }
-                        .addOnFailureListener { e -> Log.w("CartActivity", "Error updating document", e) }
-
-                } else {
-                    Log.d("CartActivity", "No such document")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d("CartActivity", "get failed with ", exception)
-            }
     }
 
     private fun updateStock(itemName: String) {
@@ -360,10 +343,7 @@ class CartActivity : AppCompatActivity() {
             cartItem: CartItem
         ) {
             productViewHolder.setContent(cartItem.itemName, cartItem.itemPrice, cartItem.image)
-            productViewHolder.setupQuantityButton(
-                cartItem.quantity,
-                snapshots.getSnapshot(position).id
-            )
+            productViewHolder.setupQuantityButton(cartItem.quantity, snapshots.getSnapshot(position).id)
             productViewHolder.deleteItem(snapshots.getSnapshot(position).id)
         }
 

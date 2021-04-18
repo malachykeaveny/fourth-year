@@ -43,6 +43,7 @@
             android:text="Chicken"/>
 
         <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+            android:visibility="invisible"
             app:finalNumber="5"
             android:id="@+id/number_button"
             android:layout_width="100dp"

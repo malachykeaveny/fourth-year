@@ -62,26 +62,13 @@ class SignUpActivity : AppCompatActivity() {
             auth!!.createUserWithEmailAndPassword(emailAddress, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Toast.makeText(this@SignUpActivity, "User has been created", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(this@SignUpActivity, "User has been created", Toast.LENGTH_SHORT).show()
                         userID = auth!!.currentUser!!.uid
-                        val documentReference = db!!.collection("users").document(
-                            userID!!
-                        )
-                        val user: MutableMap<String, Any> = HashMap()
-                        user.put("name", name)
-                        user.put("phoneNo", phoneNumber)
-                        user.put("emailAddress", emailAddress)
-                        user.put("hasAdminPrivileges", false)
-                        user.put("numberOfOrders", 0)
-                        //user["name"] = name
-                        //user["phoneNo"] = phoneNumber
-                        //user["emailAddress"] = emailAddress
-                        documentReference.set(user).addOnSuccessListener {
-                            Log.d("SignUpActivity", "user created for $userID")
-                        }.addOnFailureListener { e ->
-                            Log.d("SignUpActivity", "Firebase create user error:  $e")
-                        }
+
+                        val newUser = User(name, emailAddress, phoneNumber, false, 0)
+                        var addUser = AddUser()
+                        addUser.execute(newUser)
+
                         startActivity(Intent(applicationContext, MainActivity::class.java))
                     } else {
                         Toast.makeText(this@SignUpActivity, "Error: " + task.exception!!.message, Toast.LENGTH_SHORT).show()

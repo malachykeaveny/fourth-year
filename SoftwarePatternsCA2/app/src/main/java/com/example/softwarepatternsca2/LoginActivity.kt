@@ -65,14 +65,10 @@ class LoginActivity : AppCompatActivity() {
 
                             val checkForPrivileges = PrivilegesLoginCheck()
 
-                            /*when (checkForPrivileges.hasAdminPrivileges()) {
+                            when (checkForPrivileges.hasAdminPrivileges()) {
                                 true -> startActivity(Intent(applicationContext, AdminMainActivity::class.java))
                                 false -> startActivity(Intent(applicationContext, MainActivity::class.java))
                             }
-
-                             */
-
-                            checkIfAdmin()
 
                             Log.d("LoginActivity", checkForPrivileges.hasAdminPrivileges().toString())
 
@@ -96,23 +92,5 @@ class LoginActivity : AppCompatActivity() {
         })
 
 
-    }
-
-    private fun checkIfAdmin() {
-        val userCollectionRef = db.collection("users")
-        userCollectionRef.get().addOnCompleteListener(OnCompleteListener<QuerySnapshot> { task ->
-            if (task.isSuccessful) {
-                for (document in task.result!!) {
-                    if (document.id == auth?.uid.toString()) {
-                        val hasAdminPrivileges = document.get("hasAdminPrivileges")
-                        Log.d("hasAdminPriv", hasAdminPrivileges.toString())
-                        when (hasAdminPrivileges) {
-                            true -> startActivity(Intent(applicationContext, AdminMainActivity::class.java))
-                            false -> startActivity(Intent(applicationContext, MainActivity::class.java))
-                        }
-                    }
-                }
-            }
-        })
     }
 }

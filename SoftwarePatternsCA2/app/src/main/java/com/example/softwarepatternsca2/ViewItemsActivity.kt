@@ -332,15 +332,13 @@ class ViewItemsActivity : AppCompatActivity() {
             productViewHolder.addRating(snapshots.getSnapshot(position).id, item.reviewsTotalSum, item.noOfReviews)
             productViewHolder.addComment(snapshots.getSnapshot(position).id)
             productViewHolder.viewComments(snapshots.getSnapshot(position).id)
-            //productViewHolder.deleteItem(snapshots.getSnapshot(position).id)
         }
 
         override fun onCreateViewHolder(
-                parent: ViewGroup,
-                viewType: Int
-        ): ViewItemsActivity.ProductViewHolder {
-            val view =
-                    LayoutInflater.from(parent.context).inflate(R.layout.item_stock_item, parent, false)
+            parent: ViewGroup,
+            viewType: Int):
+                ViewItemsActivity.ProductViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_stock_item, parent, false)
             return ProductViewHolder(view)
         }
     }

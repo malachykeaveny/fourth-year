@@ -19,6 +19,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         auth = FirebaseAuth.getInstance()
 
+        binding.viewOrdersBtn.setOnClickListener {
+            startActivity(Intent(applicationContext, UserOrdersActivity::class.java))
+        }
+
         binding.viewItemsBtn.setOnClickListener {
             startActivity(Intent(applicationContext, ViewItemsActivity::class.java))
         }
