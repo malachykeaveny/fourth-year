@@ -46,7 +46,9 @@ class AdminHomeActivity : AppCompatActivity() {
         }
 
         binding.assignStaffCdVw.setOnClickListener {
-            startActivity(Intent(applicationContext, StaffToTablesActivity::class.java))
+            intent = Intent(this, StaffToTablesActivity::class.java)
+            intent.putExtra("restaurant", adminRestaurantName)
+            startActivity(intent)
         }
 
         binding.contTracingCdVw.setOnClickListener {

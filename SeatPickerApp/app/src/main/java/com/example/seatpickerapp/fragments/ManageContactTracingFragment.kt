@@ -185,14 +185,14 @@ class ManageContactTracingFragment : Fragment() {
                             )
                             for (i in tablesList) {
                                 val tableCollectionRef =
-                                    db.collection("restaurants").document("flanagans")
+                                    db.collection("restaurants").document(adminCurrentRestaurant)
                                         .collection("tables").document(i).collection(date)
                                 val tableSnapshot = tableCollectionRef.get().await()
                                 for (doc in tableSnapshot.documents) {
                                     Log.d("reportTokenCheck", doc.get("token").toString())
                                     FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
                                     val title = "Covid-19 alert"
-                                    val message = "You are being notified that a positive Covid-19 case has been reported from your recent visit at Flannery's on $date at $time"
+                                    val message = "You are being notified that a positive Covid-19 case has been reported from your recent visit at $adminCurrentRestaurant on $date at $time"
                                     val recipientToken = doc.get("token").toString()
                                     PushNotification(
                                         NotificationData(title, message),

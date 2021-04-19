@@ -4,23 +4,30 @@ import android.R
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import android.view.ViewGroup
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+import com.example.seatpickerapp.dataClasses.CartItem
+import com.example.seatpickerapp.dataClasses.Tables
 import com.example.seatpickerapp.databinding.ActivityStaffToTablesBinding
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.lang.StringBuilder
 import java.util.*
 
 
@@ -35,22 +42,29 @@ class StaffToTablesActivity : AppCompatActivity() {
     private val db = FirebaseFirestore.getInstance()
     val subjects: MutableList<String?> = ArrayList()
     private var spinner: Spinner? = null
-    private var tableOneSelected: Boolean = false
-    private var tableTwoSelected: Boolean = false
-    private var tableThreeSelected: Boolean = false
-    private var tableFourSelected: Boolean = false
-    private var tableFiveSelected: Boolean = false
-    private var tableSixSelected: Boolean = false
-    private var tableSevenSelected: Boolean = false
-    private var tableEightSelected: Boolean = false
     private var selectedStaffMember: String? = null
+    private var adapter: StaffToTablesActivity.ProductFirestoreRecyclerAdapter?= null
+    private var restaurant: String? = null
+    private var tt: String?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStaffToTablesBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        restaurant = intent.getStringExtra("restaurant").toString().decapitalize(Locale.ROOT)
+            .replace("\\s".toRegex(), "")
+        Log.d("StaffToTablesActivity", restaurant!!)
+
         spinner = binding.spinner
+
+        val tableCollectionRef = db.collection("restaurants").document(restaurant!!).collection("tables")
+        binding.staffToTablesRv.layoutManager = GridLayoutManager(applicationContext, 2)
+        //binding.staffToTablesRv.layoutManager = LinearLayoutManager(applicationContext)
+        val options = FirestoreRecyclerOptions.Builder<Tables>().setQuery(tableCollectionRef, Tables::class.java).build()
+        adapter = ProductFirestoreRecyclerAdapter(options)
+        binding.staffToTablesRv.adapter = adapter
 
         binding.dateBtn.setOnClickListener {
             setDate()
@@ -72,128 +86,14 @@ class StaffToTablesActivity : AppCompatActivity() {
                 //Toast.makeText(applicationContext, "${subjects[position]}", Toast.LENGTH_SHORT).show()
                 Log.d("spinner", "${subjects[position]}")
                 selectedStaffMember = subjects[position]
-                deSelectTables()
-            }
-
-        }
-
-        binding.ivTableOne.setOnClickListener {
-            if (date == null || selectedStaffMember == null) {
-                Toast.makeText(this, "Pick a date and employee first!", Toast.LENGTH_SHORT).show()
-            } else {
-                binding.ivTableOne.setImageResource(com.example.seatpickerapp.R.drawable.ic_two_seater_dark_blue)
-                tableOneSelected = true
             }
         }
 
-        binding.ivTableTwo.setOnClickListener {
-            if (date == null || selectedStaffMember == null) {
-                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                binding.ivTableTwo.setImageResource(com.example.seatpickerapp.R.drawable.ic_two_seater_dark_blue)
-                tableTwoSelected = true
-            }
-        }
-
-        binding.ivTableThree.setOnClickListener {
-            if (date == null || selectedStaffMember == null) {
-                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                binding.ivTableThree.setImageResource(com.example.seatpickerapp.R.drawable.ic_two_seater_dark_blue)
-                tableThreeSelected = true
-            }
-        }
-
-        binding.ivTableFour.setOnClickListener {
-            if (date == null || selectedStaffMember == null) {
-                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                binding.ivTableFour.setImageResource(com.example.seatpickerapp.R.drawable.ic_six_seater_dark_blue)
-                tableFourSelected = true
-            }
-        }
-
-        binding.ivTableFive.setOnClickListener {
-            if (date == null || selectedStaffMember == null) {
-                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                binding.ivTableFive.setImageResource(com.example.seatpickerapp.R.drawable.ic_six_seater_dark_blue)
-                tableFiveSelected = true
-            }
-        }
-
-        binding.ivTableSix.setOnClickListener {
-            if (date == null || selectedStaffMember == null) {
-                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                binding.ivTableSix.setImageResource(com.example.seatpickerapp.R.drawable.ic_four_seater_dark_blue)
-                tableSixSelected = true
-            }
-        }
-
-        binding.ivTableSeven.setOnClickListener {
-            if (date == null || selectedStaffMember == null) {
-                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                binding.ivTableSeven.setImageResource(com.example.seatpickerapp.R.drawable.ic_four_seater_dark_blue)
-                tableSevenSelected = true
-            }
-        }
-
-        binding.ivTableEight.setOnClickListener {
-            if (date == null || selectedStaffMember == null) {
-                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                binding.ivTableEight.setImageResource(com.example.seatpickerapp.R.drawable.ic_four_seater_dark_blue)
-                tableEightSelected = true
-            }
-        }
-
-        binding.confirmStaffToTable.setOnClickListener {
-            if (date == null || selectedStaffMember == null) {
-                Toast.makeText(this, "Pick a date, time and party size first", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                val sb = StringBuilder()
-                sb.clear()
-                if (tableOneSelected)
-                    sb.append("tableOne ")
-                if (tableTwoSelected)
-                    sb.append("tableTwo ")
-                if (tableThreeSelected)
-                    sb.append("tableThree ")
-                if (tableFourSelected)
-                    sb.append("tableFour ")
-                if (tableFiveSelected)
-                    sb.append("tableFive ")
-                if (tableSixSelected)
-                    sb.append("tableSix ")
-                if (tableSevenSelected)
-                    sb.append("tableSeven ")
-                if (tableEightSelected)
-                    sb.append("tableEight ")
-
-                val splitBySpace = sb.toString().split(" ")
-                val listOfSelectedTables: MutableList<String> = splitBySpace.toMutableList()
-
-                if (listOfSelectedTables.count() > 1) {
-                    listOfSelectedTables.removeLast()
-                    confirmStaffToTablesDialog(date!!, listOfSelectedTables)
-                }
-            }
-        }
 
     }
 
     private fun spinner() {
-        val staffCollectionRef = db.collection("restaurants").document("flanagans").collection("staff")
+        val staffCollectionRef = db.collection("restaurants").document(restaurant!!).collection("staff")
         val adapter = ArrayAdapter(applicationContext, R.layout.simple_spinner_item, subjects)
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
         spinner!!.adapter = adapter
@@ -222,56 +122,23 @@ class StaffToTablesActivity : AppCompatActivity() {
         dpd.show()
     }
 
-    private fun confirmStaffToTablesDialog(date: String, tables: List<String>) {
-        var sb = StringBuilder()
-        for (i in tables) {
-            when (i) {
-                "tableOne" -> sb.append("1, ")
-                "tableTwo" -> sb.append("2, ")
-                "tableThree" -> sb.append("3, ")
-                "tableFour" -> sb.append("4, ")
-                "tableFive" -> sb.append("5, ")
-                "tableSix" -> sb.append("6, ")
-                "tableSeven" -> sb.append("7, ")
-                "tableEight" -> sb.append("8, ")
-            }
+    private fun validateData(tableNo: String) {
+        if (date == null || selectedStaffMember == null) {
+            Toast.makeText(this@StaffToTablesActivity, "Please select a date and staff member first!", Toast.LENGTH_SHORT).show()
         }
-
-
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Assign tables to employee")
-        builder.setMessage(
-            "Employee: $selectedStaffMember \nDate: $date \nTable Numbers: ${sb.dropLast(2)}"
-        )
-        //builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
-
-        builder.setPositiveButton(android.R.string.yes) { dialog, which ->
-            //createBooking(date!!, time!!, tableNo)
-            for (i in tables) {
-                createStaffToTable(date, selectedStaffMember!!, i)
-                deSelectTables()
-            }
+        else {
+            createStaffToTable(date!!, selectedStaffMember!!, tableNo)
         }
-
-        builder.setNegativeButton(android.R.string.no) { dialog, which ->
-            Toast.makeText(
-                applicationContext,
-                android.R.string.no, Toast.LENGTH_SHORT
-            ).show()
-            deSelectTables()
-        }
-
-        builder.show()
     }
 
     private fun createStaffToTable(date: String, selectedStaffMember: String, tableNo: String) =
         CoroutineScope(Dispatchers.IO).launch {
             val tableLayoutCollectionRef =
-                db.collection("restaurants").document("flanagans").collection("staff")
+                db.collection("restaurants").document(restaurant!!).collection("staff")
                     .document(selectedStaffMember).collection(date)
             val querySnapshot = tableLayoutCollectionRef.get().await()
 
-            val docRef = db.collection("restaurants").document("flanagans").collection("staff")
+            val docRef = db.collection("restaurants").document(restaurant!!).collection("staff")
                 .document(selectedStaffMember).collection(date).document(tableNo)
             val docSnapshot = docRef.get().await()
 
@@ -306,40 +173,66 @@ class StaffToTablesActivity : AppCompatActivity() {
             }
         }
 
+    override fun onStart() {
+        super.onStart()
+        adapter!!.startListening()
+    }
 
-    private fun deSelectTables() {
+    override fun onStop() {
+        super.onStop()
 
-        if (tableOneSelected) {
-            tableOneSelected = false
-            binding.ivTableOne.setImageResource(com.example.seatpickerapp.R.drawable.ic_two_seater_light_blue)
+        if (adapter != null) {
+            adapter!!.stopListening()
         }
-        if (tableTwoSelected) {
-            tableTwoSelected = false
-            binding.ivTableTwo.setImageResource(com.example.seatpickerapp.R.drawable.ic_two_seater_light_blue)
+    }
+
+    private inner class ProductViewHolder internal constructor(private val view: View) :
+        RecyclerView.ViewHolder(
+            view
+        ) {
+
+        fun setContent(documentId: String) {
+            val documentIdTextView = view.findViewById<TextView>(com.example.seatpickerapp.R.id.tableTextView)
+
+            when (documentId) {
+                "tableOne" -> documentIdTextView.text = "Table One"
+                "tableTwo" -> documentIdTextView.text = "Table Two"
+                "tableThree" -> documentIdTextView.text = "Table Three"
+                "tableFour" -> documentIdTextView.text = "Table Four"
+                "tableFive" -> documentIdTextView.text = "Table Five"
+                "tableSix" -> documentIdTextView.text = "Table Six"
+                "tableSeven" -> documentIdTextView.text = "Table Seven"
+                "tableEight" -> documentIdTextView.text = "Table Eight"
+                "tableNine" -> documentIdTextView.text = "Table Nine"
+                "tableTen" -> documentIdTextView.text = "Table Ten"
+            }
+            //documentIdTextView.text = documentId
         }
-        if (tableThreeSelected) {
-            tableThreeSelected = false
-            binding.ivTableThree.setImageResource(com.example.seatpickerapp.R.drawable.ic_two_seater_light_blue)
+
+        fun itemSelected(documentId: String) {
+            val tableCardView = view.findViewById<CardView>(com.example.seatpickerapp.R.id.tableCardView)
+
+            tableCardView.setOnClickListener {
+                validateData(documentId)
+            }
         }
-        if (tableFourSelected) {
-            tableFourSelected = false
-            binding.ivTableFour.setImageResource(com.example.seatpickerapp.R.drawable.ic_six_seater_light_blue)
+
+    }
+
+    private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<Tables>) :
+        FirestoreRecyclerAdapter<Tables, StaffToTablesActivity.ProductViewHolder>(options) {
+        override fun onBindViewHolder(
+            productViewHolder: StaffToTablesActivity.ProductViewHolder,
+            position: Int,
+            tables: Tables
+        ) {
+            productViewHolder.setContent(snapshots.getSnapshot(position).id)
+            productViewHolder.itemSelected(snapshots.getSnapshot(position).id)
         }
-        if (tableFiveSelected) {
-            tableFiveSelected = false
-            binding.ivTableFive.setImageResource(com.example.seatpickerapp.R.drawable.ic_six_seater_light_blue)
-        }
-        if (tableSixSelected) {
-            tableSixSelected = false
-            binding.ivTableSix.setImageResource(com.example.seatpickerapp.R.drawable.ic_four_seater_light_blue)
-        }
-        if (tableSevenSelected) {
-            tableSevenSelected = false
-            binding.ivTableSeven.setImageResource(com.example.seatpickerapp.R.drawable.ic_four_seater_light_blue)
-        }
-        if (tableEightSelected) {
-            tableEightSelected = false
-            binding.ivTableEight.setImageResource(com.example.seatpickerapp.R.drawable.ic_four_seater_light_blue)
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StaffToTablesActivity.ProductViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(com.example.seatpickerapp.R.layout.item_table, parent, false)
+            return ProductViewHolder(view)
         }
     }
 
