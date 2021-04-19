@@ -1,5 +1,10 @@
 package com.example.seatpickerapp.fragments
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,6 +14,9 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +45,9 @@ class FoodRestaurantFragment : Fragment() {
     private val binding get() = _binding!!
     val db = FirebaseFirestore.getInstance()
     private lateinit var communicator: Communicator
+    private lateinit  var locationManager: LocationManager
+    private var userHasGPS = false
+    private var userHasNetwork = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +78,16 @@ class FoodRestaurantFragment : Fragment() {
         binding.setUserAddressButton.setOnClickListener {
             addAddress()
         }
+
+        binding.getLocationButton.setOnClickListener {
+
+        }
     }
+
+    private fun getLocation() {
+        //locationManager = getSystemService(requireContext().applicationContext.L) as LocationManager
+    }
+
 
     private fun getAddress() {
         lifecycleScope.launch {

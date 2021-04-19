@@ -11,7 +11,6 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
@@ -46,7 +45,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 
-class ViewCartActivity : AppCompatActivity() {
+    class ViewCartActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityViewCartBinding
     private var auth: FirebaseAuth? = null
@@ -138,7 +137,7 @@ class ViewCartActivity : AppCompatActivity() {
         builder.setNegativeButton("Cancel") { dialogInterface, _ -> dialogInterface.dismiss() }
             .setPositiveButton("Done") { dialogInterface, _ ->
             if (cardPayment.isChecked) {
-                cardPayment(addressLine1.text.toString(), addressLine2.text.toString(), addressLine3.text.toString(), eircode.text.toString())
+                //completePayment(addressLine1.text.toString(), addressLine2.text.toString(), addressLine3.text.toString(), eircode.text.toString())
             }}
 
         val dialog = builder.create()
@@ -146,7 +145,7 @@ class ViewCartActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun cardPayment(addressLine1: String, addressLine2: String, addressLine3: String, eircode: String) {
+    private fun completePayment(addressLine1: String, addressLine2: String, addressLine3: String, eircode: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val userCartRef = db.collection("users").document(auth?.uid.toString()).collection("cart")
             val userOrderRef = db.collection("users").document(auth?.uid.toString()).collection("order")

@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.TableBookingActivity"></activity>
+        <activity android:name=".activities.ViewContactsActivity"></activity>
+        <activity android:name=".activities.TableBookingActivity" />
         <activity android:name=".activities.EditMenuActivity" />
         <activity android:name=".activities.ViewCartActivity" />
         <activity android:name=".activities.OrderFoodActivity" />
@@ -28,14 +32,12 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".Login" />
         <activity android:name=".activities.ReportPositiveCovidTestActivity" />
         <activity android:name=".activities.StaffToTablesActivity" />
         <activity android:name=".activities.ChangeSeatingActivity" />
         <activity android:name=".activities.AdminHomeActivity" />
         <activity android:name=".activities.FilamentActivity" />
         <activity android:name=".activities.BookingActivity" />
-        <activity android:name=".SignUpActivity" />
         <activity android:name=".activities.HomePageActivity" />
         <activity android:name=".activities.WelcomeActivity">
             <intent-filter>

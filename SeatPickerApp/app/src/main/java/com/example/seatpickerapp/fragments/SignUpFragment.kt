@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.example.seatpickerapp.activities.HomePageActivity
+import com.example.seatpickerapp.dataClasses.User
 import com.example.seatpickerapp.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -92,7 +93,7 @@ class SignUpFragment : Fragment() {
                         val documentReference = db!!.collection("users").document(
                             userID!!
                         )
-                        val user: MutableMap<String, Any> = HashMap()
+                        /*val user: MutableMap<String, Any> = HashMap()
                         user.put("name", name!!)
                         user.put("phoneNo", phoneNo!!)
                         user.put("emailAddress", email!!)
@@ -100,14 +101,21 @@ class SignUpFragment : Fragment() {
                          FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
                             userToken = it.token
                         }
+                         */
 
                         userToken = FirebaseInstanceId.getInstance().getToken().toString()
+
+                        val user = User(name!!, email!!, phoneNo!!, false, userToken.toString())
+
                         Log.d("checkingToken", " token: $userToken")
 
-                        user.put("token", userToken.toString())
+                        //user.put("token", userToken.toString())
+
                         //user["name"] = name
                         //user["phoneNo"] = phoneNumber
                         //user["emailAddress"] = emailAddress
+
+                        //user.put("rooms", MutableMap<String, Any>?= null)
                         documentReference.set(user).addOnSuccessListener {
                             Log.d(
                                 TAG,

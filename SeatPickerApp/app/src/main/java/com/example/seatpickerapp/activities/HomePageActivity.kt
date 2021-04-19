@@ -1,5 +1,6 @@
 package com.example.seatpickerapp.activities
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -34,6 +35,10 @@ class HomePageActivity : AppCompatActivity() {
                 R.id.miProfile -> setFragment(profileFragment)
             }
             true
+        }
+
+        binding.chatFAB.setOnClickListener{
+            startActivity(Intent(applicationContext, ViewContactsActivity::class.java))
         }
     }
 
