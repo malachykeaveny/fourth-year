@@ -64,6 +64,10 @@ class AdminHomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.adminChatCV.setOnClickListener {
+            startActivity(Intent(applicationContext, ViewContactsActivity::class.java))
+        }
+
         binding.adminLogOut.setOnClickListener {
             logOut()
         }

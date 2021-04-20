@@ -14,7 +14,6 @@
 
         <TextView
             android:id="@+id/restaurantNameTxtView"
-            android:layout_marginTop="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Restaurant name"
@@ -26,7 +25,6 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             app:cardCornerRadius="18dp"
             android:elevation="10dp"
             app:cardUseCompatPadding="true"
@@ -37,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="8dp"
+                android:padding="2dp"
                 android:weightSum="6"
                 android:background="@drawable/meal_gradient">
 
@@ -78,7 +76,6 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             app:cardCornerRadius="18dp"
             android:elevation="10dp"
             app:cardUseCompatPadding="true"
@@ -89,7 +86,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="8dp"
+                android:padding="3dp"
                 android:weightSum="6"
                 android:background="@drawable/profile_gradient">
 
@@ -130,7 +127,6 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             app:cardCornerRadius="18dp"
             android:elevation="10dp"
             app:cardUseCompatPadding="true"
@@ -141,7 +137,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="8dp"
+                android:padding="2dp"
                 android:weightSum="6"
                 android:background="@drawable/maps_gradient">
 
@@ -182,7 +178,6 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             app:cardCornerRadius="18dp"
             android:elevation="10dp"
             app:cardUseCompatPadding="true"
@@ -193,7 +188,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="8dp"
+                android:padding="2dp"
                 android:weightSum="6"
                 android:background="@drawable/maps_gradient">
 
@@ -217,6 +212,57 @@
                         android:textSize="15dp"
                         android:textStyle="bold"
                         android:text="Manage menu items."
+                        android:textColor="#d3d3d3"/>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_food_icon"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="18dp"
+            android:elevation="10dp"
+            app:cardUseCompatPadding="true"
+            android:clickable="true"
+            android:id="@+id/adminChatCV">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="2dp"
+                android:weightSum="6"
+                android:background="@drawable/maps_gradient">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
+                        android:text="Chat"
+                        android:textColor="#ffffff"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        android:text="Help users having issues."
                         android:textColor="#d3d3d3"/>
 
                 </LinearLayout>

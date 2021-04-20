@@ -14,4 +14,6 @@
     <color name="darkGrey">#a9a9a9</color>
     <color name="lightBackground">#EBEBEB</color>
     <color name="darkBlue">#00008b</color>
+    <color name="lightBlue">#E6FFFF</color>
+    <color name="salmon">#FFCCCC</color>
 </resources>
