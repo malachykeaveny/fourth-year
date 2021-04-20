@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".activities.ViewContactsActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/contactRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="32dp"
+        tools:layout_editor_absoluteX="394dp"
+        tools:layout_editor_absoluteY="163dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

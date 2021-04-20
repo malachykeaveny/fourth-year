@@ -8,5 +8,6 @@ data class User(
     var phoneNo: String = "",
     var hasAdminPrivileges: Boolean = false,
     var token: String = "",
-    var rooms: MutableMap<String, Any>?= null
+    var rooms: MutableMap<String, Any>?= null,
+    var userId: String = ""
 ) : Serializable

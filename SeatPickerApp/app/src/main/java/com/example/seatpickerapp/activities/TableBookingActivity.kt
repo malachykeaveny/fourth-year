@@ -5,10 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.seatpickerapp.R
 import com.example.seatpickerapp.databinding.ActivityTableBookingBinding
-import com.example.seatpickerapp.fragments.FlanagansFragment
-import com.example.seatpickerapp.fragments.FoodCategoryFragment
-import com.example.seatpickerapp.fragments.FoodItemsFragment
-import com.example.seatpickerapp.fragments.TableRestaurantFragment
+import com.example.seatpickerapp.fragments.*
 import com.example.seatpickerapp.interfaces.Communicator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -43,16 +40,16 @@ class TableBookingActivity : AppCompatActivity(), Communicator {
     override fun passDataCom(id: String, name: String) {
         val transaction = this.supportFragmentManager.beginTransaction()
         val flanagansFragment = FlanagansFragment()
-        val foodItemsFragment = FoodItemsFragment()
+        val oakFirePizzaFragment = OakFirePizzaFragment()
 
         when (name) {
             "flanagans" -> {
                 //OrderFoodActivity.currentRestaurant = name
                 transaction.replace(R.id.tableBookingFL, flanagansFragment)
             }
-            "category" -> {
+            "oakFirePizza" -> {
                 //OrderFoodActivity.currentCategory = name
-                transaction.replace(R.id.tableBookingFL, foodItemsFragment)
+                transaction.replace(R.id.tableBookingFL, oakFirePizzaFragment)
             }
         }
 

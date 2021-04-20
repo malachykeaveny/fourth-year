@@ -9,13 +9,17 @@
         android:id="@+id/chatFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:scaleX="1.2"
+        android:scaleY="1.2"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="32dp"
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="@+id/flFragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/stat_notify_chat"
-        android:focusable="true" />
+        android:focusable="true"
+        android:elevation="6dp"
+        app:elevation="6dp"/>
 
     <FrameLayout
         android:id="@+id/flFragment"
