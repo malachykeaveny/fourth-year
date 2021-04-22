@@ -61,7 +61,7 @@ class OrderFoodActivity : AppCompatActivity(), Communicator {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
 
-        binding.buttonGetLocation.setOnClickListener {
+        /*binding.buttonGetLocation.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
                     applicationContext,android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this@OrderFoodActivity,
@@ -71,6 +71,8 @@ class OrderFoodActivity : AppCompatActivity(), Communicator {
                 getCurrentLocation()
             }
         }
+
+         */
 
     }
 

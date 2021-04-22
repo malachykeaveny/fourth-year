@@ -9,5 +9,8 @@ data class User(
     var hasAdminPrivileges: Boolean = false,
     var token: String = "",
     var rooms: MutableMap<String, Any>?= null,
-    var userId: String = ""
+    var userId: String = "",
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0,
+    var userAddress: String = ""
 ) : Serializable
