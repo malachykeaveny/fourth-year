@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import com.example.seatpickerapp.R
 import com.example.seatpickerapp.dataClasses.Booking
 import com.example.seatpickerapp.databinding.FragmentOakFirePizzaBinding
@@ -381,7 +382,7 @@ class OakFirePizzaFragment : Fragment() {
                 if (position != -1) {
                     partySize = seatList[position]
                     //Toast.makeText(this, "You picked: $partySize", Toast.LENGTH_SHORT).show()
-                    if (partySize!!.toInt() > 6) {
+                    if (partySize!!.toInt() > 2) {
                         Toast.makeText(context, "Party size:  $partySize", Toast.LENGTH_SHORT).show()
                         askToBookMultipleTables(partySize!!)
                     } else {
@@ -411,9 +412,8 @@ class OakFirePizzaFragment : Fragment() {
                 var month = mMonth + 1
                 date = "$mDay.$month.$mYear"
                 binding.selectDateBtn.setText(date)
-                //getAvailableTimes(date!!)
 
-                //getSpecialTableLayout(date)
+                getTableLayout()
 
                 binding.twoPmBtn.visibility = Button.VISIBLE
                 binding.fourPmBtn.visibility = Button.VISIBLE
@@ -423,6 +423,43 @@ class OakFirePizzaFragment : Fragment() {
             }, year, month, day)
         dpd.datePicker.minDate = System.currentTimeMillis() - 1000
         dpd.show()
+    }
+
+    private fun getTableLayout() {
+        val tableLayoutDocRef = db.collection("restaurants").document("oakFirePizza").collection("tableLayouts").document(date!!)
+        tableLayoutDocRef.get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    //Toast.makeText(context, "A special layout already exists for $date !", Toast.LENGTH_SHORT).show()
+                    Log.d("FlanagansFragment", "DocumentSnapshot data: ${document.data}")
+                    binding.ivTableOne.isVisible = document.get("tableOneVisible").toString().toBoolean()
+                    binding.ivTableTwo.isVisible = document.get("tableTwoVisible").toString().toBoolean()
+                    binding.ivTableThree.isVisible = document.get("tableThreeVisible").toString().toBoolean()
+                    binding.ivTableFour.isVisible = document.get("tableFourVisible").toString().toBoolean()
+                    binding.ivTableFive.isVisible = document.get("tableFiveVisible").toString().toBoolean()
+                    binding.ivTableSix.isVisible = document.get("tableSixVisible").toString().toBoolean()
+                    binding.ivTableSeven.isVisible = document.get("tableSevenVisible").toString().toBoolean()
+                    binding.ivTableEight.isVisible = document.get("tableEightVisible").toString().toBoolean()
+                    binding.ivTableNine.isVisible = document.get("tableNineVisible").toString().toBoolean()
+                    binding.ivTableTen.isVisible = document.get("tableTenVisible").toString().toBoolean()
+
+                } else {
+                    Log.d("FlanagansFragment", "No such document")
+                    binding.ivTableOne.isVisible = true
+                    binding.ivTableTwo.isVisible = true
+                    binding.ivTableThree.isVisible = true
+                    binding.ivTableFour.isVisible = true
+                    binding.ivTableFive.isVisible = true
+                    binding.ivTableSix.isVisible = true
+                    binding.ivTableSeven.isVisible = true
+                    binding.ivTableEight.isVisible = true
+                    binding.ivTableNine.isVisible = true
+                    binding.ivTableTen.isVisible = true
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("ChangeSeatingActivity", "get failed with ", exception)
+            }
     }
 
     private fun deSelectTables() {

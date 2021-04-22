@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.seatpickerapp.activities.HomePageActivity
 import com.example.seatpickerapp.dataClasses.User
+import com.example.seatpickerapp.dataClasses.UserContact
 import com.example.seatpickerapp.databinding.FragmentSignUpBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -90,53 +91,32 @@ class SignUpFragment : Fragment() {
                     if (task.isSuccessful) {
                         Toast.makeText(context, "User has been created", Toast.LENGTH_SHORT).show()
                         userID = auth!!.currentUser!!.uid
-                        val documentReference = db!!.collection("users").document(
-                            userID!!
-                        )
-                        /*val user: MutableMap<String, Any> = HashMap()
-                        user.put("name", name!!)
-                        user.put("phoneNo", phoneNo!!)
-                        user.put("emailAddress", email!!)
-                        user.put("hasAdminPrivileges", false)
-                         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-                            userToken = it.token
-                        }
-                         */
-
+                        val documentReference = db!!.collection("users").document(userID!!)
                         userToken = FirebaseInstanceId.getInstance().getToken().toString()
-
-                        val user = User(name!!, email!!, phoneNo!!, false, userToken.toString())
-
+                        val user = User(name!!, email!!, phoneNo!!, false, userToken.toString(), null, userID!!)
                         Log.d("checkingToken", " token: $userToken")
 
-                        //user.put("token", userToken.toString())
+                        documentReference.set(user)
+                            .addOnSuccessListener { Log.d(TAG, "user created for $userID") }
+                            .addOnFailureListener { e -> Log.d(TAG, "Firebase create user error:  $e") }
 
-                        //user["name"] = name
-                        //user["phoneNo"] = phoneNumber
-                        //user["emailAddress"] = emailAddress
+                        setContacts()
 
-                        //user.put("rooms", MutableMap<String, Any>?= null)
-                        documentReference.set(user).addOnSuccessListener {
-                            Log.d(
-                                TAG,
-                                "user created for $userID"
-                            )
-                        }.addOnFailureListener { e ->
-                            Log.d(
-                                TAG,
-                                "Firebase create user error:  $e"
-                            )
-                        }
                         startActivity(Intent(context, HomePageActivity::class.java))
                     } else {
-                        Toast.makeText(
-                            context,
-                            "Error: " + task.exception!!.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(context, "Error: " + task.exception!!.message, Toast.LENGTH_SHORT).show()
                     }
                 }
         }
+    }
+
+    private fun setContacts() {
+        val userContactsRef = db!!.collection("users").document(auth?.uid.toString()).collection("contacts")
+        val flanagansContact = UserContact("Flanagans", "dg5vqhBlWveR3yRlKPv9ifUpe8j1", null)
+        val oakFirePizzaContact = UserContact("OakFirePizza", "R8Bn0SsH9SNSZyGxhPrU1BDN3iL2", null)
+
+        userContactsRef.document("dg5vqhBlWveR3yRlKPv9ifUpe8j1").set(flanagansContact)
+        userContactsRef.document("R8Bn0SsH9SNSZyGxhPrU1BDN3iL2").set(oakFirePizzaContact)
     }
 
 }

@@ -89,10 +89,10 @@ class ChangeSeatingActivity : AppCompatActivity() {
                         "tableTwoVisible" to false,
                         "tableThreeVisible" to true,
                         "tableFourVisible" to true,
-                        "tableFiveVisible" to false,
+                        "tableFiveVisible" to true,
                         "tableSixVisible" to false,
                         "tableSevenVisible" to false,
-                        "tableEightVisible" to true,
+                        "tableEightVisible" to false,
                     )
 
                    tableLayoutDocRef.set(layoutHashMap).addOnSuccessListener {
@@ -125,7 +125,7 @@ class ChangeSeatingActivity : AppCompatActivity() {
                         "tableOneVisible" to true,
                         "tableTwoVisible" to false,
                         "tableThreeVisible" to true,
-                        "tableFourVisible" to false,
+                        "tableFourVisible" to true,
                         "tableFiveVisible" to true,
                         "tableSixVisible" to false,
                         "tableSevenVisible" to true,

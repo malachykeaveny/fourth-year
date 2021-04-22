@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,6 +18,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.PermissionChecker.checkCallingOrSelfPermission
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -84,9 +86,7 @@ class FoodRestaurantFragment : Fragment() {
         }
     }
 
-    private fun getLocation() {
-        //locationManager = getSystemService(requireContext().applicationContext.L) as LocationManager
-    }
+
 
 
     private fun getAddress() {
