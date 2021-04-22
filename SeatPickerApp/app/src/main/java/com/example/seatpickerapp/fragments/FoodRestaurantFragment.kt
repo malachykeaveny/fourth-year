@@ -1,18 +1,13 @@
 package com.example.seatpickerapp.fragments
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
-import android.location.LocationManager
-import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,14 +16,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.PermissionChecker.checkCallingOrSelfPermission
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seatpickerapp.R
 import com.example.seatpickerapp.activities.OrderFoodActivity
-import com.example.seatpickerapp.dataClasses.FoodCategory
 import com.example.seatpickerapp.dataClasses.FoodRestaurant
 import com.example.seatpickerapp.dataClasses.User
 import com.example.seatpickerapp.databinding.FragmentFoodRestaurantBinding
@@ -46,20 +39,17 @@ import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
+import org.w3c.dom.Text
 import java.util.*
 
 class FoodRestaurantFragment : Fragment() {
 
     private var auth: FirebaseAuth? = null
     private var adapter: FoodRestaurantFragment.ProductFirestoreRecyclerAdapter? = null
-    private var _binding: FragmentFoodRestaurantBinding?= null
+    private var _binding: FragmentFoodRestaurantBinding? = null
     private val binding get() = _binding!!
     val db = FirebaseFirestore.getInstance()
     private lateinit var communicator: Communicator
-    private lateinit  var locationManager: LocationManager
-    private var userHasGPS = false
-    private var userHasNetwork = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,23 +70,29 @@ class FoodRestaurantFragment : Fragment() {
 
         val restaurantRef = db.collection("restaurants")
         binding.restaurantRV.layoutManager = LinearLayoutManager(context)
-        val options = FirestoreRecyclerOptions.Builder<FoodRestaurant>().setQuery(restaurantRef, FoodRestaurant::class.java).build()
+        val options = FirestoreRecyclerOptions.Builder<FoodRestaurant>().setQuery(
+            restaurantRef,
+            FoodRestaurant::class.java
+        ).build()
         adapter = ProductFirestoreRecyclerAdapter(options)
         binding.restaurantRV.adapter = adapter
         communicator = activity as Communicator
 
-        //getAddress()
+        getAddress()
 
         //binding.setUserAddressButton.setOnClickListener {
-            //addAddress()
+        //addAddress()
         //}
 
         binding.getLocationButton.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
-                    requireContext(),android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(requireActivity(),
-                    arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                    , OrderFoodActivity.REQUEST_PERMISSION_REQUEST_CODE
+                    requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION),
+                    OrderFoodActivity.REQUEST_PERMISSION_REQUEST_CODE
                 )
             } else {
                 getCurrentLocation()
@@ -113,8 +109,7 @@ class FoodRestaurantFragment : Fragment() {
         if (requestCode == OrderFoodActivity.REQUEST_PERMISSION_REQUEST_CODE && grantResults.size > 0) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getCurrentLocation()
-            }
-            else {
+            } else {
                 Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
             }
         }
@@ -132,7 +127,7 @@ class FoodRestaurantFragment : Fragment() {
 
 
         LocationServices.getFusedLocationProviderClient(requireActivity())
-            .requestLocationUpdates(locationRequest,object : LocationCallback(){
+            .requestLocationUpdates(locationRequest, object : LocationCallback() {
                 override fun onLocationResult(locationResult: LocationResult?) {
                     super.onLocationResult(locationResult)
                     LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -142,7 +137,7 @@ class FoodRestaurantFragment : Fragment() {
                         var latitude = locationResult.locations.get(locIndex).latitude
                         var longitude = locationResult.locations.get(locIndex).longitude
 
-                        addressList = geoCoder.getFromLocation(latitude,longitude, 1)
+                        addressList = geoCoder.getFromLocation(latitude, longitude, 1)
 
                         if (addressList.isNotEmpty()) {
                             var userAddress: String = addressList[0].getAddressLine(0)
@@ -157,10 +152,13 @@ class FoodRestaurantFragment : Fragment() {
 
                             userDocRef
                                 .update("latitude", latitude, "longitude", longitude, "userAddress", userAddress)
-                                .addOnSuccessListener { Log.d("FoodRestaurantLocation", "DocumentSnapshot successfully updated!") }
+                                .addOnSuccessListener {
+                                    Log.d("FoodRestaurantLocation", "DocumentSnapshot successfully updated!")
+                                    adapter!!.stopListening()
+                                    adapter!!.startListening()
+                                }
                                 .addOnFailureListener { e -> Log.w("FoodRestaurantLocation", "Error updating document", e) }
-                        }
-                        else {
+                        } else {
                             getCurrentLocation()
                         }
                     }
@@ -176,17 +174,41 @@ class FoodRestaurantFragment : Fragment() {
                 for (document in querySnapshot.documents) {
                     //Log.d("FoodRestaurantFragment", document.id + " " + auth?.uid.toString())
                     if (document.id == auth?.uid.toString()) {
-                        val addressLine1 = document.get("addressLine1").toString()
-                        val addressEircode = document.get("addressEircode").toString()
-                        Log.d("FoodRestaurantFragment", "$addressLine1 $addressEircode")
-                        binding.userAddressTxtView.text = "$addressLine1, $addressEircode"
+                        if (document.get("userAddress").toString().isNotEmpty()) {
+                            val userAddress = document.get("userAddress").toString()
+                            Log.d("FoodRestaurantFragment", "$userAddress")
+                            var addressLine1 = userAddress.split(",")[0]
+                            var addressLine2 = userAddress.split(",")[1]
+                            var addressLine3 = userAddress.split(",")[2]
+                            binding.userAddressTxtView.text = "Delivering to: $addressLine1,$addressLine2,$addressLine3"
+                            var userLatitude = document.get("latitude").toString().toDouble()
+                            var userLongitude = document.get("longitude").toString().toDouble()
+                            //calculateDistance(document.get("latitude").toString().toDouble(), document.get("longitude").toString().toDouble())
+                        } else {
+                            binding.userAddressTxtView.text = "Please set your location"
+                        }
                     }
                 }
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun calculateDistance(latitude: Double, longitude: Double) {
+        Log.d("RestCheckLatLong", "$latitude $longitude")
+
+
+        val startPoint = Location("locationA")
+        startPoint.latitude = latitude
+        startPoint.longitude = longitude
+
+        val endPoint = Location("locationA")
+        endPoint.latitude = 53.35023178444848
+        endPoint.longitude = -6.259997307935073
+
+        val distance = startPoint.distanceTo(endPoint).toDouble()
+        Log.d("RestCheckLatLong", "$distance")
     }
 
     private fun addAddress() {
@@ -233,11 +255,24 @@ class FoodRestaurantFragment : Fragment() {
                         "addressEircode", eirCode.text.toString()
                     )
                         .addOnSuccessListener {
-                            Log.d("FoodRestaurantFragment", "DocumentSnapshot successfully updated!")
-                            Toast.makeText(requireContext(), "Address successfully updated!", Toast.LENGTH_SHORT).show()
+                            Log.d(
+                                "FoodRestaurantFragment",
+                                "DocumentSnapshot successfully updated!"
+                            )
+                            Toast.makeText(
+                                requireContext(),
+                                "Address successfully updated!",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             getAddress()
                         }
-                        .addOnFailureListener { e -> Log.w("EditMenuActivity", "Error updating document", e) }
+                        .addOnFailureListener { e ->
+                            Log.w(
+                                "EditMenuActivity",
+                                "Error updating document",
+                                e
+                            )
+                        }
 
                     dialog.dismiss()
                 }
@@ -263,39 +298,104 @@ class FoodRestaurantFragment : Fragment() {
         }
     }
 
-    private inner class ProductViewHolder internal constructor(private val view: View) : RecyclerView.ViewHolder(view) {
+    private inner class ProductViewHolder internal constructor(private val view: View) :
+        RecyclerView.ViewHolder(
+            view
+        ) {
 
-        fun setContent(name: String, image: String) {
-            val nameTextView = view.findViewById<TextView>(R.id.txtViewCategory)
-            val imageView = view.findViewById<ImageView>(R.id.imageCategory)
+        fun setContent(name: String, image: String, restaurantLatitude: Double, restaurantLongitude: Double) {
+            val nameTextView = view.findViewById<TextView>(R.id.restaurantNameTxtView2)
+            val imageView = view.findViewById<ImageView>(R.id.restaurantImageView)
 
             if (image.isNotEmpty()) {
                 Picasso.with(context).load(image).into(imageView)
             }
 
             nameTextView.text = name
+
+            //calculateDistance(name, restaurantLatitude, restaurantLongitude)
         }
 
         fun categorySelected(name: String) {
-            val cardViewCategory = view.findViewById<CardView>(R.id.cardViewCategory)
-            cardViewCategory.setOnClickListener {
+            val cardViewCategory = view.findViewById<CardView>(R.id.restaurantCardView)
+            cardViewCategory?.setOnClickListener {
                 val nameNoWhitespace = name.replace("\\s".toRegex(), "").decapitalize(Locale.ROOT)
                 //Toast.makeText(context, nameNoWhitespace, Toast.LENGTH_SHORT).show()
                 communicator.passDataCom("restaurant", nameNoWhitespace)
             }
         }
 
+        fun calculateDistance(name: String, restaurantLatitude: Double, restaurantLongitude: Double) {
+            var nameNoWhiteSpace = name.replace("\\s".toRegex(), "").decapitalize(Locale.ROOT)
+            val docRef = db.collection("users").document(auth?.uid.toString())
+            docRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        Log.d("FoodRestaurantFrag", "DocumentSnapshot data: ${document.data}")
+                        var userLatitude = document.get("latitude")
+                        var userLongitude = document.get("longitude")
+
+                        if (userLatitude!= null && userLongitude != null) {
+
+                            var userLatitudeDouble = userLatitude.toString().toDouble()
+                            var userLongitudeDouble = userLongitude.toString().toDouble()
+                            Log.d("checkingUserLatLng", "$userLatitudeDouble $userLatitude")
+                            Log.d("checkingRestLatLng", "$restaurantLatitude $restaurantLongitude")
+
+
+                            val userLocation = Location("locationA")
+                            userLocation.latitude = userLatitudeDouble!!
+                            userLocation.longitude = userLongitudeDouble!!
+
+                            val restaurantLocation = Location("locationA")
+                            restaurantLocation.latitude = restaurantLatitude
+                            restaurantLocation.longitude = restaurantLongitude
+
+                            val distance = userLocation.distanceTo(restaurantLocation).toDouble()
+                            val roundedDistance = String.format("%.1f", distance/1000)
+                            val distanceTextView = view.findViewById<TextView>(R.id.restaurantDistanceTextView)
+                            distanceTextView.text = "${roundedDistance}km away"
+                            Log.d("checkingDistance", "$distance")
+                        }
+                        else {
+                            Log.d("FoodRestFrag", "$name lat or long null")
+                        }
+                    } else {
+                        Log.d("FoodRestaurantFrag", "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("FoodRestaurantFrag", "get failed with ", exception)
+                }
+
+        }
+
 
     }
 
-    private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<FoodRestaurant>) : FirestoreRecyclerAdapter<FoodRestaurant, FoodRestaurantFragment.ProductViewHolder>(options) {
-        override fun onBindViewHolder(productViewHolder: FoodRestaurantFragment.ProductViewHolder, position: Int, foodRestaurant: FoodRestaurant) {
-            productViewHolder.setContent(foodRestaurant.name, foodRestaurant.image)
+    private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<FoodRestaurant>) :
+        FirestoreRecyclerAdapter<FoodRestaurant, FoodRestaurantFragment.ProductViewHolder>(
+            options
+        ) {
+        override fun onBindViewHolder(
+            productViewHolder: FoodRestaurantFragment.ProductViewHolder,
+            position: Int,
+            foodRestaurant: FoodRestaurant
+        ) {
+            productViewHolder.setContent(foodRestaurant.name, foodRestaurant.image, foodRestaurant.latitude, foodRestaurant.longitude)
             productViewHolder.categorySelected(foodRestaurant.name)
+            productViewHolder.calculateDistance(foodRestaurant.name, foodRestaurant.latitude, foodRestaurant.longitude)
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodRestaurantFragment.ProductViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_food_category, parent, false)
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): FoodRestaurantFragment.ProductViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(
+                R.layout.item_restaurant,
+                parent,
+                false
+            )
             return ProductViewHolder(view)
         }
     }

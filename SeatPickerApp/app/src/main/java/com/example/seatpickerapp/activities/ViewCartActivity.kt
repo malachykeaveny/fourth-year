@@ -59,6 +59,7 @@ import java.util.*
     private var name: String = ""
     private var phoneNo: String = ""
     private var addressLine1: String = ""
+    private var addressLine2: String = ""
     private var eirCode: String = ""
     private var county: String = ""
     private var cartTotal: Double = 0.0
@@ -106,9 +107,11 @@ import java.util.*
                 if (document != null) {
                     name = document.get("name").toString()
                     phoneNo = document.get("phoneNo").toString()
-                    addressLine1 = document.get("addressLine1").toString()
-                    county = document.get("addressCounty").toString()
-                    eirCode = document.get("addressEircode").toString()
+                    var address = document.get("userAddress").toString()
+                    Log.d("ViewCartSplit", "${address.split(",")[0]}")
+                    addressLine1 = address.split(",")[0]
+                    addressLine2 = address.split(",")[1]
+                    county = address.split(",")[2]
                     Log.d("ViewCartActivity", "DocumentSnapshot data: ${document.data}")
                     setUpPaymentSession()
                 } else {
@@ -271,8 +274,8 @@ import java.util.*
                 ShippingInformation(
                 Address.Builder()
                     .setLine1(addressLine1)
+                    .setLine2(addressLine2)
                     .setCity(county)
-                    .setPostalCode(eirCode)
                     .setCountry("IE")
                     .build(),
                 name,
