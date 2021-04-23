@@ -303,17 +303,17 @@ class FoodRestaurantFragment : Fragment() {
             view
         ) {
 
-        fun setContent(name: String, image: String, restaurantLatitude: Double, restaurantLongitude: Double) {
-            val nameTextView = view.findViewById<TextView>(R.id.restaurantNameTxtView2)
-            val imageView = view.findViewById<ImageView>(R.id.restaurantImageView)
+        fun setContent(name: String, image: String) {
+                val nameTextView = view.findViewById<TextView>(R.id.restaurantNameTxtView2)
+                val imageView = view.findViewById<ImageView>(R.id.restaurantImageView)
 
-            if (image.isNotEmpty()) {
-                Picasso.with(context).load(image).into(imageView)
-            }
+                nameTextView.text = name
 
-            nameTextView.text = name
+                if (image.isNotEmpty()) {
+                    Picasso.with(context).load(image).into(imageView)
+                }
 
-            //calculateDistance(name, restaurantLatitude, restaurantLongitude)
+
         }
 
         fun categorySelected(name: String) {
@@ -325,7 +325,7 @@ class FoodRestaurantFragment : Fragment() {
             }
         }
 
-        fun calculateDistance(name: String, restaurantLatitude: Double, restaurantLongitude: Double) {
+        fun calculateDistance(name: String, image: String, restaurantLatitude: Double, restaurantLongitude: Double) {
             var nameNoWhiteSpace = name.replace("\\s".toRegex(), "").decapitalize(Locale.ROOT)
             val docRef = db.collection("users").document(auth?.uid.toString())
             docRef.get()
@@ -352,10 +352,11 @@ class FoodRestaurantFragment : Fragment() {
                             restaurantLocation.longitude = restaurantLongitude
 
                             val distance = userLocation.distanceTo(restaurantLocation).toDouble()
-                            val roundedDistance = String.format("%.1f", distance/1000)
-                            val distanceTextView = view.findViewById<TextView>(R.id.restaurantDistanceTextView)
-                            distanceTextView.text = "${roundedDistance}km away"
-                            Log.d("checkingDistance", "$distance")
+
+                                val roundedDistance = String.format("%.1f", distance / 1000)
+                                val distanceTextView = view.findViewById<TextView>(R.id.restaurantDistanceTextView)
+                                distanceTextView.text = "${roundedDistance}km away"
+                                Log.d("checkingDistance", "$distance")
                         }
                         else {
                             Log.d("FoodRestFrag", "$name lat or long null")
@@ -382,9 +383,9 @@ class FoodRestaurantFragment : Fragment() {
             position: Int,
             foodRestaurant: FoodRestaurant
         ) {
-            productViewHolder.setContent(foodRestaurant.name, foodRestaurant.image, foodRestaurant.latitude, foodRestaurant.longitude)
+            productViewHolder.setContent(foodRestaurant.name, foodRestaurant.image)
             productViewHolder.categorySelected(foodRestaurant.name)
-            productViewHolder.calculateDistance(foodRestaurant.name, foodRestaurant.latitude, foodRestaurant.longitude)
+            productViewHolder.calculateDistance(foodRestaurant.name, foodRestaurant.image, foodRestaurant.latitude, foodRestaurant.longitude)
         }
 
         override fun onCreateViewHolder(

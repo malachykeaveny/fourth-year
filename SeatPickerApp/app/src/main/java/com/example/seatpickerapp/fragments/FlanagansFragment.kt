@@ -52,7 +52,7 @@ class FlanagansFragment : Fragment() {
     private var tableSevenSelected: Boolean = false
     private var tableEightSelected: Boolean = false
     private var canSelectMultipleTables: Boolean = false
-    private var specialLayout: String = ""
+    private var specialLayout: String = "default"
     private var tableOneSeats: Int = 2
     private var tableTwoSeats: Int = 2
     private var tableThreeSeats: Int = 2

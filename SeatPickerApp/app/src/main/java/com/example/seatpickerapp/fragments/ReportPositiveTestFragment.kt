@@ -31,6 +31,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
+import java.util.*
 
 
 class ReportPositiveTestFragment : Fragment() {
@@ -114,12 +115,14 @@ class ReportPositiveTestFragment : Fragment() {
                 "tableSix" -> tableLong = "6"
                 "tableSeven" -> tableLong = "7"
                 "tableEight" -> tableLong = "8"
+                "tableNine" -> tableLong = "9"
+                "tableTen" -> tableLong = "10"
             }
             tableNoTextView.text = "Table Number: $tableLong"
 
         }
 
-        fun reportPositiveTest(documentId: String, date: String, tableNo: String, time: String) {
+        fun reportPositiveTest(restaurant: String, documentId: String, date: String, tableNo: String, time: String) {
             val cVReport = view.findViewById<CardView>(R.id.cardViewReport)
             cVReport.setOnClickListener {
                 //Toast.makeText(context, documentId + " " + date + " " + tableNo + " " + time, Toast.LENGTH_SHORT).show()
@@ -134,6 +137,8 @@ class ReportPositiveTestFragment : Fragment() {
                     "tableSix" -> tableLong = "6"
                     "tableSeven" -> tableLong = "7"
                     "tableEight" -> tableLong = "8"
+                    "tableNine" -> tableLong = "9"
+                    "tableTen" -> tableLong = "10"
                 }
 
                 val builder = AlertDialog.Builder(activity!!)
@@ -144,6 +149,7 @@ class ReportPositiveTestFragment : Fragment() {
                 builder.setPositiveButton("Yes") { dialog, which ->
                     Toast.makeText(context, "Thank you for reporting your positive covid-19 test, we will notify the applicable guests and staff. Get well soon.", Toast.LENGTH_SHORT).show()
                     var myToken: String?= null
+                    Log.d("reportRestaurant", restaurant)
 
                     lifecycleScope.launch {
                         try {
@@ -155,24 +161,27 @@ class ReportPositiveTestFragment : Fragment() {
                                 "tableFive",
                                 "tableSix",
                                 "tableSeven",
-                                "tableEight"
+                                "tableEight",
+                                "tableNine",
+                                "tableTen"
                             )
                             for (i in tablesList) {
-                                val tableCollectionRef =
-                                    db.collection("restaurants").document("flanagans")
-                                        .collection("tables").document(i).collection(date)
+                                val tableCollectionRef = db.collection("restaurants").document(restaurant).collection("tables").document(i).collection(date)
                                 val tableSnapshot = tableCollectionRef.get().await()
                                 for (doc in tableSnapshot.documents) {
-                                    Log.d("reportTokenCheck", doc.get("token").toString())
-                                    FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
-                                    val title = "Covid-19 alert"
-                                    val message = "You are being notified that a positive Covid-19 case has been reported from your recent visit at Flannery's on $date at $time"
-                                    val recipientToken = doc.get("token").toString()
-                                    PushNotification(
-                                        NotificationData(title, message),
-                                        recipientToken
-                                    ).also {
-                                        sendNotification(it)
+                                    if (doc.get("time") == time) {
+                                        Log.d("reportTokenCheck", doc.get("token").toString())
+                                        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+                                        val title = "Covid-19 alert"
+                                        val message =
+                                            "You are being notified that a positive Covid-19 case has been reported from a neaby table at your recent visit at $restaurant's on $date at $time"
+                                        val recipientToken = doc.get("token").toString()
+                                        PushNotification(
+                                            NotificationData(title, message),
+                                            recipientToken
+                                        ).also {
+                                            sendNotification(it)
+                                        }
                                     }
                                 }
                             }
@@ -211,9 +220,9 @@ class ReportPositiveTestFragment : Fragment() {
 
     private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<Booking>) : FirestoreRecyclerAdapter<Booking, ReportPositiveTestFragment.ProductViewHolder>(options) {
         override fun onBindViewHolder(productViewHolder: ReportPositiveTestFragment.ProductViewHolder, position: Int, booking: Booking) {
-            productViewHolder.setProductName(booking.restaurant, booking.date, booking.time, booking.tableNo)
+            productViewHolder.setProductName(booking.restaurant.replace("\\s".toRegex(), "").decapitalize(Locale.ROOT), booking.date, booking.time, booking.tableNo)
 
-            productViewHolder.reportPositiveTest(snapshots.getSnapshot(position).id, booking.date, booking.tableNo, booking.time)
+            productViewHolder.reportPositiveTest(booking.restaurant.replace("\\s".toRegex(), "").decapitalize(Locale.ROOT), snapshots.getSnapshot(position).id, booking.date, booking.tableNo, booking.time)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportPositiveTestFragment.ProductViewHolder {

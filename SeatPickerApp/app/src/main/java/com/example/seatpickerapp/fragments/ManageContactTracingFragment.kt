@@ -161,6 +161,7 @@ class ManageContactTracingFragment : Fragment() {
                     "tableSix" -> tableLong = "6"
                     "tableSeven" -> tableLong = "7"
                     "tableEight" -> tableLong = "8"
+                    "tableNine" -> tableLong = "9"
                 }
 
                 val builder = AlertDialog.Builder(activity!!)
@@ -181,7 +182,9 @@ class ManageContactTracingFragment : Fragment() {
                                 "tableFive",
                                 "tableSix",
                                 "tableSeven",
-                                "tableEight"
+                                "tableEight",
+                                "tableNine",
+                                "tableTen"
                             )
                             for (i in tablesList) {
                                 val tableCollectionRef =
