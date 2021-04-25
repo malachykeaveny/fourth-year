@@ -1,6 +1,7 @@
 package com.example.seatpickerapp.fragments
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,12 +14,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.example.seatpickerapp.R
+import com.example.seatpickerapp.activities.HomePageActivity
+import com.example.seatpickerapp.activities.TOPIC
 import com.example.seatpickerapp.dataClasses.Booking
 import com.example.seatpickerapp.databinding.FragmentOakFirePizzaBinding
+import com.example.seatpickerapp.firebaseNotifications.NotificationData
+import com.example.seatpickerapp.firebaseNotifications.PushNotification
+import com.example.seatpickerapp.firebaseNotifications.RetrofitInstance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -1076,7 +1084,10 @@ class OakFirePizzaFragment : Fragment() {
                         )
                     }
 
+                notifyAdmin(date, time, tableNo)
+
                 //Log.d(TAG, adminRef.toString())
+                startActivity(Intent(context, HomePageActivity::class.java))
 
 
             }.addOnFailureListener { e ->
@@ -1090,5 +1101,63 @@ class OakFirePizzaFragment : Fragment() {
 
             Log.d("checkIfDateExists", date + " " + tableNo + " " + querySnapshot.size().toString())
         }
+
+    private fun notifyAdmin(date: String, time: String, tableNo: String) {
+        val docRef = db.collection("users").document("R8Bn0SsH9SNSZyGxhPrU1BDN3iL2")
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+
+                    var tableLong: String? = null
+                    when (tableNo) {
+                        "tableOne" -> tableLong = "1"
+                        "tableTwo" -> tableLong = "2"
+                        "tableThree" -> tableLong = "3"
+                        "tableFour" -> tableLong = "4"
+                        "tableFive" -> tableLong = "5"
+                        "tableSix" -> tableLong = "6"
+                        "tableSeven" -> tableLong = "7"
+                        "tableEight" -> tableLong = "8"
+                        "tableNine" -> tableLong = "9"
+                        "tableTen" -> tableLong = "10"
+                    }
+
+                    Log.d(TAG, "DocumentSnapshot data: ${document.data}")
+                    Log.d("reportTokenCheck", document.get("token").toString())
+                    FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+                    val title = "Oak Fire Pizza: Table reservation received"
+                    val message =
+                        "Table $tableLong has been booked for $time on $date"
+                    val recipientToken = document.get("token").toString()
+                    PushNotification(
+                        NotificationData(title, message),
+                        recipientToken
+                    ).also {
+                        sendNotification(it)
+                    }
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
+    }
+
+    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = RetrofitInstance.api.postNotification(notification)
+            if (response.isSuccessful) {
+                Log.d("OakFirePizzaFragment", "Response; ${Gson().toJson(response)}")
+            }
+            else {
+                Log.e("OakFirePizzaFragment", response.errorBody().toString())
+            }
+        } catch (e: java.lang.Exception) {
+            Log.e("OakFirePizzaFragment", e.toString())
+        }
+    }
+
+
 
 }

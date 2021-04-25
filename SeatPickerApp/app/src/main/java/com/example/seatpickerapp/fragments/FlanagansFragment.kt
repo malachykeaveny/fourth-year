@@ -1,6 +1,7 @@
 package com.example.seatpickerapp.fragments
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -14,12 +15,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.example.seatpickerapp.R
+import com.example.seatpickerapp.activities.AdminHomeActivity
+import com.example.seatpickerapp.activities.HomePageActivity
+import com.example.seatpickerapp.activities.TOPIC
 import com.example.seatpickerapp.dataClasses.Booking
 import com.example.seatpickerapp.databinding.FragmentFlanagansBinding
+import com.example.seatpickerapp.firebaseNotifications.NotificationData
+import com.example.seatpickerapp.firebaseNotifications.PushNotification
+import com.example.seatpickerapp.firebaseNotifications.RetrofitInstance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -457,10 +466,7 @@ class FlanagansFragment : Fragment() {
                     .addOnSuccessListener { Log.d(TAG, "User updated with booking!") }
                     .addOnFailureListener { e -> Log.w(TAG, "Error updating user with booking", e) }
 
-                val adminCollectionRef =
-                    db.collection("restaurants").document("flanagans").collection(
-                        "bookingsMgmt"
-                    ).document("tableBookings").collection(date)
+                val adminCollectionRef = db.collection("restaurants").document("flanagans").collection("bookingsMgmt").document("tableBookings").collection(date)
                 val adminBooking = hashMapOf(
                     "date" to date,
                     "time" to time,
@@ -479,7 +485,10 @@ class FlanagansFragment : Fragment() {
                         )
                     }
 
+                notifyAdmin(date, time, tableNo)
+
                 //Log.d(TAG, adminRef.toString())
+                startActivity(Intent(context, HomePageActivity::class.java))
 
 
             }.addOnFailureListener { e ->
@@ -492,22 +501,64 @@ class FlanagansFragment : Fragment() {
             }
 
 
-            /**withContext(Dispatchers.Main) {
-            when (querySnapshot.size()) {
-            0 -> Toast.makeText(
-            this@TableLayoutMessing,
-            "Date doesn't exist",
-            Toast.LENGTH_SHORT
-            ).show()
-            else -> Toast.makeText(
-            this@TableLayoutMessing,
-            "Date already exists",
-            Toast.LENGTH_SHORT
-            ).show()
-            }
-            } **/
+
             Log.d("checkIfDateExists", date + " " + tableNo + " " + querySnapshot.size().toString())
         }
+
+    private fun notifyAdmin(date: String, time: String, tableNo: String) {
+        val docRef = db.collection("users").document("dg5vqhBlWveR3yRlKPv9ifUpe8j1")
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+
+                    var tableLong: String? = null
+                    when (tableNo) {
+                        "tableOne" -> tableLong = "1"
+                        "tableTwo" -> tableLong = "2"
+                        "tableThree" -> tableLong = "3"
+                        "tableFour" -> tableLong = "4"
+                        "tableFive" -> tableLong = "5"
+                        "tableSix" -> tableLong = "6"
+                        "tableSeven" -> tableLong = "7"
+                        "tableEight" -> tableLong = "8"
+                    }
+
+                    Log.d(TAG, "DocumentSnapshot data: ${document.data}")
+                    Log.d("reportTokenCheck", document.get("token").toString())
+                    FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+                    val title = "Flanagans: Table reservation received"
+                    val message =
+                        "Table $tableLong has been booked for $time on $date"
+                    val recipientToken = document.get("token").toString()
+                    PushNotification(
+                        NotificationData(title, message),
+                        recipientToken
+                    ).also {
+                        sendNotification(it)
+                    }
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
+    }
+
+    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = RetrofitInstance.api.postNotification(notification)
+            if (response.isSuccessful) {
+                Log.d("FlanagansFragment", "Response; ${Gson().toJson(response)}")
+            }
+            else {
+                Log.e("FlanagansFragment", response.errorBody().toString())
+            }
+        } catch (e: java.lang.Exception) {
+            Log.e("FlanagansFragment", e.toString())
+        }
+    }
+
 
     private fun getUnsuitableTables(partySize: String) =
         CoroutineScope(Dispatchers.IO).launch {
