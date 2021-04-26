@@ -1,5 +1,6 @@
     package com.example.seatpickerapp.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seatpickerapp.dataClasses.Booking
 import com.example.seatpickerapp.R
+import com.example.seatpickerapp.activities.PreOrderMealActivity
 import com.example.seatpickerapp.databinding.FragmentBookingsBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
@@ -141,13 +143,27 @@ import java.util.*
 
             }
         }
+
+        fun preOrder(id: String, restaurant: String, date: String, tableNo: String, time: String) {
+            val preOrderFloatingActionButton = view.findViewById<FloatingActionButton>(R.id.fl_btn_pre_order)
+
+            preOrderFloatingActionButton.setOnClickListener {
+                Log.d("BookingsFragment", "$restaurant $date $tableNo $time")
+                TableRestaurantFragment.currentDate = date
+                TableRestaurantFragment.currentTime = time
+                TableRestaurantFragment.currentTableNo = tableNo
+                FlanagansFragment.preOrderRestaurant = restaurant
+
+                startActivity(Intent(context, PreOrderMealActivity::class.java))
+            }
+        }
     }
 
     private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<Booking>) : FirestoreRecyclerAdapter<Booking, BookingsFragment.ProductViewHolder>(options) {
         override fun onBindViewHolder(productViewHolder: BookingsFragment.ProductViewHolder, position: Int, booking: Booking) {
             productViewHolder.setProductName(booking.restaurant, booking.date, booking.time, booking.tableNo)
-
             productViewHolder.deleteBooking(snapshots.getSnapshot(position).id, booking.restaurant, booking.date, booking.tableNo, booking.time)
+            productViewHolder.preOrder(snapshots.getSnapshot(position).id, booking.restaurant, booking.date, booking.tableNo, booking.time)
 
         }
 

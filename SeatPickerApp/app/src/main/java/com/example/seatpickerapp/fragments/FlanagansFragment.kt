@@ -2,7 +2,6 @@ package com.example.seatpickerapp.fragments
 
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,8 +14,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.example.seatpickerapp.R
-import com.example.seatpickerapp.activities.AdminHomeActivity
 import com.example.seatpickerapp.activities.HomePageActivity
+import com.example.seatpickerapp.activities.PreOrderMealActivity
 import com.example.seatpickerapp.activities.TOPIC
 import com.example.seatpickerapp.dataClasses.Booking
 import com.example.seatpickerapp.databinding.FragmentFlanagansBinding
@@ -70,6 +69,10 @@ class FlanagansFragment : Fragment() {
     private var tableSixSeats: Int = 4
     private var tableSevenSeats: Int = 4
     private var tableEightSeats: Int = 4
+
+    companion object {
+        var preOrderRestaurant : String = ""
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -487,8 +490,7 @@ class FlanagansFragment : Fragment() {
 
                 notifyAdmin(date, time, tableNo)
 
-                //Log.d(TAG, adminRef.toString())
-                startActivity(Intent(context, HomePageActivity::class.java))
+                askToPreOrderFood(date, time, tableNo)
 
 
             }.addOnFailureListener { e ->
@@ -504,6 +506,25 @@ class FlanagansFragment : Fragment() {
 
             Log.d("checkIfDateExists", date + " " + tableNo + " " + querySnapshot.size().toString())
         }
+
+    private fun askToPreOrderFood(date: String, time: String, tableNo: String) {
+        val askForFoodDialog = AlertDialog.Builder(requireContext())
+            .setTitle("Would you like to pre-order food for your reservation?")
+            .setPositiveButton("Yes") { dialog, which ->
+                TableRestaurantFragment.currentDate = date
+                TableRestaurantFragment.currentTime = time
+                TableRestaurantFragment.currentTableNo = tableNo
+                preOrderRestaurant = "flanagans"
+                startActivity(Intent(context, PreOrderMealActivity::class.java))
+            }
+            .setNegativeButton("Back") { dialogInterface, which ->
+                startActivity(Intent(context, HomePageActivity::class.java))
+            }.create()
+
+        askForFoodDialog.show()
+        askForFoodDialog.setCancelable(false)
+        askForFoodDialog.setCanceledOnTouchOutside(false)
+    }
 
     private fun notifyAdmin(date: String, time: String, tableNo: String) {
         val docRef = db.collection("users").document("dg5vqhBlWveR3yRlKPv9ifUpe8j1")

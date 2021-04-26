@@ -32,6 +32,12 @@ class TableRestaurantFragment : Fragment() {
     val db = FirebaseFirestore.getInstance()
     private lateinit var communicator: Communicator
 
+    companion object {
+        var currentDate: String = ""
+        var currentTime: String = ""
+        var currentTableNo: String = ""
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

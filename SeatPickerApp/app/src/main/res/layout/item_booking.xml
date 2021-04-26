@@ -25,10 +25,11 @@
             android:id="@+id/fl_btn_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginTop="20dp"
             android:clickable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivthumbcv"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_delete"
             android:focusable="true"
@@ -41,6 +42,7 @@
             android:layout_margin="6dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_booking_icon"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
@@ -102,6 +104,16 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/ivthumbcv"
             app:layout_constraintTop_toBottomOf="@+id/booking_time_text_view" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fl_btn_pre_order"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/fl_btn_delete"
+            app:srcCompat="@drawable/ic_food_icon" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
