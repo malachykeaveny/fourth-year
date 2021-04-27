@@ -113,7 +113,13 @@ class MessageActivity : AppCompatActivity() {
     private inner class ChatMessageViewHolder internal constructor(private val view: View) : RecyclerView.ViewHolder(view) {
         internal fun setMessage(chatMessage: ChatMessage) {
             var chatMessageTextView = view.findViewById<TextView>(R.id.messageTextView)
+            var timeTextView = view.findViewById<TextView>(R.id.timeTextView)
+
             chatMessageTextView.text = chatMessage.messageText
+
+            val splitTime = chatMessage.timeSentAt.toString().split(" ")
+
+            timeTextView.text = "${splitTime[1]} ${splitTime[2]} ${splitTime[3]}"
         }
     }
 
