@@ -1,15 +1,19 @@
  package com.example.seatpickerapp.activities
 
 import android.R
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +21,8 @@ import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.example.seatpickerapp.dataClasses.CartItem
 import com.example.seatpickerapp.dataClasses.Tables
 import com.example.seatpickerapp.databinding.ActivityStaffToTablesBinding
+import com.example.seatpickerapp.fragments.FlanagansFragment
+import com.example.seatpickerapp.fragments.TableRestaurantFragment
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.gms.tasks.OnCompleteListener
@@ -127,7 +133,40 @@ class StaffToTablesActivity : AppCompatActivity() {
             Toast.makeText(this@StaffToTablesActivity, "Please select a date and staff member first!", Toast.LENGTH_SHORT).show()
         }
         else {
-            createStaffToTable(date!!, selectedStaffMember!!, tableNo)
+            db.collection("restaurants").document(restaurant!!).collection("tableLayouts").document(date!!)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        Log.d("StaffToTables", "DocumentSnapshot data: ${document.data}")
+                        Log.d("StaffToTables", "Table number: $tableNo")
+
+                        var docVisible: String = "${tableNo}Visible"
+                        Log.d("StaffToTables", "$docVisible")
+
+                        if (document.get(docVisible) == false) {
+                            val askForFoodDialog = AlertDialog.Builder(this)
+                                .setTitle("Table layout issue!")
+                                .setMessage("Cannot assign staff to this table because it is not available on $date")
+                                .setPositiveButton("Ok") { dialog, which ->
+
+                                }
+                                .create()
+
+                            askForFoodDialog.show()
+                            askForFoodDialog.setCancelable(false)
+                            askForFoodDialog.setCanceledOnTouchOutside(false)
+                        }
+                        else {
+                            createStaffToTable(date!!, selectedStaffMember!!, tableNo)
+                        }
+
+                    } else {
+                        Log.d("StaffToTables", "No such document")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("StaffToTables", "get failed with ", exception)
+                }
         }
     }
 
