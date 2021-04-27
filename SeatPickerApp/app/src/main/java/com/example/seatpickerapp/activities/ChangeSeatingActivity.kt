@@ -73,79 +73,134 @@ class ChangeSeatingActivity : AppCompatActivity() {
     }
 
     private fun setFourMetreLayoutFlanagans() {
-        val tableLayoutDocRef = db.collection("restaurants").document("flanagans").collection("tableLayouts").document(date!!)
-        tableLayoutDocRef.get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    Toast.makeText(this, "A special layout already exists for $date !", Toast.LENGTH_SHORT).show()
-                    Log.d("ChangeSeatingActivity", "DocumentSnapshot data: ${document.data}")
-                } else {
-                    Log.d("ChangeSeatingActivity", "No such document")
 
-                    val layoutHashMap = hashMapOf(
-                        "date" to date,
-                        "tableLayout" to tableLayout,
-                        "tableOneVisible" to true,
-                        "tableTwoVisible" to false,
-                        "tableThreeVisible" to true,
-                        "tableFourVisible" to true,
-                        "tableFiveVisible" to true,
-                        "tableSixVisible" to false,
-                        "tableSevenVisible" to false,
-                        "tableEightVisible" to false,
-                    )
+        db.collection("restaurants").document(adminCurrentRestaurant!!).collection("bookingsMgmt").document("tableBookings").collection(date!!)
+            .get()
+            .addOnSuccessListener { result ->
 
-                   tableLayoutDocRef.set(layoutHashMap).addOnSuccessListener {
-                       Log.d("seatingChangeConfirm", "Layout change successfully written!")
-                       Toast.makeText(this@ChangeSeatingActivity, "Layout change successfully written!", Toast.LENGTH_SHORT).show()
-                   }.addOnFailureListener { e ->
-                       Log.w("seatingChangeConfirmF", "Error writing document", e)
-                       Toast.makeText(this@ChangeSeatingActivity, e.toString(), Toast.LENGTH_SHORT).show()
-                   }
+                for (document in result) {
+                    Log.d("ChangeSeating", "${document.id} => ${document.data}")
                 }
+
+                if (result.size() > 5) {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("Warning")
+                    builder.setMessage("Cannot change layout as there are many bookings already on this date")
+
+                    builder.setPositiveButton("Cancel") { dialog, which ->
+
+                    }
+
+                    builder.show()
+                }
+                else {
+                    val tableLayoutDocRef = db.collection("restaurants").document("flanagans").collection("tableLayouts").document(date!!)
+                    tableLayoutDocRef.get()
+                        .addOnSuccessListener { document ->
+                            if (document.exists()) {
+                                Toast.makeText(this, "A special layout already exists for $date !", Toast.LENGTH_SHORT).show()
+                                Log.d("ChangeSeatingActivity", "DocumentSnapshot data: ${document.data}")
+                            } else {
+                                Log.d("ChangeSeatingActivity", "No such document")
+
+                                val layoutHashMap = hashMapOf(
+                                    "date" to date,
+                                    "tableLayout" to tableLayout,
+                                    "tableOneVisible" to true,
+                                    "tableTwoVisible" to false,
+                                    "tableThreeVisible" to true,
+                                    "tableFourVisible" to true,
+                                    "tableFiveVisible" to true,
+                                    "tableSixVisible" to false,
+                                    "tableSevenVisible" to false,
+                                    "tableEightVisible" to false,
+                                )
+
+                                tableLayoutDocRef.set(layoutHashMap).addOnSuccessListener {
+                                    Log.d("seatingChangeConfirm", "Layout change successfully written!")
+                                    Toast.makeText(this@ChangeSeatingActivity, "Layout change successfully written!", Toast.LENGTH_SHORT).show()
+                                }.addOnFailureListener { e ->
+                                    Log.w("seatingChangeConfirmF", "Error writing document", e)
+                                    Toast.makeText(this@ChangeSeatingActivity, e.toString(), Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d("ChangeSeatingActivity", "get failed with ", exception)
+                        }
+                }
+
             }
             .addOnFailureListener { exception ->
-                Log.d("ChangeSeatingActivity", "get failed with ", exception)
+                Log.d("ChangeSeating", "Error getting documents: ", exception)
             }
     }
 
     private fun setFourMetreLayoutOakFirePizza() {
-        val tableLayoutDocRef = db.collection("restaurants").document("oakFirePizza").collection("tableLayouts").document(date!!)
-        tableLayoutDocRef.get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    Toast.makeText(this, "A special layout already exists for $date !", Toast.LENGTH_SHORT).show()
-                    Log.d("ChangeSeatingActivity", "DocumentSnapshot data: ${document.data}")
-                } else {
-                    Log.d("ChangeSeatingActivity", "No such document")
 
-                    val layoutHashMap = hashMapOf(
-                        "date" to date,
-                        "tableLayout" to tableLayout,
-                        "tableOneVisible" to true,
-                        "tableTwoVisible" to false,
-                        "tableThreeVisible" to true,
-                        "tableFourVisible" to true,
-                        "tableFiveVisible" to true,
-                        "tableSixVisible" to false,
-                        "tableSevenVisible" to true,
-                        "tableEightVisible" to false,
-                        "tableNineVisible" to true,
-                        "tableTenVisible" to false
-                    )
+        db.collection("restaurants").document(adminCurrentRestaurant!!).collection("bookingsMgmt").document("tableBookings").collection(date!!)
+            .get()
+            .addOnSuccessListener { result ->
 
-                    tableLayoutDocRef.set(layoutHashMap).addOnSuccessListener {
-                        Log.d("seatingChangeConfirm", "Layout change successfully written!")
-                        Toast.makeText(this@ChangeSeatingActivity, "Layout change successfully written!", Toast.LENGTH_SHORT).show()
-                    }.addOnFailureListener { e ->
-                        Log.w("seatingChangeConfirmF", "Error writing document", e)
-                        Toast.makeText(this@ChangeSeatingActivity, e.toString(), Toast.LENGTH_SHORT).show()
-                    }
+                for (document in result) {
+                    Log.d("ChangeSeating", "${document.id} => ${document.data}")
                 }
+
+                if (result.size() > 5) {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("Warning")
+                    builder.setMessage("Cannot change layout as there are many bookings already on this date")
+
+                    builder.setPositiveButton("Dismiss") { dialog, which ->
+
+                    }
+
+                    builder.show()
+                }
+                else {
+                    val tableLayoutDocRef = db.collection("restaurants").document("oakFirePizza").collection("tableLayouts").document(date!!)
+                    tableLayoutDocRef.get()
+                        .addOnSuccessListener { document ->
+                            if (document.exists()) {
+                                Toast.makeText(this, "A special layout already exists for $date !", Toast.LENGTH_SHORT).show()
+                                Log.d("ChangeSeatingActivity", "DocumentSnapshot data: ${document.data}")
+                            } else {
+                                Log.d("ChangeSeatingActivity", "No such document")
+
+                                val layoutHashMap = hashMapOf(
+                                    "date" to date,
+                                    "tableLayout" to tableLayout,
+                                    "tableOneVisible" to true,
+                                    "tableTwoVisible" to false,
+                                    "tableThreeVisible" to true,
+                                    "tableFourVisible" to true,
+                                    "tableFiveVisible" to true,
+                                    "tableSixVisible" to false,
+                                    "tableSevenVisible" to true,
+                                    "tableEightVisible" to false,
+                                    "tableNineVisible" to true,
+                                    "tableTenVisible" to false
+                                )
+
+                                tableLayoutDocRef.set(layoutHashMap).addOnSuccessListener {
+                                    Log.d("seatingChangeConfirm", "Layout change successfully written!")
+                                    Toast.makeText(this@ChangeSeatingActivity, "Layout change successfully written!", Toast.LENGTH_SHORT).show()
+                                }.addOnFailureListener { e ->
+                                    Log.w("seatingChangeConfirmF", "Error writing document", e)
+                                    Toast.makeText(this@ChangeSeatingActivity, e.toString(), Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d("ChangeSeatingActivity", "get failed with ", exception)
+                        }
+                }
+
             }
             .addOnFailureListener { exception ->
-                Log.d("ChangeSeatingActivity", "get failed with ", exception)
+                Log.d("ChangeSeating", "Error getting documents: ", exception)
             }
+
     }
 
     private fun confirmLayoutDialog(date: String, tableLayout: String) {
@@ -167,6 +222,8 @@ class ChangeSeatingActivity : AppCompatActivity() {
 
         builder.show()
     }
+
+
 
     private fun createTableLayoutChange(date: String, tableLayout: String) =
         CoroutineScope(Dispatchers.IO).launch {
@@ -217,10 +274,11 @@ class ChangeSeatingActivity : AppCompatActivity() {
                 binding.dateBtn.setText(date)
                 //getAvailableTimes(date!!)
 
-
             }, year, month, day)
         dpd.datePicker.minDate = System.currentTimeMillis() - 1000
         dpd.show()
     }
+
+
 
 }

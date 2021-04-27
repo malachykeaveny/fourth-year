@@ -63,10 +63,9 @@ class MessageActivity : AppCompatActivity() {
             }
             fromUserRooms!![roomId] = true
             fromUserObject?.rooms = fromUserRooms
-            db.collection("users").document(auth?.uid.toString())
+            db.collection("users").document(fromUserObject!!.userId)
                 .set(fromUserObject!!, SetOptions.merge())
-            db.collection("users").document(targetUserObject?.userId.toString())
-                .collection("contacts").document(fromUserObject?.userId.toString())
+            db.collection("users").document(targetUserObject?.userId.toString()).collection("contacts").document(fromUserObject?.userId.toString())
                 .set(fromUserObject!!, SetOptions.merge())
             db.collection("rooms").document(targetUserObject?.userId.toString())
                 .collection("userRooms").document(roomId).set(fromUserObject, SetOptions.merge())
@@ -78,8 +77,7 @@ class MessageActivity : AppCompatActivity() {
             targetUserObject?.rooms = targetUserRooms
             db.collection("users").document(targetUserObject?.userId.toString())
                 .set(targetUserObject!!, SetOptions.merge())
-            db.collection("users").document(auth?.uid.toString()).collection("contacts")
-                .document(targetUserObject?.userId.toString())
+            db.collection("users").document(fromUserObject.userId).collection("contacts").document(targetUserObject?.userId.toString())
                 .set(targetUserObject!!, SetOptions.merge())
             db.collection("rooms").document(auth?.uid.toString()).collection("userRooms")
                 .document(roomId).set(targetUserObject, SetOptions.merge())
@@ -119,7 +117,9 @@ class MessageActivity : AppCompatActivity() {
 
             val splitTime = chatMessage.timeSentAt.toString().split(" ")
 
-            timeTextView.text = "${splitTime[1]} ${splitTime[2]} ${splitTime[3]}"
+            if (splitTime.size > 4) {
+                timeTextView.text = "${splitTime[1]} ${splitTime[2]} ${splitTime[3]}"
+            }
         }
     }
 
