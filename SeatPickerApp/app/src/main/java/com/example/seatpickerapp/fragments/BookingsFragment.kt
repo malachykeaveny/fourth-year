@@ -7,10 +7,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.seatpickerapp.dataClasses.Booking
@@ -20,8 +21,8 @@ import com.example.seatpickerapp.databinding.FragmentBookingsBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.Query
 import java.util.*
 
 
@@ -51,7 +52,7 @@ import java.util.*
         super.onViewCreated(view, savedInstanceState)
         auth = FirebaseAuth.getInstance()
 
-        val bookingCollectionRef = db.collection("users").document(auth?.uid.toString()).collection("booking")
+        val bookingCollectionRef = db.collection("users").document(auth?.uid.toString()).collection("booking").orderBy("date", Query.Direction.ASCENDING)
         binding.bookingsRecyclerView.layoutManager = LinearLayoutManager(context)
         //binding.bookingsRecyclerView.layoutManager = GridLayoutManager(context, 2)
         val options = FirestoreRecyclerOptions.Builder<Booking>().setQuery(bookingCollectionRef, Booking::class.java).build()
@@ -83,17 +84,17 @@ import java.util.*
         val db = FirebaseFirestore.getInstance()
 
         fun setProductName(restaurant: String, date: String, time: String, tableNo: String) {
-            val restaurantTextView = view.findViewById<TextView>(R.id.booking_restaurant_text_view)
-            val dateTextView = view.findViewById<TextView>(R.id.booking_date_text_view)
-            val timeTextView = view.findViewById<TextView>(R.id.booking_time_text_view)
-            val tableNoTextView = view.findViewById<TextView>(R.id.booking_tableNo_text_view)
-            val card_View = view.findViewById<CardView>(R.id.cardViewBooking)
+            val restaurantTextView = view.findViewById<TextView>(R.id.orderRestaurantText)
+            val dateTextView = view.findViewById<TextView>(R.id.orderItemsText)
+            val timeTextView = view.findViewById<TextView>(R.id.orderDateText)
+            val tableNoTextView = view.findViewById<TextView>(R.id.orderTimeText)
+            val card_View = view.findViewById<CardView>(R.id.bookingCardView)
 
             Log.d("DisplayBookings", date)
 
-            restaurantTextView.text = "Restaurant: $restaurant"
-            dateTextView.text = "Date: $date"
-            timeTextView.text = "Time $time"
+            restaurantTextView.text = "$restaurant"
+            dateTextView.text = "$date"
+            timeTextView.text = "$time"
 
             var tableLong: String?= null
             when (tableNo) {
@@ -106,46 +107,61 @@ import java.util.*
                 "tableSeven" -> tableLong = "7"
                 "tableEight" -> tableLong = "8"
             }
-            tableNoTextView.text = "Table Number: $tableLong"
+            tableNoTextView.text = "Table $tableLong"
 
         }
 
         fun deleteBooking(documentId: String, restaurant: String, date: String, tableNo: String, time: String) {
-            val delete_btn = view.findViewById<FloatingActionButton>(R.id.fl_btn_delete)
+            val delete_btn = view.findViewById<Button>(R.id.bookingDeleteButton)
             delete_btn.setOnClickListener {
 
-                db.collection("users").document(auth?.uid.toString()).collection("booking").document(documentId)
-                    .delete()
-                    .addOnSuccessListener { Log.d("BookingsFragment", "User DocumentSnapshot successfully deleted!")
-                        Toast.makeText(context, "Booking deleted!", Toast.LENGTH_SHORT).show()}
-                    .addOnFailureListener { e -> Log.w("BookingsFragment", "Error deleting document", e) }
+                val builder = AlertDialog.Builder(requireActivity())
+                builder.setTitle("Cancel booking")
+                var tableLong: String? = null
 
-                //Toast.makeText(context, documentId + " " + date + " " + tableNo + " " + time, Toast.LENGTH_SHORT).show()
+                builder.setMessage("Are you sure you want to cancel this booking?")
+                //builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
 
-                db.collection("restaurants").document(restaurant.replace("\\s".toRegex(), "")
-                    .decapitalize(Locale.ROOT)).collection("tables").document(tableNo).collection(date).document(time)
-                    .delete()
-                    .addOnSuccessListener { Log.d("BookingsFragment", "Restaurant DocumentSnapshot successfully deleted!")
-                        Toast.makeText(context, "Booking deleted!", Toast.LENGTH_SHORT).show()}
-                    .addOnFailureListener { e -> Log.w("BookingsFragment", "Error deleting restaurant document", e) }
+                builder.setPositiveButton("Yes") { dialog, which ->
+                    db.collection("users").document(auth?.uid.toString()).collection("booking").document(documentId)
+                        .delete()
+                        .addOnSuccessListener { Log.d("BookingsFragment", "User DocumentSnapshot successfully deleted!")
+                            Toast.makeText(context, "Booking deleted!", Toast.LENGTH_SHORT).show()}
+                        .addOnFailureListener { e -> Log.w("BookingsFragment", "Error deleting document", e) }
 
-                val adminCollectionRef = db.collection("restaurants").document("flanagans").collection("bookingsMgmt").document("tableBookings").collection(date)
-                val adminRef = adminCollectionRef.whereEqualTo("time", time).whereEqualTo("tableNo", tableNo)
-                adminRef.get().addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        for (document in task.result!!) {
-                            adminCollectionRef.document(document.id).delete()
+                    //Toast.makeText(context, documentId + " " + date + " " + tableNo + " " + time, Toast.LENGTH_SHORT).show()
+
+                    db.collection("restaurants").document(restaurant.replace("\\s".toRegex(), "")
+                        .decapitalize(Locale.ROOT)).collection("tables").document(tableNo).collection(date).document(time)
+                        .delete()
+                        .addOnSuccessListener { Log.d("BookingsFragment", "Restaurant DocumentSnapshot successfully deleted!")
+                            Toast.makeText(context, "Booking deleted!", Toast.LENGTH_SHORT).show()}
+                        .addOnFailureListener { e -> Log.w("BookingsFragment", "Error deleting restaurant document", e) }
+
+                    val adminCollectionRef = db.collection("restaurants").document("flanagans").collection("bookingsMgmt").document("tableBookings").collection(date)
+                    val adminRef = adminCollectionRef.whereEqualTo("time", time).whereEqualTo("tableNo", tableNo)
+                    adminRef.get().addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            for (document in task.result!!) {
+                                adminCollectionRef.document(document.id).delete()
+                            }
+                        } else {
+                            Log.d("BookingsFragmentadmin", "Error getting documents: ", task.exception)
                         }
-                    } else {
-                        Log.d("BookingsFragmentadmin", "Error getting documents: ", task.exception)
                     }
+
+                }
+                builder.setNegativeButton("No") { dialog, which ->
+                    //Toast.makeText(context, android.R.string.no, Toast.LENGTH_SHORT).show()
                 }
 
-            }
+                builder.show()
+                }
+
         }
 
         fun preOrder(id: String, restaurant: String, date: String, tableNo: String, time: String) {
-            val preOrderFloatingActionButton = view.findViewById<FloatingActionButton>(R.id.fl_btn_pre_order)
+            val preOrderFloatingActionButton = view.findViewById<Button>(R.id.bookingPreOrderButton)
 
             preOrderFloatingActionButton.setOnClickListener {
                 Log.d("BookingsFragment", "$restaurant $date $tableNo $time")
@@ -168,7 +184,7 @@ import java.util.*
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookingsFragment.ProductViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_booking, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_booking_v2, parent, false)
             return ProductViewHolder(view)
         }
     }

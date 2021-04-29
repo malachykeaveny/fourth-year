@@ -84,19 +84,21 @@ class TableRestaurantFragment : Fragment() {
 
     private inner class ProductViewHolder internal constructor(private val view: View) : RecyclerView.ViewHolder(view) {
 
-        fun setContent(name: String, image: String) {
-            val nameTextView = view.findViewById<TextView>(R.id.txtViewCategory)
-            val imageView = view.findViewById<ImageView>(R.id.imageCategory)
+        fun setContent(name: String, image: String, location: String) {
+            val nameTextView = view.findViewById<TextView>(R.id.restaurantNameTxtView2)
+            val addressTextView = view.findViewById<TextView>(R.id.restaurantAddressTxtView2)
+            val imageView = view.findViewById<ImageView>(R.id.restaurantImageView2)
 
             if (image.isNotEmpty()) {
                 Picasso.with(context).load(image).into(imageView)
             }
 
             nameTextView.text = name
+            addressTextView.text = location
         }
 
         fun categorySelected(name: String) {
-            val cardViewCategory = view.findViewById<CardView>(R.id.cardViewCategory)
+            val cardViewCategory = view.findViewById<CardView>(R.id.restaurantCardView2)
             cardViewCategory.setOnClickListener {
                 val nameNoWhitespace = name.replace("\\s".toRegex(), "").decapitalize(Locale.ROOT)
                 Toast.makeText(context, nameNoWhitespace, Toast.LENGTH_SHORT).show()
@@ -109,12 +111,12 @@ class TableRestaurantFragment : Fragment() {
 
     private inner class ProductFirestoreRecyclerAdapter internal constructor(options: FirestoreRecyclerOptions<FoodRestaurant>) : FirestoreRecyclerAdapter<FoodRestaurant, TableRestaurantFragment.ProductViewHolder>(options) {
         override fun onBindViewHolder(productViewHolder: TableRestaurantFragment.ProductViewHolder, position: Int, foodRestaurant: FoodRestaurant) {
-            productViewHolder.setContent(foodRestaurant.name, foodRestaurant.image)
+            productViewHolder.setContent(foodRestaurant.name, foodRestaurant.image, foodRestaurant.location)
             productViewHolder.categorySelected(foodRestaurant.name)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TableRestaurantFragment.ProductViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_food_category, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_restaurant_v2, parent, false)
             return ProductViewHolder(view)
         }
     }

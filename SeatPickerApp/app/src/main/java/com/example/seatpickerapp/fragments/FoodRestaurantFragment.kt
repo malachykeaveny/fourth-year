@@ -305,7 +305,7 @@ class FoodRestaurantFragment : Fragment() {
 
         fun setContent(name: String, image: String) {
                 val nameTextView = view.findViewById<TextView>(R.id.restaurantNameTxtView2)
-                val imageView = view.findViewById<ImageView>(R.id.restaurantImageView)
+                val imageView = view.findViewById<ImageView>(R.id.restaurantImageView2)
 
                 nameTextView.text = name
 
@@ -317,7 +317,7 @@ class FoodRestaurantFragment : Fragment() {
         }
 
         fun categorySelected(name: String) {
-            val cardViewCategory = view.findViewById<CardView>(R.id.restaurantCardView)
+            val cardViewCategory = view.findViewById<CardView>(R.id.restaurantCardView2)
             cardViewCategory?.setOnClickListener {
                 val nameNoWhitespace = name.replace("\\s".toRegex(), "").decapitalize(Locale.ROOT)
                 //Toast.makeText(context, nameNoWhitespace, Toast.LENGTH_SHORT).show()
@@ -354,7 +354,7 @@ class FoodRestaurantFragment : Fragment() {
                             val distance = userLocation.distanceTo(restaurantLocation).toDouble()
 
                                 val roundedDistance = String.format("%.1f", distance / 1000)
-                                val distanceTextView = view.findViewById<TextView>(R.id.restaurantDistanceTextView)
+                                val distanceTextView = view.findViewById<TextView>(R.id.restaurantAddressTxtView2)
                                 distanceTextView.text = "${roundedDistance}km away"
                                 Log.d("checkingDistance", "$distance")
                         }
@@ -393,7 +393,7 @@ class FoodRestaurantFragment : Fragment() {
             viewType: Int
         ): FoodRestaurantFragment.ProductViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(
-                R.layout.item_restaurant,
+                R.layout.item_restaurant_v2,
                 parent,
                 false
             )

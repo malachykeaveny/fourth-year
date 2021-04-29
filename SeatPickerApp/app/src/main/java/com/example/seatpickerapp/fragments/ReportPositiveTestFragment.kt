@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -103,17 +104,23 @@ class ReportPositiveTestFragment : Fragment() {
         val db = FirebaseFirestore.getInstance()
 
         fun setProductName(restaurant: String, date: String, time: String, tableNo: String) {
-            val restaurantTextView = view.findViewById<TextView>(R.id.report_restaurant_text_view)
-            val dateTextView = view.findViewById<TextView>(R.id.report_date_text_view)
-            val timeTextView = view.findViewById<TextView>(R.id.report_time_text_view)
-            val tableNoTextView = view.findViewById<TextView>(R.id.report_tableNo_text_view)
+            val restaurantTextView = view.findViewById<TextView>(R.id.orderRestaurantText)
+            val dateTextView = view.findViewById<TextView>(R.id.orderItemsText)
+            val timeTextView = view.findViewById<TextView>(R.id.orderDateText)
+            val tableNoTextView = view.findViewById<TextView>(R.id.orderTimeText)
             val card_View = view.findViewById<CardView>(R.id.cardViewReport)
 
             Log.d("DisplayBookingsReport", date)
 
-            restaurantTextView.text = "Restaurant: $restaurant"
-            dateTextView.text = "Date: $date"
-            timeTextView.text = "Time $time"
+            restaurantTextView.text = "$restaurant"
+            dateTextView.text = "$date"
+            timeTextView.text = "$time"
+
+            val deleteButton = view.findViewById<Button>(R.id.bookingDeleteButton)
+            val preOrderButton = view.findViewById<Button>(R.id.bookingPreOrderButton)
+
+            deleteButton.visibility = View.GONE
+            preOrderButton.visibility = View.GONE
 
             var tableLong: String? = null
             when (tableNo) {
@@ -128,7 +135,7 @@ class ReportPositiveTestFragment : Fragment() {
                 "tableNine" -> tableLong = "9"
                 "tableTen" -> tableLong = "10"
             }
-            tableNoTextView.text = "Table Number: $tableLong"
+            tableNoTextView.text = "Table $tableLong"
 
         }
 
@@ -136,7 +143,7 @@ class ReportPositiveTestFragment : Fragment() {
         fun reportPositiveTest(
             restaurant: String, documentId: String, date: String, tableNo: String, time: String
         ) {
-            val cVReport = view.findViewById<CardView>(R.id.cardViewReport)
+            val cVReport = view.findViewById<CardView>(R.id.bookingCardView)
             cVReport.setOnClickListener {
                 //Toast.makeText(context, documentId + " " + date + " " + tableNo + " " + time, Toast.LENGTH_SHORT).show()
 
@@ -339,6 +346,7 @@ class ReportPositiveTestFragment : Fragment() {
         FirestoreRecyclerAdapter<Booking, ReportPositiveTestFragment.ProductViewHolder>(
             options
         ) {
+        @RequiresApi(Build.VERSION_CODES.O)
         override fun onBindViewHolder(
             productViewHolder: ReportPositiveTestFragment.ProductViewHolder,
             position: Int,
@@ -362,7 +370,7 @@ class ReportPositiveTestFragment : Fragment() {
             viewType: Int
         ): ReportPositiveTestFragment.ProductViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(
-                R.layout.item_report_booking,
+                R.layout.item_booking_v2,
                 parent,
                 false
             )

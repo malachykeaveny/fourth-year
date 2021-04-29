@@ -78,16 +78,17 @@
         android:id="@+id/signup_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintWidth_percent="0.8"
-        app:layout_constraintVertical_bias="0.6"
+        android:background="@drawable/button_shape_1"
+        android:text="Sign Up"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/signup_phone_no_et"
-        android:text="Sign Up"
-        android:textStyle="bold"
-        android:textSize="15sp"
-        android:textColor="@color/white"
-        android:background="@drawable/button_shape_1"/>
+        app:layout_constraintTop_toBottomOf="@id/signup_phone_no_et"
+        app:layout_constraintVertical_bias="0.3"
+        app:layout_constraintWidth_percent="0.8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

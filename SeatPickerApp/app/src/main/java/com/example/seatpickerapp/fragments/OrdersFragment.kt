@@ -77,13 +77,16 @@ class OrdersFragment : Fragment() {
     private inner class ProductViewHolder internal constructor(private val view: View) : RecyclerView.ViewHolder(view) {
 
         fun setContent(restaurant: String, items: String, date: String, time: String, address: String) {
-            val restaurantTxtView = view.findViewById<TextView>(R.id.txtViewRestaurant)
-            val itemsTextView = view.findViewById<TextView>(R.id.txtViewItems)
-            val dateTextView = view.findViewById<TextView>(R.id.orderDateTextView)
-            val timeTextView = view.findViewById<TextView>(R.id.orderTimeTextView)
-            val addressTextView = view.findViewById<TextView>(R.id.orderAddressTextView)
+            val restaurantTxtView = view.findViewById<TextView>(R.id.orderRestaurantText)
+            val itemsTextView = view.findViewById<TextView>(R.id.orderItemsText)
+            val dateTextView = view.findViewById<TextView>(R.id.orderDateText)
+            val timeTextView = view.findViewById<TextView>(R.id.orderTimeText)
+            val addressTextView = view.findViewById<TextView>(R.id.orderAddressText)
 
-            restaurantTxtView.text = restaurant
+            when (restaurant) {
+                "flanagans" -> restaurantTxtView.text = "Flanagans"
+                "oakFirePizza" -> restaurantTxtView.text = "Oak Fire Pizza"
+            }
             itemsTextView.text = items.dropLast(1)
             dateTextView.text = date
             timeTextView.text = time
@@ -112,7 +115,7 @@ class OrdersFragment : Fragment() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdersFragment.ProductViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_order, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_order_v2, parent, false)
             return ProductViewHolder(view)
         }
     }

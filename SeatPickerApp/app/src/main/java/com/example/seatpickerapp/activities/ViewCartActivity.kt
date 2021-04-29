@@ -275,6 +275,7 @@ import java.util.*
                 Address.Builder()
                     .setLine1(addressLine1)
                     .setLine2(addressLine2)
+                    .setPostalCode("D")
                     .setCity(county)
                     .setCountry("IE")
                     .build(),

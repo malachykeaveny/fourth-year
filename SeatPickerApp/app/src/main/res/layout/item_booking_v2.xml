@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/CardView.Light"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    tools:ignore="ContentDescription"
+    android:id="@+id/bookingCardView">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/orderRestaurantText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Restaurant"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bookingImageIV" />
+
+        <TextView
+            android:id="@+id/orderItemsText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/veryDarkGrey"
+            app:layout_constraintTop_toBottomOf="@+id/orderRestaurantText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bookingImageIV" />
+
+        <TextView
+            android:id="@+id/orderDateText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/veryDarkGrey"
+            app:layout_constraintTop_toBottomOf="@+id/orderItemsText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bookingImageIV" />
+
+        <TextView
+            android:id="@+id/orderTimeText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/veryDarkGrey"
+            app:layout_constraintTop_toBottomOf="@+id/orderDateText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bookingImageIV" />
+
+        <ImageView
+            android:id="@+id/bookingImageIV"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_circle_table" />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/bookingDeleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:minWidth="0dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="Delete"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toBottomOf="@+id/bookingImageIV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/bookingPreOrderButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:minWidth="0dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="Pre order"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="@+id/bookingDeleteButton"
+            app:layout_constraintStart_toEndOf="@+id/bookingDeleteButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

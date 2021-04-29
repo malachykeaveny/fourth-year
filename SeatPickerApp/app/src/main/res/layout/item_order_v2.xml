@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/CardView.Light"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    tools:ignore="ContentDescription"
+    android:id="@+id/orderCardView">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/orderRestaurantText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Restaurant"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/black"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bookingImageIV" />
+
+        <TextView
+            android:id="@+id/orderItemsText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Items"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/veryDarkGrey"
+            app:layout_constraintTop_toBottomOf="@+id/orderRestaurantText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bookingImageIV" />
+
+        <TextView
+            android:id="@+id/orderDateText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/veryDarkGrey"
+            app:layout_constraintTop_toBottomOf="@+id/orderItemsText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bookingImageIV" />
+
+        <TextView
+            android:id="@+id/orderTimeText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Time"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/veryDarkGrey"
+            app:layout_constraintTop_toBottomOf="@+id/orderDateText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bookingImageIV" />
+
+        <TextView
+            android:id="@+id/orderAddressText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Address"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/veryDarkGrey"
+            app:layout_constraintTop_toBottomOf="@+id/orderTimeText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/bookingImageIV"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageView
+            android:id="@+id/bookingImageIV"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_food_icon" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

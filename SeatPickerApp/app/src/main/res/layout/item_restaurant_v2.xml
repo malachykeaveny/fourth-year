@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/CardView.Light"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    tools:ignore="ContentDescription"
+    android:id="@+id/restaurantCardView2">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/darkGrey">
+
+        <ImageView
+            android:id="@+id/restaurantImageView2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@android:color/darker_gray"
+            app:layout_constraintDimensionRatio="H,16:9"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/restaurantNameTxtView2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="Restaurant Name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/white"
+            android:lineSpacingExtra="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/restaurantImageView2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/restaurantAddressTxtView2"/>
+
+        <TextView
+        android:id="@+id/restaurantAddressTxtView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Restaurant Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/white"
+        android:lineSpacingExtra="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/restaurantNameTxtView2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
