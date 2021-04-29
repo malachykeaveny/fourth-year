@@ -26,6 +26,11 @@ class MessageActivity : AppCompatActivity() {
     private var auth: FirebaseAuth? = null
     val db = FirebaseFirestore.getInstance()
     private var adapter: ChatMessageAdapter?= null
+    private var fromUserObject: UserContact?= null
+    private var targetUserObject: UserContact?= null
+    private var roomId: String = ""
+    private var fromUserRooms: MutableMap<String, Any>?= null
+    private var targetUserRooms: MutableMap<String, Any>?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,64 +39,75 @@ class MessageActivity : AppCompatActivity() {
         setContentView(view)
         auth = FirebaseAuth.getInstance()
 
-        val fromUserObject = intent.extras?.get("fromUser") as? UserContact
-        val targetUserObject = intent.extras?.get("targetUser") as? UserContact
-        //val targetUserId = intent.extras?.get("targetUserId") as String
-        var roomId = intent.extras?.get("roomId") as String
-        var fromUserRooms = fromUserObject?.rooms
-        var targetUserRooms = targetUserObject?.rooms
+        getIntentInfo()
+
+        binding.sendMessageBtn.setOnClickListener {
+            sendMessage()
+        }
+
+        setupRecyclerView()
+    }
+
+    private fun setupRecyclerView() {
+        val messageQuery = db.collection("messages").document(roomId!!).collection("roomMessages").orderBy("timeSentAt", Query.Direction.ASCENDING)
+        binding.messagesRV.layoutManager = LinearLayoutManager(applicationContext)
+        val options = FirestoreRecyclerOptions.Builder<ChatMessage>().setQuery(messageQuery, ChatMessage::class.java).build()
+        adapter = ChatMessageAdapter(options)
+        binding.messagesRV.adapter = adapter
+    }
+
+    private fun getIntentInfo() {
+        fromUserObject = intent.extras?.get("fromUser") as? UserContact
+        targetUserObject = intent.extras?.get("targetUser") as? UserContact
+        roomId = intent.extras?.get("roomId") as String
+        fromUserRooms = fromUserObject?.rooms
+        targetUserRooms = targetUserObject?.rooms
 
         Log.d("MessageActivity", "$fromUserObject $targetUserObject $roomId")
 
         if (roomId == "") {
             roomId = db.collection("messages").document().id
             if (fromUserRooms != null) {
-                for ((key, _) in fromUserRooms) {
+                for ((key, _) in fromUserRooms!!) {
                     if (targetUserRooms != null) {
-                        if (targetUserRooms.contains(key)) {
+                        if (targetUserRooms!!.contains(key)) {
                             roomId = key
                         }
                     }
                 }
             }
         }
+    }
 
-        binding.sendMessageBtn.setOnClickListener {
-
-            if (fromUserRooms == null) {
-                fromUserRooms = mutableMapOf()
-            }
-            fromUserRooms!![roomId] = true
-            fromUserObject?.rooms = fromUserRooms
-            db.collection("users").document(fromUserObject!!.userId)
-                .set(fromUserObject!!, SetOptions.merge())
-            db.collection("users").document(targetUserObject?.userId.toString()).collection("contacts").document(fromUserObject?.userId.toString())
-                .set(fromUserObject!!, SetOptions.merge())
-            db.collection("rooms").document(targetUserObject?.userId.toString())
-                .collection("userRooms").document(roomId).set(fromUserObject, SetOptions.merge())
-
-            if (targetUserRooms == null) {
-                targetUserRooms = mutableMapOf()
-            }
-            targetUserRooms!![roomId] = true
-            targetUserObject?.rooms = targetUserRooms
-            db.collection("users").document(targetUserObject?.userId.toString())
-                .set(targetUserObject!!, SetOptions.merge())
-            db.collection("users").document(fromUserObject.userId).collection("contacts").document(targetUserObject?.userId.toString())
-                .set(targetUserObject!!, SetOptions.merge())
-            db.collection("rooms").document(auth?.uid.toString()).collection("userRooms")
-                .document(roomId).set(targetUserObject, SetOptions.merge())
-
-            val messageText = binding.messageBodyEditText.text.toString()
-            val chatMessage = ChatMessage(messageText, auth?.uid.toString())
-            db.collection("messages").document(roomId).collection("roomMessages").add(chatMessage)
-            binding.messageBodyEditText.text.clear()
+    private fun sendMessage() {
+        if (fromUserRooms == null) {
+            fromUserRooms = mutableMapOf()
         }
-            val messageQuery = db.collection("messages").document(roomId).collection("roomMessages").orderBy("timeSentAt", Query.Direction.ASCENDING)
-            binding.messagesRV.layoutManager = LinearLayoutManager(applicationContext)
-            val options = FirestoreRecyclerOptions.Builder<ChatMessage>().setQuery(messageQuery, ChatMessage::class.java).build()
-            adapter = ChatMessageAdapter(options)
-            binding.messagesRV.adapter = adapter
+        fromUserRooms!![roomId] = true
+        fromUserObject?.rooms = fromUserRooms
+        db.collection("users").document(fromUserObject!!.userId)
+            .set(fromUserObject!!, SetOptions.merge())
+        db.collection("users").document(targetUserObject?.userId.toString()).collection("contacts").document(fromUserObject?.userId.toString())
+            .set(fromUserObject!!, SetOptions.merge())
+        db.collection("rooms").document(targetUserObject?.userId.toString())
+            .collection("userRooms").document(roomId).set(fromUserObject!!, SetOptions.merge())
+
+        if (targetUserRooms == null) {
+            targetUserRooms = mutableMapOf()
+        }
+        targetUserRooms!![roomId] = true
+        targetUserObject?.rooms = targetUserRooms
+        db.collection("users").document(targetUserObject?.userId.toString())
+            .set(targetUserObject!!, SetOptions.merge())
+        db.collection("users").document(fromUserObject!!.userId).collection("contacts").document(targetUserObject?.userId.toString())
+            .set(targetUserObject!!, SetOptions.merge())
+        db.collection("rooms").document(auth?.uid.toString()).collection("userRooms")
+            .document(roomId).set(targetUserObject!!, SetOptions.merge())
+
+        val messageText = binding.messageBodyEditText.text.toString()
+        val chatMessage = ChatMessage(messageText, auth?.uid.toString())
+        db.collection("messages").document(roomId).collection("roomMessages").add(chatMessage)
+        binding.messageBodyEditText.text.clear()
     }
 
     override fun onStart() {

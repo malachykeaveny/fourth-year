@@ -35,9 +35,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="2dp"
+                android:padding="0dp"
                 android:weightSum="6"
-                android:background="@drawable/meal_gradient">
+                android:background="@drawable/maps_gradient">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -50,12 +50,14 @@
                         android:layout_height="wrap_content"
                         android:textSize="20dp"
                         android:textStyle="bold"
+                        android:layout_gravity="center"
                         android:text="Change seating plan"
                         android:textColor="#ffffff"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:textSize="15dp"
                         android:textStyle="bold"
                         android:text="Alter the seating plan for a particular day."
@@ -86,9 +88,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="3dp"
+                android:padding="0dp"
                 android:weightSum="6"
-                android:background="@drawable/profile_gradient">
+                android:background="@drawable/maps_gradient">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -100,6 +102,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20dp"
+                        android:layout_gravity="center"
                         android:textStyle="bold"
                         android:text="Assign staff to tables"
                         android:textColor="#ffffff"/>
@@ -107,6 +110,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:textSize="15dp"
                         android:textStyle="bold"
                         android:text="Assign waiting staff to specific bookings to assist in contact tracing efforts."
@@ -137,7 +141,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="2dp"
+                android:padding="0dp"
                 android:weightSum="6"
                 android:background="@drawable/maps_gradient">
 
@@ -151,6 +155,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20dp"
+                        android:layout_gravity="center"
                         android:textStyle="bold"
                         android:text="Manage contact tracing"
                         android:textColor="#ffffff"/>
@@ -158,6 +163,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:textSize="15dp"
                         android:textStyle="bold"
                         android:text="Manage Covid-19 contact tracing from here."
@@ -188,7 +194,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="2dp"
+                android:padding="0dp"
                 android:weightSum="6"
                 android:background="@drawable/maps_gradient">
 
@@ -202,6 +208,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20dp"
+                        android:layout_gravity="center"
                         android:textStyle="bold"
                         android:text="Edit menu"
                         android:textColor="#ffffff"/>
@@ -209,6 +216,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:textSize="15dp"
                         android:textStyle="bold"
                         android:text="Manage menu items."
@@ -239,7 +247,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:padding="2dp"
+                android:padding="0dp"
                 android:weightSum="6"
                 android:background="@drawable/maps_gradient">
 
@@ -250,16 +258,18 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20dp"
                         android:textStyle="bold"
-                        android:text="Chat"
+                        android:text="Chat with customers"
                         android:textColor="#ffffff"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:textSize="15dp"
                         android:textStyle="bold"
                         android:text="Help users having issues."
@@ -271,7 +281,7 @@
                     android:layout_width="0dp"
                     android:layout_height="100dp"
                     android:layout_weight="1"
-                    android:src="@drawable/ic_food_icon"/>
+                    app:srcCompat="@android:drawable/stat_notify_chat"/>
 
             </LinearLayout>
 
@@ -282,7 +292,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Logout"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="4dp"
             android:layout_gravity="center"
             android:background="@drawable/button_shape_blue"
             />
